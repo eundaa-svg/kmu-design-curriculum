@@ -820,7 +820,7 @@ function SearchListView({
                   <td style={{ padding: '0 12px', fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)', textAlign: 'center' }}>
                     {course.semester === 0 ? '전' : `${course.semester}학기`}
                   </td>
-                  <td style={{ padding: '0 12px', fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)', textAlign: 'center' }}>{course.credits}</td>
+                  <td style={{ padding: '0 12px', fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)', textAlign: 'center' }}>{course.credits}학점</td>
                   <td style={{ padding: '0 12px', textAlign: 'center' }}>
                     <Badge variant={course.category === 'required' ? 'required' : 'elective'} style={{ fontSize: 11 }}>
                       {course.category === 'required' ? '필수' : '선택'}

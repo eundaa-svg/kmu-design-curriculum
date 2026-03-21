@@ -272,7 +272,7 @@ export default function ListView({ courses, completed, onToggle, onSelect }: Lis
                         {c.semester === 0 ? '전학기' : `${c.semester}학기`}
                       </td>
                       <td style={{ padding: '0 12px', textAlign: 'center', fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-                        {c.credits}
+                        {c.credits}학점
                       </td>
                       <td style={{ padding: '0 12px', textAlign: 'center', fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
                         {c.theory}/{c.practice}
