@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
-  CheckCircle, AlertTriangle, X, ChevronRight, ChevronUp, Check,
+  CheckCircle, AlertTriangle, X, ChevronRight, ChevronUp, Check, ChevronDown,
 } from 'lucide-react'
 import { useStore } from '../store/useStore'
 import { useDepartment } from '../hooks/useDepartment'
@@ -12,6 +12,8 @@ import Badge from '../components/ui/Badge'
 import ProgressBar from '../components/ui/ProgressBar'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import NoDeptSelected from '../components/ui/NoDeptSelected'
+import { departments } from '../data'
+import transferRequirements, { type TransferRequirement } from '../data/transferRequirements'
 
 /* ── 공업디자인 세부전공 ── */
 const CONCENTRATIONS_ID = [
@@ -174,63 +176,18 @@ export default function GraduationCheck() {
       >
         복수전공 관련 요건
       </h2>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 16,
-          marginBottom: 28,
-        }}
-        className="minor-grid"
-      >
-        {/* 부전공 */}
-        <Card>
-          <h3 style={{ font: 'var(--font-heading-md)', fontFamily: 'var(--font-family)', color: 'var(--color-text-primary)', marginBottom: 8 }}>
-            부전공
-          </h3>
-          <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-secondary)', marginBottom: 14 }}>
-            요건: 전공과목 18학점 이상 이수
-          </p>
-          <ProgressBar
-            value={Math.min(100, (grad.completedCredits / 18) * 100)}
-            color={grad.completedCredits >= 18 ? 'var(--color-accent-green)' : 'var(--color-accent-blue)'}
-            height={8}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-            <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-              현재 {grad.completedCredits}학점 이수
-            </span>
-            <Badge variant={grad.completedCredits >= 18 ? 'green' : 'gray'}>
-              {grad.completedCredits >= 18 ? '충족' : `${18 - grad.completedCredits}학점 부족`}
-            </Badge>
-          </div>
-        </Card>
-
-        {/* 다전공 */}
-        <Card>
-          <h3 style={{ font: 'var(--font-heading-md)', fontFamily: 'var(--font-family)', color: 'var(--color-text-primary)', marginBottom: 8 }}>
-            다전공
-          </h3>
-          <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-secondary)', marginBottom: 14 }}>
-            요건: 필수 지정 과목 포함 최저이수학점 이상
-          </p>
-          <ProgressBar
-            value={(grad.completedCredits / grad.minRequiredCredits) * 100}
-            color={grad.completedCredits >= grad.minRequiredCredits ? 'var(--color-accent-green)' : 'var(--color-accent-indigo)'}
-            height={8}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-            <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-              {grad.completedCredits} / {grad.minRequiredCredits}학점
-            </span>
-            <Badge variant={grad.completedCredits >= grad.minRequiredCredits ? 'green' : 'gray'}>
-              {grad.completedCredits >= grad.minRequiredCredits ? '충족' : '미충족'}
-            </Badge>
-          </div>
-          <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-muted)', marginTop: 10, fontSize: 11 }}>
-            ※ S-TEAM Class, 사제동행세미나를 수강하지 않아도 다전공 이수 가능
-          </p>
-        </Card>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
+        <MinorCard
+          type="minor"
+          currentDeptId={department.id}
+          completedCredits={grad.completedCredits}
+        />
+        <MinorCard
+          type="double"
+          currentDeptId={department.id}
+          completedCredits={grad.completedCredits}
+          minRequiredCredits={grad.minRequiredCredits}
+        />
       </div>
 
       {/* ── B-4. 공업디자인 세부전공 (전용) ── */}
@@ -330,6 +287,338 @@ export default function GraduationCheck() {
       `}</style>
     </div>
   )
+}
+
+/* ── 부전공/다전공 카드 ── */
+interface MinorCardProps {
+  type: 'minor' | 'double'
+  currentDeptId: string
+  completedCredits: number
+  minRequiredCredits?: number
+}
+
+function MinorCard({ type, currentDeptId, completedCredits, minRequiredCredits = 39 }: MinorCardProps) {
+  const [selectedDeptId, setSelectedDeptId] = useState<string | null>(null)
+  const requirement = selectedDeptId
+    ? transferRequirements.find(r => r.departmentId === selectedDeptId) ?? null
+    : null
+
+  const availableDepts = departments.filter(d => d.id !== currentDeptId)
+
+  const isMinor = type === 'minor'
+  const title = isMinor ? '부전공' : '다전공'
+  const baseReq = isMinor ? '전공과목 18학점 이상 이수' : '필수 지정 과목 포함 최저이수학점 이상'
+  const creditGoal = isMinor ? 18 : minRequiredCredits
+  const progressPct = Math.min(100, (completedCredits / creditGoal) * 100)
+  const met = completedCredits >= creditGoal
+
+  return (
+    <Card style={{ padding: 20 }}>
+      {/* 헤더 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+        <h3 style={{ font: 'var(--font-heading-md)', fontFamily: 'var(--font-family)', color: 'var(--color-text-primary)' }}>
+          {title}
+        </h3>
+        <Badge variant={met ? 'green' : 'gray'}>
+          {met ? '기본 요건 충족' : `${creditGoal - completedCredits}학점 부족`}
+        </Badge>
+      </div>
+      <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-secondary)', marginBottom: 12 }}>
+        요건: {baseReq}
+      </p>
+      <ProgressBar
+        value={progressPct}
+        color={met ? 'var(--color-accent-green)' : 'var(--color-accent-blue)'}
+        height={6}
+      />
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: 'var(--color-text-muted)', marginTop: 6, marginBottom: 20 }}>
+        현재 {completedCredits}학점 이수 / 목표 {creditGoal}학점
+      </p>
+
+      {/* 학과 선택 드롭다운 */}
+      <DeptDropdown
+        departments={availableDepts}
+        selectedId={selectedDeptId}
+        onChange={setSelectedDeptId}
+        placeholder={`${title} 희망 학과를 선택하세요`}
+      />
+
+      {/* 조건 카드 */}
+      <AnimatePresence mode="wait">
+        {requirement && (
+          <motion.div
+            key={requirement.departmentId}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            style={{ marginTop: 16 }}
+          >
+            <TransferRequirementCard req={requirement} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Card>
+  )
+}
+
+/* ── 커스텀 드롭다운 ── */
+interface DeptDropdownProps {
+  departments: { id: string; name: string }[]
+  selectedId: string | null
+  onChange: (id: string) => void
+  placeholder: string
+}
+
+function DeptDropdown({ departments: depts, selectedId, onChange, placeholder }: DeptDropdownProps) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const selected = depts.find(d => d.id === selectedId)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={{
+          width: '100%',
+          height: 44,
+          background: '#FFFFFF',
+          border: `1px solid ${open ? '#3182F6' : '#E5E8EB'}`,
+          borderRadius: 10,
+          padding: '0 16px',
+          fontFamily: 'var(--font-family)',
+          fontSize: 14,
+          color: selected ? '#191F28' : '#8B95A1',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: open ? '0 0 0 3px rgba(49,130,246,0.1)' : 'none',
+          transition: 'border-color 150ms, box-shadow 150ms',
+          textAlign: 'left',
+        }}
+      >
+        <span>{selected ? selected.name : placeholder}</span>
+        <ChevronDown
+          size={16}
+          style={{
+            color: '#8B95A1',
+            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 200ms',
+            flexShrink: 0,
+          }}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            style={{
+              position: 'absolute',
+              top: 'calc(100% + 6px)',
+              left: 0,
+              right: 0,
+              background: '#FFFFFF',
+              border: '1px solid #E5E8EB',
+              borderRadius: 10,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+              maxHeight: 240,
+              overflowY: 'auto',
+              zIndex: 100,
+            }}
+          >
+            {depts.map(dept => {
+              const isSelected = dept.id === selectedId
+              return (
+                <button
+                  key={dept.id}
+                  onClick={() => { onChange(dept.id); setOpen(false) }}
+                  style={{
+                    width: '100%',
+                    height: 40,
+                    padding: '0 16px',
+                    background: isSelected ? '#EBF5FF' : 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-family)',
+                    fontSize: 14,
+                    color: isSelected ? '#3182F6' : '#191F28',
+                    textAlign: 'left',
+                    transition: 'background 100ms',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) e.currentTarget.style.background = '#F1F3F5'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) e.currentTarget.style.background = 'transparent'
+                  }}
+                >
+                  {dept.name}
+                </button>
+              )
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/* ── 전입 조건 카드 ── */
+function TransferRequirementCard({ req }: { req: TransferRequirement }) {
+  const methodBadges = parseSelectionMethod(req.selectionMethod)
+
+  return (
+    <div
+      style={{
+        borderRadius: 12,
+        border: '1px solid #E5E8EB',
+        background: '#F7F8FA',
+        padding: 20,
+      }}
+    >
+      {/* 학과명 */}
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 16, fontWeight: 600, color: '#191F28', marginBottom: 14 }}>
+        {req.departmentName}
+      </p>
+
+      {/* 구분선 */}
+      <div style={{ height: 1, background: '#E5E8EB', marginBottom: 14 }} />
+
+      {/* 지원 조건 */}
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: '#8B95A1', marginBottom: 10 }}>지원 조건</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 18 }}>
+        {req.requiredCourses.map((item, i) => {
+          const isGpa = item.description.includes('평점')
+          return (
+            <div key={i}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                {/* 원형 아이콘 */}
+                <div
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: '50%',
+                    border: '2px solid #8B95A1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: 1,
+                  }}
+                />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: '#191F28' }}>
+                      {item.description}
+                    </span>
+                    {isGpa && (
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-family)',
+                          fontSize: 11,
+                          fontWeight: 500,
+                          background: '#FFF9DB',
+                          color: '#F59F00',
+                          borderRadius: 4,
+                          padding: '1px 6px',
+                        }}
+                      >
+                        B+ 이상
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 과목 리스트 */}
+                  {item.courses && item.courses.length > 0 && (
+                    <div style={{ paddingLeft: 0, marginTop: 8 }}>
+                      {item.selectCount && (
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            fontFamily: 'var(--font-family)',
+                            fontSize: 11,
+                            fontWeight: 500,
+                            background: '#EBF5FF',
+                            color: '#3182F6',
+                            borderRadius: 4,
+                            padding: '1px 7px',
+                            marginBottom: 6,
+                          }}
+                        >
+                          {item.selectCount}개 선택
+                        </span>
+                      )}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingLeft: 4 }}>
+                        {item.courses.map((course, j) => (
+                          <span
+                            key={j}
+                            style={{
+                              fontFamily: 'var(--font-family)',
+                              fontSize: 13,
+                              color: '#4E5968',
+                            }}
+                          >
+                            · {course}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 전형 방법 */}
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: '#8B95A1', marginBottom: 8 }}>전형 방법</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+        {methodBadges.map((badge, i) => (
+          <span
+            key={i}
+            style={{
+              fontFamily: 'var(--font-family)',
+              fontSize: 12,
+              fontWeight: 500,
+              background: badge.bg,
+              color: badge.color,
+              borderRadius: 6,
+              padding: '3px 10px',
+            }}
+          >
+            {badge.label}
+          </span>
+        ))}
+      </div>
+
+      {/* 안내 */}
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: '#8B95A1' }}>
+        ※ 세부 지원 일정 및 절차는 학교 공지사항을 확인하세요.
+      </p>
+    </div>
+  )
+}
+
+function parseSelectionMethod(method: string): { label: string; bg: string; color: string }[] {
+  const badges: { label: string; bg: string; color: string }[] = []
+  if (method.includes('서류심사')) badges.push({ label: '서류심사', bg: '#EBF5FF', color: '#3182F6' })
+  if (method.includes('면접')) badges.push({ label: '면접', bg: '#E6FCF5', color: '#20C997' })
+  if (method.includes('포트폴리오')) badges.push({ label: '포트폴리오', bg: '#FFF9DB', color: '#F59F00' })
+  return badges
 }
 
 /* ── 요건 아이템 컴포넌트 ── */
