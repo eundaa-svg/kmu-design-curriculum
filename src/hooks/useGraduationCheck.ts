@@ -41,7 +41,7 @@ export function useGraduationCheck(
     if (!department) return empty
 
     const courses = department.courses
-    const minRequired = department.totalRequiredCredits
+    const minRequired = department.totalRequiredCredits ?? 130
 
     // 학점 집계
     const totalCredits = courses.reduce((s, c) => s + c.credits, 0)

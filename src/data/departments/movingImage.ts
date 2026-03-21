@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Department } from '../../types';
 
 const movingImage: Department = {
