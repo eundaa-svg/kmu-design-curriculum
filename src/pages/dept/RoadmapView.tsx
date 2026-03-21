@@ -141,7 +141,7 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
             minWidth: 1680,
           }}
         >
-          {YEAR_SEM_COLS.map(({ year, sem }, i) => {
+          {YEAR_SEM_COLS.map(({ year, sem }) => {
             const key = `${year}-${sem}`
             const colCourses = byCols[key] ?? []
             return (
