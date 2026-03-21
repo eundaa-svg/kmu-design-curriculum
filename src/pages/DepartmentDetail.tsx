@@ -1,0 +1,339 @@
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  ArrowLeft,
+  Cpu, Eye, Gem, Coffee, Shirt, Home, Film, Car, Brain,
+  BookOpen,
+  ChevronDown, ChevronUp,
+} from 'lucide-react'
+import { useDepartment } from '../hooks/useDepartment'
+import { useStore } from '../store/useStore'
+import { useProgress } from '../hooks/useProgress'
+import type { Course } from '../types'
+import ProgressBar from '../components/ui/ProgressBar'
+import CourseDetailPanel from '../components/course/CourseDetailPanel'
+import RoadmapView from './dept/RoadmapView'
+import CategoryView from './dept/CategoryView'
+import ListView from './dept/ListView'
+
+/* ── 학과 메타 ── */
+const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
+  'industrial-design':  { icon: <Cpu size={22} />,    color: '#2563EB', bg: '#EFF6FF' },
+  'visual-design':      { icon: <Eye size={22} />,    color: '#8B5CF6', bg: '#F5F3FF' },
+  'metal-craft':        { icon: <Gem size={22} />,    color: '#F59E0B', bg: '#FFFBEB' },
+  'ceramic-craft':      { icon: <Coffee size={22} />, color: '#EC4899', bg: '#FDF2F8' },
+  'fashion-design':     { icon: <Shirt size={22} />,  color: '#06B6D4', bg: '#ECFEFF' },
+  'spatial-design':     { icon: <Home size={22} />,   color: '#10B981', bg: '#ECFDF5' },
+  'moving-image':       { icon: <Film size={22} />,   color: '#EF4444', bg: '#FEF2F2' },
+  'automotive-design':  { icon: <Car size={22} />,    color: '#F97316', bg: '#FFF7ED' },
+  'ai-design':          { icon: <Brain size={22} />,  color: '#6366F1', bg: '#EEF2FF' },
+}
+
+type ViewMode = 'roadmap' | 'category' | 'list'
+
+const TABS: { id: ViewMode; label: string }[] = [
+  { id: 'roadmap',   label: '로드맵' },
+  { id: 'category',  label: '영역별' },
+  { id: 'list',      label: '전체 목록' },
+]
+
+export default function DepartmentDetail() {
+  const { deptId } = useParams<{ deptId: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const viewParam = (searchParams.get('view') ?? 'roadmap') as ViewMode
+  const view: ViewMode = ['roadmap', 'category', 'list'].includes(viewParam) ? viewParam : 'roadmap'
+
+  const department = useDepartment(deptId)
+  const { studentProgress, selectDepartment, toggleCourseComplete } = useStore()
+  const progress = studentProgress?.departmentId === deptId ? studentProgress : null
+  const stats = useProgress(department, progress)
+
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
+  const [goalExpanded, setGoalExpanded] = useState(false)
+  const mainRef = useRef<HTMLDivElement>(null)
+
+  /* 학과 선택 */
+  useEffect(() => {
+    if (deptId) selectDepartment(deptId)
+  }, [deptId, selectDepartment])
+
+  /* 뷰 전환 시 스크롤 초기화 */
+  const setView = (v: ViewMode) => {
+    setSearchParams({ view: v }, { replace: true })
+    mainRef.current?.scrollTo({ top: 0 })
+  }
+
+  if (!department) {
+    return (
+      <div style={{ padding: '80px 0', textAlign: 'center', fontFamily: 'var(--font-family)', color: 'var(--color-text-muted)' }}>
+        학과를 찾을 수 없습니다.
+      </div>
+    )
+  }
+
+  const meta = DEPT_META[department.id] ?? { icon: <BookOpen size={22} />, color: '#64748B', bg: '#F1F5F9' }
+  const completed = new Set(progress?.completedCourseIds ?? [])
+
+  const handleToggle = (id: string, e: MouseEvent) => {
+    e.stopPropagation()
+    toggleCourseComplete(id)
+  }
+
+  const handleSelect = (course: Course) => setSelectedCourse(course)
+  const handleClose = () => setSelectedCourse(null)
+
+  const handleNavigateToPrereq = (prereqName: string) => {
+    const found = department.courses.find((c) => c.name === prereqName)
+    if (found) setSelectedCourse(found)
+  }
+
+  return (
+    <div ref={mainRef} style={{ maxWidth: 1200, margin: '0 auto' }}>
+
+      {/* ── 뒤로가기 ── */}
+      <Link
+        to="/department"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 5,
+          fontFamily: 'var(--font-family)',
+          fontSize: 13,
+          color: 'var(--color-text-secondary)',
+          textDecoration: 'none',
+          marginBottom: 20,
+          transition: 'color 150ms',
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
+      >
+        <ArrowLeft size={15} />
+        학과 목록
+      </Link>
+
+      {/* ══════════════════ A. 학과 헤더 ══════════════════ */}
+      <div style={{ paddingBottom: 24 }}>
+        {/* 아이콘 + 학과명 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 }}>
+          <div
+            style={{
+              width: 52,
+              height: 52,
+              borderRadius: '50%',
+              background: meta.bg,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: meta.color,
+              flexShrink: 0,
+            }}
+          >
+            {meta.icon}
+          </div>
+          <div>
+            <h1
+              style={{
+                font: 'var(--font-heading-xl)',
+                fontFamily: 'var(--font-family)',
+                color: 'var(--color-text-primary)',
+                lineHeight: 1.2,
+              }}
+            >
+              {department.name}
+            </h1>
+            <p
+              style={{
+                font: 'var(--font-body-sm)',
+                fontFamily: 'var(--font-family)',
+                color: 'var(--color-text-muted)',
+                marginTop: 3,
+              }}
+            >
+              {department.shortName}
+            </p>
+          </div>
+        </div>
+
+        {/* 교육목표 (접기/펼치기) */}
+        <div style={{ marginTop: 10, marginLeft: 66 }}>
+          <p
+            style={{
+              font: 'var(--font-body-sm)',
+              fontFamily: 'var(--font-family)',
+              color: 'var(--color-text-secondary)',
+              lineHeight: '22px',
+              display: goalExpanded ? undefined : '-webkit-box',
+              WebkitLineClamp: goalExpanded ? undefined : 2,
+              WebkitBoxOrient: goalExpanded ? undefined : 'vertical',
+              overflow: goalExpanded ? undefined : 'hidden',
+              marginBottom: 4,
+            }}
+          >
+            {department.educationGoal}
+          </p>
+          {department.educationGoal.length > 100 && (
+            <button
+              onClick={() => setGoalExpanded((v) => !v)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-family)',
+                fontSize: 12,
+                color: 'var(--color-accent-blue)',
+                fontWeight: 500,
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 3,
+              }}
+            >
+              {goalExpanded ? (<>접기 <ChevronUp size={12} /></>) : (<>더 보기 <ChevronDown size={12} /></>)}
+            </button>
+          )}
+        </div>
+
+        {/* 통계 배지 + 프로그레스 */}
+        <div style={{ marginTop: 16, marginLeft: 66, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+          <StatBadge label={`전체 ${stats.totalCourses}과목`} variant="gray" />
+          <StatBadge label={`필수 ${stats.requiredCourses}과목`} variant="blue" />
+          <StatBadge
+            label={`캡스톤 ${department.courses.filter((c) => c.isCapstone).length}과목`}
+            variant="amber"
+          />
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10, minWidth: 200 }}>
+            <span style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
+              {stats.completedCourses}/{stats.totalCourses} 이수
+            </span>
+            <div style={{ flex: 1 }}>
+              <ProgressBar value={stats.percentage} height={6} color={meta.color} />
+            </div>
+            <span style={{ fontFamily: 'var(--font-family)', fontSize: 12, fontWeight: 600, color: meta.color, whiteSpace: 'nowrap' }}>
+              {stats.percentage}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════ B. 뷰 모드 탭 ══════════════════ */}
+      <div
+        style={{
+          display: 'flex',
+          borderBottom: '1px solid var(--color-border)',
+          marginBottom: 24,
+          gap: 0,
+        }}
+      >
+        {TABS.map((tab) => {
+          const active = view === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setView(tab.id)}
+              style={{
+                height: 44,
+                padding: '0 20px',
+                border: 'none',
+                borderBottom: active ? `2px solid ${meta.color}` : '2px solid transparent',
+                background: 'none',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-family)',
+                fontSize: 14,
+                fontWeight: active ? 600 : 400,
+                color: active ? meta.color : 'var(--color-text-secondary)',
+                transition: 'color 150ms, border-color 150ms',
+                marginBottom: -1,
+              }}
+              onMouseEnter={(e) => {
+                if (!active) e.currentTarget.style.color = 'var(--color-text-primary)'
+              }}
+              onMouseLeave={(e) => {
+                if (!active) e.currentTarget.style.color = 'var(--color-text-secondary)'
+              }}
+            >
+              {tab.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* ══════════════════ C. 뷰 콘텐츠 ══════════════════ */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={view}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          style={{ paddingBottom: 48 }}
+        >
+          {view === 'roadmap' && (
+            <RoadmapView
+              courses={department.courses}
+              completed={completed}
+              onToggle={handleToggle}
+              onSelect={handleSelect}
+            />
+          )}
+          {view === 'category' && (
+            <CategoryView
+              courses={department.courses}
+              completed={completed}
+              onToggle={handleToggle}
+              onSelect={handleSelect}
+            />
+          )}
+          {view === 'list' && (
+            <ListView
+              courses={department.courses}
+              completed={completed}
+              onToggle={handleToggle}
+              onSelect={handleSelect}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* ══════════════════ D. 교과목 상세 패널 ══════════════════ */}
+      <CourseDetailPanel
+        course={selectedCourse}
+        completed={selectedCourse ? completed.has(selectedCourse.id) : false}
+        onClose={handleClose}
+        onToggle={() => {
+          if (selectedCourse) toggleCourseComplete(selectedCourse.id)
+        }}
+        onNavigateToPrereq={handleNavigateToPrereq}
+      />
+    </div>
+  )
+}
+
+/* ── 헬퍼 ── */
+function StatBadge({ label, variant }: { label: string; variant: 'gray' | 'blue' | 'amber' }) {
+  const styles = {
+    gray:  { bg: '#F1F5F9', color: 'var(--color-text-secondary)' },
+    blue:  { bg: 'var(--color-accent-blue-light)', color: 'var(--color-accent-blue)' },
+    amber: { bg: 'var(--color-accent-amber-light)', color: 'var(--color-accent-amber)' },
+  }[variant]
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        height: 28,
+        padding: '0 10px',
+        borderRadius: 6,
+        background: styles.bg,
+        color: styles.color,
+        fontFamily: 'var(--font-family)',
+        fontSize: 12,
+        fontWeight: 500,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+    </span>
+  )
+}
