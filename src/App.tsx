@@ -9,7 +9,6 @@ const ProgressTracker = lazy(() => import('./pages/ProgressTracker'))
 const CourseSearch = lazy(() => import('./pages/CourseSearch'))
 const GraduationCheck = lazy(() => import('./pages/GraduationCheck'))
 const Settings = lazy(() => import('./pages/Settings'))
-const Compare = lazy(() => import('./pages/Compare'))
 
 function PageLoader() {
   return (
@@ -50,7 +49,7 @@ export default function App() {
             <Route path="search" element={<CourseSearch />} />
             <Route path="graduation" element={<GraduationCheck />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="compare" element={<Compare />} />
+
           </Route>
         </Routes>
       </Suspense>

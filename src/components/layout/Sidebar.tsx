@@ -13,7 +13,6 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  GitCompare,
 } from 'lucide-react'
 import { departments } from '../../data'
 import { useTheme } from '../../hooks/useTheme'
@@ -54,7 +53,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     { to: '/progress', icon: <CheckCircle size={20} />, label: '이수 현황' },
     { to: '/search', icon: <Search size={20} />, label: '교과목 검색' },
     { to: '/graduation', icon: <GraduationCap size={20} />, label: '졸업 요건' },
-    { to: '/compare', icon: <GitCompare size={20} />, label: '학과 비교' },
   ]
 
   const w = collapsed ? 72 : 256
