@@ -36,13 +36,17 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
         display: 'flex',
         flexDirection: 'column',
         gap: 6,
-        transition: 'box-shadow 150ms ease, border-color 150ms ease, background 150ms ease',
+        transition: 'box-shadow 150ms ease, border-top-color 150ms ease, border-right-color 150ms ease, border-bottom-color 150ms ease, background 150ms ease, transform 150ms ease',
         position: 'relative',
       }}
       onMouseEnter={(e) => {
         if (!completed) {
           e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.07)'
           e.currentTarget.style.borderColor = 'var(--color-accent-blue)'
+          // borderColor 단축속성이 4면을 덮어쓰므로 필수 과목 좌측 바를 재복원
+          if (course.category === 'required') {
+            e.currentTarget.style.borderLeftColor = 'var(--color-accent-blue)'
+          }
           e.currentTarget.style.transform = 'translateY(-1px)'
         }
       }}
@@ -51,6 +55,10 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
         e.currentTarget.style.borderColor = completed
           ? 'var(--color-accent-green)'
           : 'var(--color-border)'
+        // borderColor 단축속성이 4면을 덮어쓰므로 필수 과목 좌측 바를 재복원
+        if (course.category === 'required') {
+          e.currentTarget.style.borderLeftColor = 'var(--color-accent-blue)'
+        }
         e.currentTarget.style.transform = 'none'
       }}
     >
