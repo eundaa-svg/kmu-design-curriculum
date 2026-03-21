@@ -7,6 +7,7 @@ interface StoreState {
   departments: Department[];
   selectedDepartmentId: string | null;
   studentProgress: StudentProgress | null;
+  nickname: string;
 
   selectDepartment: (id: string) => void;
   setStudentProgress: (progress: StudentProgress) => void;
@@ -15,6 +16,7 @@ interface StoreState {
   resetProgress: () => void;
   setCurrentYear: (year: number) => void;
   setCurrentSemester: (sem: 1 | 2) => void;
+  setNickname: (name: string) => void;
 }
 
 export const useStore = create<StoreState>()(
@@ -23,6 +25,7 @@ export const useStore = create<StoreState>()(
       departments,
       selectedDepartmentId: null,
       studentProgress: null,
+      nickname: '',
 
       selectDepartment: (id) => {
         const dept = departments.find(d => d.id === id);
@@ -78,6 +81,8 @@ export const useStore = create<StoreState>()(
         if (!progress) return;
         set({ studentProgress: { ...progress, currentSemester: sem } });
       },
+
+      setNickname: (name) => set({ nickname: name }),
     }),
     { name: 'curriculum-store' }
   )

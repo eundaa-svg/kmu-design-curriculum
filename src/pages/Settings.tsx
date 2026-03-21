@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useStore } from '../store/useStore'
 import { departments } from '../data'
 import Card from '../components/ui/Card'
@@ -6,9 +6,11 @@ import { AlertTriangle, Download, Upload } from 'lucide-react'
 import { useToast } from '../hooks/useToast'
 
 export default function Settings() {
-  const { selectedDepartmentId, selectDepartment, resetProgress, studentProgress } = useStore()
+  const { selectedDepartmentId, selectDepartment, resetProgress, studentProgress, nickname, setNickname } = useStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const toast = useToast()
+  const [editingNickname, setEditingNickname] = useState(false)
+  const [nicknameInput, setNicknameInput] = useState(nickname)
 
   const handleExport = () => {
     const data = {
@@ -58,6 +60,79 @@ export default function Settings() {
         </h1>
       </div>
 
+      {/* 닉네임 */}
+      <Card style={{ marginBottom: 16 }}>
+        <h2 style={{ font: 'var(--font-body-base)', fontFamily: 'var(--font-family)', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 12 }}>
+          닉네임
+        </h2>
+        {editingNickname ? (
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <input
+              type="text"
+              value={nicknameInput}
+              onChange={(e) => setNicknameInput(e.target.value.slice(0, 10))}
+              maxLength={10}
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { setNickname(nicknameInput.trim()); setEditingNickname(false) }
+                if (e.key === 'Escape') { setNicknameInput(nickname); setEditingNickname(false) }
+              }}
+              style={{
+                flex: 1,
+                height: 36,
+                border: '1px solid var(--color-accent-blue)',
+                borderRadius: 8,
+                padding: '0 12px',
+                fontFamily: 'var(--font-family)',
+                fontSize: 14,
+                color: 'var(--color-text-primary)',
+                outline: 'none',
+                background: 'var(--color-bg-primary)',
+              }}
+            />
+            <button
+              onClick={() => { setNickname(nicknameInput.trim()); setEditingNickname(false); toast.success('닉네임이 저장되었습니다.') }}
+              style={{
+                height: 36, padding: '0 14px', borderRadius: 8,
+                border: 'none', background: 'var(--color-accent-blue)',
+                color: '#fff', fontFamily: 'var(--font-family)', fontSize: 13,
+                fontWeight: 500, cursor: 'pointer',
+              }}
+            >
+              저장
+            </button>
+            <button
+              onClick={() => { setNicknameInput(nickname); setEditingNickname(false) }}
+              style={{
+                height: 36, padding: '0 14px', borderRadius: 8,
+                border: '1px solid var(--color-border)', background: 'transparent',
+                color: 'var(--color-text-secondary)', fontFamily: 'var(--font-family)',
+                fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              취소
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: nickname ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
+              {nickname || '닉네임 미설정'}
+            </span>
+            <button
+              onClick={() => { setNicknameInput(nickname); setEditingNickname(true) }}
+              style={{
+                height: 30, padding: '0 12px', borderRadius: 7,
+                border: '1px solid var(--color-border)', background: 'var(--color-bg-primary)',
+                color: 'var(--color-text-secondary)', fontFamily: 'var(--font-family)',
+                fontSize: 12, cursor: 'pointer',
+              }}
+            >
+              수정
+            </button>
+          </div>
+        )}
+      </Card>
+
       {/* Dept select */}
       <Card style={{ marginBottom: 16 }}>
         <h2 style={{ font: 'var(--font-body-base)', fontFamily: 'var(--font-family)', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 12 }}>
@@ -74,7 +149,6 @@ export default function Settings() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
                 padding: '6px 12px',
                 borderRadius: 8,
                 border: selectedDepartmentId === dept.id
@@ -93,7 +167,6 @@ export default function Settings() {
                 transition: 'all 150ms',
               }}
             >
-              <span>{dept.icon}</span>
               {dept.shortName}
             </button>
           ))}

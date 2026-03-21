@@ -2,17 +2,14 @@ import { useState } from 'react'
 import { Bell } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import SearchInput from '../ui/SearchInput'
+import { useStore } from '../../store/useStore'
 
 export default function Header() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
+  const { nickname, selectedDepartmentId, departments } = useStore()
 
-  const today = new Date().toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long',
-  })
+  const dept = departments.find(d => d.id === selectedDepartmentId)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +17,8 @@ export default function Header() {
       navigate(`/search?q=${encodeURIComponent(query.trim())}`)
     }
   }
+
+  const displayName = nickname.trim() ? nickname.trim() : '학생'
 
   return (
     <header
@@ -38,24 +37,41 @@ export default function Header() {
       <div style={{ flex: 1, minWidth: 0 }}>
         <p
           style={{
-            font: 'var(--font-heading-md)',
             fontFamily: 'var(--font-family)',
+            fontSize: 18,
+            fontWeight: 600,
             color: 'var(--color-text-primary)',
             lineHeight: 1.2,
           }}
         >
-          안녕하세요, 학생님
+          안녕하세요, {displayName}님
         </p>
-        <p
-          style={{
-            font: 'var(--font-body-sm)',
-            fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-secondary)',
-            marginTop: 1,
-          }}
-        >
-          {today}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-family)',
+              fontSize: 13,
+              color: '#8B95A1',
+            }}
+          >
+            {dept ? dept.name : '학과를 선택해주세요'}
+          </p>
+          <button
+            onClick={() => navigate('/settings')}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-family)',
+              fontSize: 12,
+              color: '#3182F6',
+              padding: 0,
+              lineHeight: 1,
+            }}
+          >
+            {dept ? '변경' : '설정'}
+          </button>
+        </div>
       </div>
 
       {/* Center search */}
@@ -112,7 +128,7 @@ export default function Header() {
             flexShrink: 0,
           }}
         >
-          학
+          {displayName.slice(0, 1)}
         </div>
       </div>
     </header>

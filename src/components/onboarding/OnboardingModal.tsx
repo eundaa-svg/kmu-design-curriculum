@@ -18,19 +18,26 @@ interface OnboardingModalProps {
 
 export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [step, setStep] = useState(0)
+  const [nickname, setNicknameLocal] = useState('')
   const [selectedDept, setSelectedDept] = useState<string>('')
   const [selectedYear, setSelectedYear] = useState<number>(1)
   const [selectedSem, setSelectedSem] = useState<1 | 2>(1)
   const [bulkYears, setBulkYears] = useState<number[]>([])
   const firstFocusRef = useRef<HTMLButtonElement>(null)
+  const nicknameInputRef = useRef<HTMLInputElement>(null)
   const toast = useToast()
-  const { selectDepartment, setStudentProgress, bulkComplete } = useStore()
+  const { selectDepartment, setStudentProgress, bulkComplete, setNickname } = useStore()
 
   useEffect(() => {
-    setTimeout(() => firstFocusRef.current?.focus(), 50)
+    if (step === 0) {
+      setTimeout(() => nicknameInputRef.current?.focus(), 50)
+    } else {
+      setTimeout(() => firstFocusRef.current?.focus(), 50)
+    }
   }, [step])
 
   const handleComplete = () => {
+    setNickname(nickname.trim())
     selectDepartment(selectedDept)
     setStudentProgress({
       departmentId: selectedDept,
@@ -52,12 +59,16 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }
 
   const steps = [
+    { title: '닉네임을 입력해주세요', sub: '대시보드에서 사용할 이름입니다.' },
     { title: '소속 학과를 선택해주세요', sub: '선택한 학과를 기준으로 커리큘럼과 이수 현황을 제공합니다.' },
     { title: '현재 학년과 학기를 선택해주세요', sub: '현재 학년/학기를 기준으로 추천 과목을 안내합니다.' },
     { title: '이미 이수한 학년이 있나요?', sub: '해당 학년의 전체 과목을 이수 완료로 표시합니다. 나중에 개별 수정 가능합니다.' },
   ]
 
-  const canNext = step === 0 ? !!selectedDept : true
+  const canNext =
+    step === 0 ? nickname.trim().length > 0 :
+    step === 1 ? !!selectedDept :
+    true
 
   return (
     <div
@@ -132,13 +143,39 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
             transition={{ duration: 0.18 }}
           >
             {step === 0 && (
+              <input
+                ref={nicknameInputRef}
+                type="text"
+                value={nickname}
+                onChange={(e) => setNicknameLocal(e.target.value.slice(0, 10))}
+                placeholder="닉네임 입력"
+                maxLength={10}
+                onKeyDown={(e) => { if (e.key === 'Enter' && canNext) setStep(1) }}
+                style={{
+                  width: '100%',
+                  height: 48,
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 10,
+                  padding: '0 16px',
+                  fontFamily: 'var(--font-family)',
+                  fontSize: 15,
+                  color: 'var(--color-text-primary)',
+                  outline: 'none',
+                  background: 'var(--color-bg-primary)',
+                  transition: 'border-color 150ms',
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-blue)')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+              />
+            )}
+            {step === 1 && (
               <DeptGrid
                 selected={selectedDept}
                 onSelect={setSelectedDept}
                 firstRef={firstFocusRef}
               />
             )}
-            {step === 1 && (
+            {step === 2 && (
               <YearSemSelect
                 year={selectedYear}
                 sem={selectedSem}
@@ -147,7 +184,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 firstRef={firstFocusRef}
               />
             )}
-            {step === 2 && (
+            {step === 3 && (
               <BulkSelect
                 deptId={selectedDept}
                 currentYear={selectedYear}
@@ -188,7 +225,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           </button>
 
           <div style={{ display: 'flex', gap: 8 }}>
-            {step === 2 && (
+            {step === steps.length - 1 && (
               <button
                 onClick={handleComplete}
                 style={{
@@ -281,7 +318,6 @@ function DeptGrid({
               if (!isSelected) e.currentTarget.style.borderColor = 'var(--color-border)'
             }}
           >
-            <span style={{ fontSize: 24 }}>{dept.icon}</span>
             <span
               style={{
                 fontFamily: 'var(--font-family)',
