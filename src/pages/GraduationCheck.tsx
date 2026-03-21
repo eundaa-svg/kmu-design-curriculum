@@ -15,44 +15,6 @@ import NoDeptSelected from '../components/ui/NoDeptSelected'
 import { departments } from '../data'
 import { minorRequirements, doubleMajorRequirements, type TransferRequirement } from '../data/transferRequirements'
 
-/* ── 공업디자인 세부전공 ── */
-const CONCENTRATIONS_ID = [
-  {
-    name: '글로벌디자인',
-    nameEng: 'Global Design',
-    courses2: ['해외인턴십', '글로벌디자인스튜디오'],
-    courses34: ['프로덕트디자인III', '프로덕트디자인IV'],
-    courses4: ['졸업연구I(캡스톤디자인)', '졸업연구II(캡스톤디자인)', '졸업작품I(캡스톤디자인)', '졸업작품II(캡스톤디자인)'],
-  },
-  {
-    name: '비즈니스디자인',
-    nameEng: 'Business Design',
-    courses2: ['마케팅과디자인', '디자인스토리텔링'],
-    courses34: ['프로덕트디자인III', '프로덕트디자인IV'],
-    courses4: ['졸업연구I(캡스톤디자인)', '졸업연구II(캡스톤디자인)', '졸업작품I(캡스톤디자인)', '졸업작품II(캡스톤디자인)'],
-  },
-  {
-    name: '엔지니어링디자인',
-    nameEng: 'Engineering Design',
-    courses2: ['재료와생산공정', '디지털페브리케이션'],
-    courses34: ['프로덕트디자인III', '프로덕트디자인IV'],
-    courses4: ['졸업연구I(캡스톤디자인)', '졸업연구II(캡스톤디자인)', '졸업작품I(캡스톤디자인)', '졸업작품II(캡스톤디자인)'],
-  },
-  {
-    name: '인간공학디자인',
-    nameEng: 'Ergonomic Design',
-    courses2: ['사용자경험디자인', '개념과발상'],
-    courses34: ['프로덕트디자인III', '프로덕트디자인IV'],
-    courses4: ['졸업연구I(캡스톤디자인)', '졸업연구II(캡스톤디자인)', '졸업작품I(캡스톤디자인)', '졸업작품II(캡스톤디자인)'],
-  },
-  {
-    name: '엔터테인먼트디자인',
-    nameEng: 'Entertainment Design',
-    courses2: ['인터랙티브캡스톤제품디자인', '제너러티브캡스톤디자인'],
-    courses34: ['프로덕트디자인III', '프로덕트디자인IV'],
-    courses4: ['졸업연구I(캡스톤디자인)', '졸업연구II(캡스톤디자인)', '졸업작품I(캡스톤디자인)', '졸업작품II(캡스톤디자인)'],
-  },
-]
 
 export default function GraduationCheck() {
   const { selectedDepartmentId, studentProgress, toggleCourseComplete } = useStore()
@@ -191,88 +153,6 @@ export default function GraduationCheck() {
           requirements={doubleMajorRequirements}
         />
       </div>
-
-      {/* ── B-4. 공업디자인 세부전공 (전용) ── */}
-      {department.id === 'industrial-design' && (
-        <div style={{ marginBottom: 32 }}>
-          <h2
-            style={{
-              font: 'var(--font-heading-lg)',
-              fontFamily: 'var(--font-family)',
-              color: 'var(--color-text-primary)',
-              marginBottom: 4,
-            }}
-          >
-            세부전공
-          </h2>
-          <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-secondary)', marginBottom: 16 }}>
-            공업디자인학과 전용 — 5개 세부전공 중 택 1
-          </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: 14,
-            }}
-          >
-            {CONCENTRATIONS_ID.map(conc => {
-              const allNames = [...conc.courses2, ...conc.courses34, ...conc.courses4]
-              const relatedCourses = department.courses.filter(c => allNames.includes(c.name))
-              const completedInConc = relatedCourses.filter(c => completedSet.has(c.id)).length
-              return (
-                <Card key={conc.name} style={{ padding: '16px' }}>
-                  <h3 style={{ font: 'var(--font-body-base)', fontFamily: 'var(--font-family)', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4 }}>
-                    {conc.name}
-                  </h3>
-                  <p style={{ fontFamily: 'var(--font-family)', fontSize: 11, color: 'var(--color-text-muted)', marginBottom: 10 }}>
-                    {conc.nameEng}
-                  </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }}>
-                    {relatedCourses.map(c => (
-                      <div
-                        key={c.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 6,
-                          fontFamily: 'var(--font-family)',
-                          fontSize: 12,
-                          color: completedSet.has(c.id) ? 'var(--color-accent-green)' : 'var(--color-text-secondary)',
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: 14,
-                            height: 14,
-                            borderRadius: 4,
-                            border: `1.5px solid ${completedSet.has(c.id) ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-                            background: completedSet.has(c.id) ? 'var(--color-accent-green)' : 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                          }}
-                        >
-                          {completedSet.has(c.id) && <Check size={9} color="#fff" strokeWidth={3} />}
-                        </span>
-                        {c.name}
-                      </div>
-                    ))}
-                  </div>
-                  <ProgressBar
-                    value={relatedCourses.length ? (completedInConc / relatedCourses.length) * 100 : 0}
-                    height={5}
-                    color="var(--color-accent-blue)"
-                  />
-                  <p style={{ fontFamily: 'var(--font-family)', fontSize: 11, color: 'var(--color-text-muted)', marginTop: 8 }}>
-                    {completedInConc}/{relatedCourses.length} 이수 · 평점평균 2.5 이상 필요
-                  </p>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
-      )}
 
       {/* ── 교과목 상세 패널 ── */}
       <CourseDetailPanel
