@@ -29,13 +29,7 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
         padding: '10px 12px',
         borderRadius: 10,
         border: `1px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-        borderLeft: `3px solid ${
-          completed
-            ? 'var(--color-accent-green)'
-            : course.category === 'required'
-            ? 'var(--color-accent-blue)'
-            : 'transparent'
-        }`,
+        borderLeft: `3px solid ${course.category === 'required' ? 'var(--color-accent-blue)' : 'transparent'}`,
         background: completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)',
         cursor: 'pointer',
         textAlign: 'left',
