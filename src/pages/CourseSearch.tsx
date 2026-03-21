@@ -393,10 +393,18 @@ export default function CourseSearch() {
           결과 영역
       ═══════════════════════════════ */}
       {isInitial ? (
-        /* ── 초기 상태: 학과별 과목 수 바 차트 ── */
-        <InitialView
-          onSelectDept={(id) => updateFilter('deptIds', [id])}
-        />
+        /* ── 초기 상태: 안내 텍스트 ── */
+        <p
+          style={{
+            textAlign: 'center',
+            fontFamily: 'var(--font-family)',
+            fontSize: 14,
+            color: '#8B95A1',
+            marginTop: 48,
+          }}
+        >
+          교과목명, 영문명, 키워드로 검색해보세요
+        </p>
       ) : (
         <>
           {/* 상단 바 */}
@@ -526,93 +534,6 @@ export default function CourseSearch() {
         @media (max-width: 1023px) { .search-grid { grid-template-columns: repeat(2,1fr) !important; } }
         @media (max-width: 600px)  { .search-grid { grid-template-columns: 1fr !important; } }
       `}</style>
-    </div>
-  )
-}
-
-/* ════════════════════════════════════
-   초기 상태: 학과별 바 차트
-════════════════════════════════════ */
-function InitialView({ onSelectDept }: { onSelectDept: (id: string) => void }) {
-  const max = Math.max(...departments.map(d => d.courses.length))
-  return (
-    <div>
-      <h2
-        style={{
-          font: 'var(--font-heading-lg)',
-          fontFamily: 'var(--font-family)',
-          color: 'var(--color-text-primary)',
-          marginBottom: 20,
-        }}
-      >
-        전체 학과 교과목 현황
-      </h2>
-      <div
-        style={{
-          background: 'var(--color-bg-card)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 14,
-          padding: '20px 24px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 12,
-        }}
-      >
-        {departments.map(dept => {
-          const count = dept.courses.length
-          const pct = (count / max) * 100
-          const color = DEPT_COLORS[dept.id] ?? '#64748B'
-          return (
-            <div
-              key={dept.id}
-              onClick={() => onSelectDept(dept.id)}
-              title={`${dept.name}: ${count}개 교과목`}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-family)',
-                  fontSize: 13,
-                  color: 'var(--color-text-secondary)',
-                  width: 100,
-                  flexShrink: 0,
-                  textAlign: 'right',
-                }}
-              >
-                {dept.shortName}
-              </span>
-              <div style={{ flex: 1, height: 28, background: '#F1F5F9', borderRadius: 6, overflow: 'hidden' }}>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${pct}%` }}
-                  transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-                  style={{
-                    height: '100%',
-                    background: color,
-                    borderRadius: 6,
-                    opacity: 0.85,
-                    display: 'flex',
-                    alignItems: 'center',
-                    paddingLeft: 10,
-                  }}
-                />
-              </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-family)',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: 'var(--color-text-secondary)',
-                  width: 32,
-                  flexShrink: 0,
-                }}
-              >
-                {count}
-              </span>
-            </div>
-          )
-        })}
-      </div>
     </div>
   )
 }
