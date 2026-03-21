@@ -2,31 +2,45 @@
 @import "tailwindcss";
 
 :root {
-  /* Colors */
-  --color-bg-primary: #F8F9FB;
+  /* 배경 */
+  --color-bg-primary: #F7F8FA;
   --color-bg-card: #FFFFFF;
   --color-bg-sidebar: #FFFFFF;
-  --color-border: #E2E8F0;
-  --color-border-hover: #CBD5E1;
-  --color-text-primary: #1E293B;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
-  --color-accent-blue: #2563EB;
-  --color-accent-blue-light: #EFF6FF;
-  --color-accent-green: #10B981;
-  --color-accent-green-light: #ECFDF5;
-  --color-accent-amber: #F59E0B;
-  --color-accent-amber-light: #FFFBEB;
-  --color-accent-red: #EF4444;
-  --color-accent-red-light: #FEF2F2;
-  --color-accent-indigo: #6366F1;
+  --color-bg-hover: #F1F3F5;
+  --color-bg-selected: #EBF5FF;
+
+  /* 테두리 */
+  --color-border: #E5E8EB;
+  --color-border-hover: #D1D5DB;
+
+  /* 텍스트 */
+  --color-text-primary: #191F28;
+  --color-text-secondary: #4E5968;
+  --color-text-muted: #8B95A1;
+  --color-text-white: #FFFFFF;
+
+  /* 액센트 */
+  --color-accent-blue: #3182F6;
+  --color-accent-blue-light: #EBF5FF;
+  --color-accent-blue-dark: #1B64DA;
+  --color-accent-green: #20C997;
+  --color-accent-green-light: #E6FCF5;
+  --color-accent-amber: #F59F00;
+  --color-accent-amber-light: #FFF9DB;
+  --color-accent-red: #F03E3E;
+  --color-accent-red-light: #FFF0F0;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
 
   /* Typography */
   --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading-xl: 600 28px/36px var(--font-family);
-  --font-heading-lg: 600 22px/30px var(--font-family);
-  --font-heading-md: 600 18px/26px var(--font-family);
-  --font-body-base: 400 15px/24px var(--font-family);
+  --font-heading-xl: 700 26px/34px var(--font-family);
+  --font-heading-lg: 700 20px/28px var(--font-family);
+  --font-heading-md: 600 16px/24px var(--font-family);
+  --font-body-base: 400 14px/22px var(--font-family);
   --font-body-sm: 400 13px/20px var(--font-family);
   --font-label: 500 12px/16px var(--font-family);
 
@@ -38,22 +52,6 @@
   --space-xl: 24px;
   --space-2xl: 32px;
   --space-3xl: 48px;
-}
-
-/* ── Dark mode ── */
-[data-theme="dark"] {
-  --color-bg-primary: #0F172A;
-  --color-bg-card: #1E293B;
-  --color-bg-sidebar: #1E293B;
-  --color-border: #334155;
-  --color-border-hover: #475569;
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #64748B;
-  --color-accent-blue-light: #1E3A5F;
-  --color-accent-green-light: #0D2D22;
-  --color-accent-amber-light: #2D1F00;
-  --color-accent-red-light: #2D0D0D;
 }
 
 body {
@@ -92,12 +90,13 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 3px;
 }
+::-webkit-scrollbar-thumb {
+  background: #8B95A1;
+  border-radius: 3px;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-hover);
+  background: #4E5968;
 }

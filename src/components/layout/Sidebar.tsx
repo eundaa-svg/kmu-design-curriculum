@@ -158,13 +158,13 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               gap: 12,
               padding: collapsed ? '0' : '0 12px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              background: isDeptActive ? 'var(--color-accent-blue)' : 'transparent',
-              color: isDeptActive ? '#fff' : 'var(--color-text-secondary)',
+              background: isDeptActive ? 'var(--color-accent-blue-light)' : 'transparent',
+              color: isDeptActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
               cursor: 'pointer',
               transition: 'background 150ms, color 150ms',
               fontFamily: 'var(--font-family)',
               fontSize: 15,
-              fontWeight: isDeptActive ? 500 : 400,
+              fontWeight: isDeptActive ? 600 : 400,
             }}
             onMouseEnter={(e) => {
               if (!isDeptActive) {
@@ -369,21 +369,20 @@ function NavItem({ to, icon, label, collapsed, end }: NavItemProps) {
         textDecoration: 'none',
         fontFamily: 'var(--font-family)',
         fontSize: 15,
-        fontWeight: isActive ? 500 : 400,
-        color: isActive ? '#fff' : 'var(--color-text-secondary)',
-        background: isActive ? 'var(--color-accent-blue)' : 'transparent',
+        fontWeight: isActive ? 600 : 400,
+        color: isActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
+        background: isActive ? 'var(--color-accent-blue-light)' : 'transparent',
         transition: 'background 150ms, color 150ms',
       })}
       onMouseEnter={(e) => {
-        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue)' ||
-          e.currentTarget.style.background.includes('37, 99, 235')
+        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue-light)'
         if (!isActive) {
-          e.currentTarget.style.background = '#F1F5F9'
+          e.currentTarget.style.background = 'var(--color-bg-hover)'
           e.currentTarget.style.color = 'var(--color-text-primary)'
         }
       }}
       onMouseLeave={(e) => {
-        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue)'
+        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue-light)'
         if (!isActive) {
           e.currentTarget.style.background = 'transparent'
           e.currentTarget.style.color = 'var(--color-text-secondary)'

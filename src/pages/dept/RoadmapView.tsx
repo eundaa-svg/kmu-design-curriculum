@@ -108,18 +108,23 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
             marginBottom: 4,
           }}
         >
-          {[1, 2, 3, 4].map((year) => (
+          {([
+            { year: 1, bg: '#EBF5FF', color: '#1B64DA' },
+            { year: 2, bg: '#E6FCF5', color: '#0D9488' },
+            { year: 3, bg: '#FFF9DB', color: '#B45309' },
+            { year: 4, bg: '#FFF0F0', color: '#DC2626' },
+          ]).map(({ year, bg, color }) => (
             <div
               key={year}
               style={{
                 textAlign: 'center',
                 padding: '6px 0',
-                background: 'var(--color-accent-blue-light)',
+                background: bg,
                 borderRadius: 8,
                 fontFamily: 'var(--font-family)',
                 fontSize: 13,
                 fontWeight: 600,
-                color: 'var(--color-accent-blue)',
+                color,
               }}
             >
               {year}학년
@@ -143,7 +148,7 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
               <div
                 key={key}
                 style={{
-                  background: i % 2 === 1 ? 'rgba(0,0,0,0.012)' : 'transparent',
+                  background: 'transparent',
                   borderRadius: 10,
                   padding: '0 4px 8px',
                 }}

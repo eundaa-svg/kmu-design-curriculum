@@ -25,7 +25,7 @@ export default function Header() {
     <header
       style={{
         height: 64,
-        background: 'var(--color-bg-primary)',
+        background: 'var(--color-bg-card)',
         borderBottom: '1px solid var(--color-border)',
         display: 'flex',
         alignItems: 'center',

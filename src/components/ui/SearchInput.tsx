@@ -25,7 +25,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           style={{
             width: '100%',
             height: '40px',
-            background: 'var(--color-bg-card)',
+            background: '#F7F8FA',
             border: '1px solid var(--color-border)',
             borderRadius: '10px',
             paddingLeft: '40px',

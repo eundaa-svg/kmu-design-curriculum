@@ -49,6 +49,7 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
         if (!completed) {
           e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.07)'
           e.currentTarget.style.borderColor = 'var(--color-accent-blue)'
+          e.currentTarget.style.transform = 'translateY(-1px)'
         }
       }}
       onMouseLeave={(e) => {
@@ -56,6 +57,7 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
         e.currentTarget.style.borderColor = completed
           ? 'var(--color-accent-green)'
           : 'var(--color-border)'
+        e.currentTarget.style.transform = 'none'
       }}
     >
       {/* Row 1: 과목명 + 체크 아이콘 */}
@@ -122,7 +124,7 @@ export default function CourseCard({ course, completed, onToggle, onClick }: Cou
             padding: '1px 5px',
           }}
         >
-          {course.credits}cr
+          {course.credits}학점
         </span>
 
         {/* 이수구분 */}
