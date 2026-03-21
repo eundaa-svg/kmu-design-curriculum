@@ -13,7 +13,7 @@ import ProgressBar from '../components/ui/ProgressBar'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import NoDeptSelected from '../components/ui/NoDeptSelected'
 import { departments } from '../data'
-import transferRequirements, { type TransferRequirement } from '../data/transferRequirements'
+import { minorRequirements, doubleMajorRequirements, type TransferRequirement } from '../data/transferRequirements'
 
 /* ── 공업디자인 세부전공 ── */
 const CONCENTRATIONS_ID = [
@@ -181,12 +181,14 @@ export default function GraduationCheck() {
           type="minor"
           currentDeptId={department.id}
           completedCredits={grad.completedCredits}
+          requirements={minorRequirements}
         />
         <MinorCard
           type="double"
           currentDeptId={department.id}
           completedCredits={grad.completedCredits}
           minRequiredCredits={grad.minRequiredCredits}
+          requirements={doubleMajorRequirements}
         />
       </div>
 
@@ -295,12 +297,13 @@ interface MinorCardProps {
   currentDeptId: string
   completedCredits: number
   minRequiredCredits?: number
+  requirements: TransferRequirement[]
 }
 
-function MinorCard({ type, currentDeptId, completedCredits, minRequiredCredits = 39 }: MinorCardProps) {
+function MinorCard({ type, currentDeptId, completedCredits, minRequiredCredits = 39, requirements }: MinorCardProps) {
   const [selectedDeptId, setSelectedDeptId] = useState<string | null>(null)
   const requirement = selectedDeptId
-    ? transferRequirements.find(r => r.departmentId === selectedDeptId) ?? null
+    ? requirements.find(r => r.departmentId === selectedDeptId) ?? null
     : null
 
   const availableDepts = departments.filter(d => d.id !== currentDeptId)
@@ -618,6 +621,7 @@ function parseSelectionMethod(method: string): { label: string; bg: string; colo
   if (method.includes('서류심사')) badges.push({ label: '서류심사', bg: '#EBF5FF', color: '#3182F6' })
   if (method.includes('면접')) badges.push({ label: '면접', bg: '#E6FCF5', color: '#20C997' })
   if (method.includes('포트폴리오')) badges.push({ label: '포트폴리오', bg: '#FFF9DB', color: '#F59F00' })
+  if (method.includes('실기')) badges.push({ label: '실기', bg: '#FFF0F0', color: '#F03E3E' })
   return badges
 }
 
