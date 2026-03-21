@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, type Variants } from 'framer-motion'
 import {
-  Building2,
   BookOpen,
   CheckCircle,
   Cpu,
@@ -52,8 +51,6 @@ const deptContainerVariants: Variants = {
   visible: { transition: { staggerChildren: 0.04 } },
 }
 
-/* ─── 전역 통계 계산 ─── */
-const totalCourses = departments.reduce((s, d) => s + d.courses.length, 0)
 
 /* ─────────────────────────────────────── */
 export default function DashboardHome() {
@@ -67,8 +64,6 @@ export default function DashboardHome() {
     deptTotalCourses > 0 ? (completedCount / deptTotalCourses) * 100 : 0
 
   /* CountUp */
-  const countDepts = useCountUp(9, 800)
-  const countTotal = useCountUp(totalCourses, 800)
   const countCompleted = useCountUp(completedCount, 800)
   const countPct = useCountUp(achievePct, 800, 1)
 
@@ -84,35 +79,11 @@ export default function DashboardHome() {
         animate="visible"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: 16,
         }}
         className="stats-grid"
       >
-        {/* A: 전체 학과 */}
-        <motion.div variants={cardVariants}>
-          <StatCard
-            icon={<Building2 size={20} />}
-            iconColor="var(--color-accent-blue)"
-            iconBg="var(--color-accent-blue-light)"
-            value={countDepts}
-            unit="개"
-            label="전체 학과"
-          />
-        </motion.div>
-
-        {/* B: 전체 교과목 */}
-        <motion.div variants={cardVariants}>
-          <StatCard
-            icon={<BookOpen size={20} />}
-            iconColor="var(--color-accent-indigo)"
-            iconBg="#EEF2FF"
-            value={countTotal}
-            unit="개"
-            label="전체 교과목"
-          />
-        </motion.div>
-
         {/* C: 이수 완료 */}
         <motion.div variants={cardVariants}>
           <StatCard
