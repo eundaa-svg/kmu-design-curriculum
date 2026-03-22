@@ -297,7 +297,7 @@ const visualDesign: Department = {
     },
     {
       id: 'vd-208',
-      name: '활자와콘텐츠',
+      name: '타입과콘텐츠',
       nameEng: 'Type & Contents',
       year: 2, semester: 2,
       categoryType: '전공선택', category: 'elective', isRequired: false,
@@ -355,7 +355,7 @@ const visualDesign: Department = {
     },
     {
       id: 'vd-303',
-      name: '활자와미디어',
+      name: '타입과미디어',
       nameEng: 'Typography based on Project & Media',
       year: 3, semester: 1,
       categoryType: '전공선택', category: 'elective', isRequired: false,
