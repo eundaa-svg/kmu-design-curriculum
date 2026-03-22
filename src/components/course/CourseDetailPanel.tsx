@@ -37,6 +37,17 @@ export default function CourseDetailPanel({
     setDescExpanded(false)
   }, [course?.id])
 
+  /* 모바일에서만 body 스크롤 잠금 */
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768
+    if (course && isMobile) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [course])
+
   /* 포커스 트래핑 */
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'Tab' || !panelRef.current) return
@@ -61,23 +72,7 @@ export default function CourseDetailPanel({
   return (
     <AnimatePresence>
       {course && (
-        <>
-          {/* 오버레이 */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            onClick={onClose}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.1)',
-              zIndex: 40,
-            }}
-          />
-
-          {/* 패널 */}
+          /* 패널 */
           <motion.div
             ref={panelRef}
             initial={{ x: 420 }}
@@ -90,7 +85,7 @@ export default function CourseDetailPanel({
               top: 0,
               right: 0,
               bottom: 0,
-              width: 420,
+              width: 'min(420px, 100vw)',
               maxWidth: '100vw',
               background: 'var(--color-bg-card)',
               boxShadow: '-4px 0 16px rgba(0,0,0,0.08)',
@@ -368,7 +363,6 @@ export default function CourseDetailPanel({
               </button>
             </div>
           </motion.div>
-        </>
       )}
     </AnimatePresence>
   )
