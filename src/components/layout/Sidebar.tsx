@@ -11,11 +11,9 @@ import {
   ChevronsRight,
   ChevronDown,
   ChevronRight,
-  Moon,
-  Sun,
+
 } from 'lucide-react'
 import { departments } from '../../data'
-import { useTheme } from '../../hooks/useTheme'
 
 const DEPT_COLORS = [
   '#2563EB',
@@ -42,7 +40,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   )
 
   const isDeptActive = location.pathname.startsWith('/department')
-  const { isDark, toggle: toggleTheme } = useTheme()
 
   useEffect(() => {
     if (isDeptActive) setDeptExpanded(true)
@@ -277,44 +274,17 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         />
       </nav>
 
-      {/* Bottom: theme + collapse */}
+      {/* Bottom: collapse */}
       <div
         style={{
           padding: collapsed ? '12px 8px' : '12px 16px',
           borderTop: '1px solid var(--color-border)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: collapsed ? 'center' : 'space-between',
-          gap: 8,
+          justifyContent: 'center',
           flexShrink: 0,
         }}
       >
-        {/* 다크모드 토글 */}
-        <button
-          onClick={toggleTheme}
-          title={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-          aria-label={isDark ? '라이트 모드' : '다크 모드'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: collapsed ? 0 : 8,
-            height: 32,
-            padding: collapsed ? '0 8px' : '0 10px',
-            borderRadius: 8,
-            border: '1px solid var(--color-border)',
-            background: isDark ? 'var(--color-accent-blue-light)' : 'var(--color-bg-card)',
-            cursor: 'pointer',
-            color: isDark ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-            fontFamily: 'var(--font-family)',
-            fontSize: 12,
-            transition: 'all 150ms',
-            flex: collapsed ? undefined : 1,
-          }}
-        >
-          {isDark ? <Sun size={15} /> : <Moon size={15} />}
-          {!collapsed && (isDark ? '라이트 모드' : '다크 모드')}
-        </button>
-
         {/* 사이드바 접기 */}
         <button
           onClick={onToggle}
