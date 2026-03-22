@@ -16,6 +16,7 @@ import ProgressBar from '../components/ui/ProgressBar'
 import Badge from '../components/ui/Badge'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import NoDeptSelected from '../components/ui/NoDeptSelected'
+import SubMajorTracker from '../components/progress/SubMajorTracker'
 
 export default function ProgressTracker() {
   const { selectedDepartmentId, studentProgress, selectDepartment, toggleCourseComplete, bulkComplete, resetProgress } = useStore()
@@ -192,6 +193,11 @@ export default function ProgressTracker() {
               </div>
             </Card>
           </div>
+
+          {/* ── A-2.5 다전공/부전공 트래커 ── */}
+          {selectedDepartmentId && (
+            <SubMajorTracker currentDeptId={selectedDepartmentId} />
+          )}
 
           {/* ── A-3. 학년별 상세 현황 ── */}
           <div style={{ marginBottom: 24 }}>
