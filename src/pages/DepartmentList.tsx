@@ -4,8 +4,8 @@ import Card from '../components/ui/Card'
 import { ArrowRight } from 'lucide-react'
 
 const DEPT_COLORS = [
-  '#2563EB', '#6366F1', '#10B981', '#F59E0B',
-  '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316',
+  '#FF0017', '#FF006A', '#FFC900', '#FF7700',
+  '#8E008E', '#008AC2', '#00BCB5', '#2B50B6', '#00CC00',
 ]
 
 export default function DepartmentList() {

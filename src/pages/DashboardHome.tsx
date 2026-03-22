@@ -26,15 +26,15 @@ import ProgressCircle from '../components/ui/ProgressCircle'
 
 /* ─── 학과별 Lucide 아이콘 + 색상 매핑 ─── */
 const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  'industrial-design':  { icon: <Cpu size={20} />,    color: '#2563EB', bg: '#EFF6FF' },
-  'visual-design':      { icon: <Eye size={20} />,    color: '#8B5CF6', bg: '#F5F3FF' },
-  'metal-craft':        { icon: <Gem size={20} />,    color: '#F59E0B', bg: '#FFFBEB' },
-  'ceramic-craft':      { icon: <Coffee size={20} />, color: '#EC4899', bg: '#FDF2F8' },
-  'fashion-design':     { icon: <Shirt size={20} />,  color: '#06B6D4', bg: '#ECFEFF' },
-  'spatial-design':     { icon: <Home size={20} />,   color: '#10B981', bg: '#ECFDF5' },
-  'moving-image':       { icon: <Film size={20} />,   color: '#EF4444', bg: '#FEF2F2' },
-  'automotive-design':  { icon: <Car size={20} />,    color: '#F97316', bg: '#FFF7ED' },
-  'ai-design':          { icon: <Brain size={20} />,  color: '#6366F1', bg: '#EEF2FF' },
+  'industrial-design':  { icon: <Cpu size={20} />,    color: '#FF0017', bg: 'rgba(255,0,23,0.1)' },
+  'visual-design':      { icon: <Eye size={20} />,    color: '#FF006A', bg: 'rgba(255,0,106,0.1)' },
+  'metal-craft':        { icon: <Gem size={20} />,    color: '#FFC900', bg: 'rgba(255,201,0,0.1)' },
+  'ceramic-craft':      { icon: <Coffee size={20} />, color: '#FF7700', bg: 'rgba(255,119,0,0.1)' },
+  'fashion-design':     { icon: <Shirt size={20} />,  color: '#8E008E', bg: 'rgba(142,0,142,0.1)' },
+  'spatial-design':     { icon: <Home size={20} />,   color: '#008AC2', bg: 'rgba(0,138,194,0.1)' },
+  'moving-image':       { icon: <Film size={20} />,   color: '#00BCB5', bg: 'rgba(0,188,181,0.1)' },
+  'automotive-design':  { icon: <Car size={20} />,    color: '#2B50B6', bg: 'rgba(43,80,182,0.1)' },
+  'ai-design':          { icon: <Brain size={20} />,  color: '#00CC00', bg: 'rgba(0,255,0,0.1)' },
 }
 
 /* ─── Framer Motion variants ─── */

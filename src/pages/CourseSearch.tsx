@@ -14,10 +14,10 @@ import Badge from '../components/ui/Badge'
 
 /* ── 학과 고유색 ── */
 const DEPT_COLORS: Record<string, string> = {
-  'industrial-design': '#2563EB', 'visual-design': '#8B5CF6',
-  'metal-craft': '#F59E0B', 'ceramic-craft': '#EC4899',
-  'fashion-design': '#06B6D4', 'spatial-design': '#10B981',
-  'moving-image': '#EF4444', 'automotive-design': '#F97316', 'ai-design': '#6366F1',
+  'industrial-design': '#FF0017', 'visual-design': '#FF006A',
+  'metal-craft': '#FFC900', 'ceramic-craft': '#FF7700',
+  'fashion-design': '#8E008E', 'spatial-design': '#008AC2',
+  'moving-image': '#00BCB5', 'automotive-design': '#2B50B6', 'ai-design': '#00CC00',
 }
 
 const ALL_TAGS = ['인문', '소통', '글로벌', '창의', '전문']
