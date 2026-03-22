@@ -23,6 +23,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [selectedYear, setSelectedYear] = useState<number>(1)
   const [selectedSem, setSelectedSem] = useState<1 | 2>(1)
   const [bulkYears, setBulkYears] = useState<number[]>([])
+  const [bulkFirstSem, setBulkFirstSem] = useState(false)
   const firstFocusRef = useRef<HTMLButtonElement>(null)
   const nicknameInputRef = useRef<HTMLInputElement>(null)
   const toast = useToast()
@@ -45,11 +46,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
       currentYear: selectedYear,
       currentSemester: selectedSem,
     })
-    if (bulkYears.length > 0) {
+    if (bulkYears.length > 0 || bulkFirstSem) {
       const dept = departments.find((d) => d.id === selectedDept)
       if (dept) {
         const ids = dept.courses
-          .filter((c) => bulkYears.includes(c.year))
+          .filter((c) => {
+            if (bulkYears.includes(c.year)) return true
+            if (bulkFirstSem && c.year === selectedYear && c.semester === 1) return true
+            return false
+          })
           .map((c) => c.id)
         bulkComplete(ids)
       }
@@ -188,12 +193,15 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
               <BulkSelect
                 deptId={selectedDept}
                 currentYear={selectedYear}
+                currentSemester={selectedSem}
                 selected={bulkYears}
                 onToggle={(y) =>
                   setBulkYears((prev) =>
                     prev.includes(y) ? prev.filter((x) => x !== y) : [...prev, y]
                   )
                 }
+                firstSemChecked={bulkFirstSem}
+                onToggleFirstSem={() => setBulkFirstSem((v) => !v)}
                 firstRef={firstFocusRef}
               />
             )}
@@ -408,72 +416,79 @@ function YearSemSelect({
 
 /* ── 일괄 이수 선택 ── */
 function BulkSelect({
-  currentYear, selected, onToggle, firstRef,
+  currentYear, currentSemester, selected, onToggle, firstSemChecked, onToggleFirstSem, firstRef,
 }: {
   deptId?: string
   currentYear: number
+  currentSemester: 1 | 2
   selected: number[]
   onToggle: (y: number) => void
+  firstSemChecked: boolean
+  onToggleFirstSem: () => void
   firstRef: React.RefObject<HTMLButtonElement | null>
 }) {
   const prevYears = Array.from({ length: Math.max(0, currentYear - 1) }, (_, i) => i + 1)
-  if (prevYears.length === 0) {
+  const showFirstSem = currentSemester === 2
+
+  if (prevYears.length === 0 && !showFirstSem) {
     return (
       <p style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '20px 0' }}>
         1학년이므로 이전 이수 학년이 없습니다.
       </p>
     )
   }
+
+  const CheckBtn = ({
+    isChecked, onClick, label, refProp,
+  }: { isChecked: boolean; onClick: () => void; label: string; refProp?: React.RefObject<HTMLButtonElement | null> }) => (
+    <button
+      ref={refProp}
+      onClick={onClick}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '14px 16px', borderRadius: 10,
+        border: `1.5px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
+        background: isChecked ? 'var(--color-accent-green-light)' : 'var(--color-bg-primary)',
+        cursor: 'pointer', transition: 'all 150ms',
+      }}
+    >
+      <span style={{
+        width: 22, height: 22, borderRadius: 6,
+        border: `2px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
+        background: isChecked ? 'var(--color-accent-green)' : 'transparent',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0, transition: 'all 150ms',
+      }}>
+        {isChecked && <Check size={13} color="#fff" strokeWidth={3} />}
+      </span>
+      <span style={{
+        fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500,
+        color: isChecked ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
+      }}>
+        {label}
+      </span>
+    </button>
+  )
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {prevYears.map((y, i) => {
-        const isChecked = selected.includes(y)
-        return (
-          <button
-            key={y}
-            ref={i === 0 ? firstRef : undefined}
-            onClick={() => onToggle(y)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '14px 16px',
-              borderRadius: 10,
-              border: `1.5px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-              background: isChecked ? 'var(--color-accent-green-light)' : 'var(--color-bg-primary)',
-              cursor: 'pointer',
-              transition: 'all 150ms',
-            }}
-          >
-            <span
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: 6,
-                border: `2px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-                background: isChecked ? 'var(--color-accent-green)' : 'transparent',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                transition: 'all 150ms',
-              }}
-            >
-              {isChecked && <Check size={13} color="#fff" strokeWidth={3} />}
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-family)',
-                fontSize: 14,
-                fontWeight: 500,
-                color: isChecked ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
-              }}
-            >
-              {y}학년 전체 이수 완료
-            </span>
-          </button>
-        )
-      })}
+      {prevYears.map((y, i) => (
+        <CheckBtn
+          key={y}
+          isChecked={selected.includes(y)}
+          onClick={() => onToggle(y)}
+          label={`${y}학년 전체 이수완료`}
+          refProp={i === 0 ? firstRef : undefined}
+        />
+      ))}
+      {showFirstSem && (
+        <CheckBtn
+          isChecked={firstSemChecked}
+          onClick={onToggleFirstSem}
+          label={`${currentYear}학년 1학기 이수완료`}
+          refProp={prevYears.length === 0 ? firstRef : undefined}
+        />
+      )}
     </div>
   )
 }
