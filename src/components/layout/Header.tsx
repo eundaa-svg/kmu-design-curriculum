@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Bell } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import SearchInput from '../ui/SearchInput'
 import { useStore } from '../../store/useStore'
@@ -88,28 +87,6 @@ export default function Header() {
 
       {/* Right actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        {/* Bell */}
-        <button
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            border: 'none',
-            background: 'transparent',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--color-text-secondary)',
-            transition: 'background 150ms',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#F1F5F9')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-          title="알림"
-        >
-          <Bell size={20} />
-        </button>
-
         {/* Avatar */}
         <div
           style={{
