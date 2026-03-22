@@ -8,6 +8,8 @@ export interface ProgressStats {
   completedRequired: number
   totalCredits: number
   completedCredits: number
+  completedRequiredCredits: number
+  completedElectiveCredits: number
   capstoneCompleted: number
   percentage: number
 }
@@ -25,17 +27,21 @@ export function useProgress(
         completedRequired: 0,
         totalCredits: 0,
         completedCredits: 0,
+        completedRequiredCredits: 0,
+        completedElectiveCredits: 0,
         capstoneCompleted: 0,
         percentage: 0,
       }
     }
     const completed = new Set(progress.completedCourseIds)
-    let totalCourses = department.courses.length
+    const totalCourses = department.courses.length
     let completedCourses = 0
     let requiredCourses = 0
     let completedRequired = 0
     let totalCredits = 0
     let completedCredits = 0
+    let completedRequiredCredits = 0
+    let completedElectiveCredits = 0
     let capstoneCompleted = 0
 
     for (const course of department.courses) {
@@ -44,7 +50,12 @@ export function useProgress(
       if (completed.has(course.id)) {
         completedCourses++
         completedCredits += course.credits
-        if (course.category === 'required') completedRequired++
+        if (course.category === 'required') {
+          completedRequired++
+          completedRequiredCredits += course.credits
+        } else {
+          completedElectiveCredits += course.credits
+        }
         if (course.isCapstone) capstoneCompleted++
       }
     }
@@ -58,6 +69,8 @@ export function useProgress(
       completedRequired,
       totalCredits,
       completedCredits,
+      completedRequiredCredits,
+      completedElectiveCredits,
       capstoneCompleted,
       percentage,
     }

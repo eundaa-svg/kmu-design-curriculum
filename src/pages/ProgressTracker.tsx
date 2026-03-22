@@ -13,7 +13,6 @@ import { departments } from '../data'
 import type { Course } from '../types'
 import Card from '../components/ui/Card'
 import ProgressBar from '../components/ui/ProgressBar'
-import ProgressCircle from '../components/ui/ProgressCircle'
 import Badge from '../components/ui/Badge'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import NoDeptSelected from '../components/ui/NoDeptSelected'
@@ -143,139 +142,55 @@ export default function ProgressTracker() {
             }}
             className="progress-stats-grid"
           >
-            {/* 원형 프로그레스 */}
-            <Card
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 12,
-                padding: '24px',
-              }}
-            >
-              <ProgressCircle
-                value={stats.percentage}
-                size={120}
-                strokeWidth={10}
-                label={`${stats.percentage}%`}
-                sublabel="이수율"
-              />
-              <p
-                style={{
-                  font: 'var(--font-body-sm)',
-                  fontFamily: 'var(--font-family)',
-                  color: 'var(--color-text-secondary)',
-                }}
-              >
-                {stats.completedCourses} / {stats.totalCourses} 과목 완료
-              </p>
-            </Card>
-
-            {/* 필수 과목 */}
+            {/* 카드 1: 필수 과목 이수 */}
             <Card style={{ padding: '20px' }}>
-              <h3
-                style={{
-                  font: 'var(--font-heading-md)',
-                  fontFamily: 'var(--font-family)',
-                  color: 'var(--color-text-primary)',
-                  marginBottom: 14,
-                }}
-              >
-                필수 과목
+              <h3 style={{ fontFamily: 'var(--font-family)', fontSize: 15, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 14 }}>
+                필수 과목 이수
               </h3>
               <ProgressBar
                 value={(stats.completedRequired / Math.max(stats.requiredCourses, 1)) * 100}
                 color="var(--color-accent-blue)"
                 height={8}
               />
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginTop: 10,
-                }}
-              >
-                <span
-                  style={{
-                    font: 'var(--font-body-sm)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
                   {stats.completedRequired} / {stats.requiredCourses} 과목
                 </span>
-                <span
-                  style={{
-                    font: 'var(--font-body-sm)',
-                    fontFamily: 'var(--font-family)',
-                    fontWeight: 600,
-                    color: 'var(--color-accent-blue)',
-                  }}
-                >
+                <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-accent-blue)' }}>
                   {Math.round((stats.completedRequired / Math.max(stats.requiredCourses, 1)) * 100)}%
                 </span>
               </div>
               {stats.completedRequired < stats.requiredCourses && (
-                <p
-                  style={{
-                    font: 'var(--font-body-sm)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-accent-red)',
-                    marginTop: 8,
-                    fontWeight: 500,
-                  }}
-                >
+                <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-accent-red)', marginTop: 8, fontWeight: 500 }}>
                   ⚠ {stats.requiredCourses - stats.completedRequired}개 필수 과목 미이수
                 </p>
               )}
             </Card>
 
-            {/* 학점 현황 */}
+            {/* 카드 2: 필수 과목 학점 */}
             <Card style={{ padding: '20px' }}>
-              <h3
-                style={{
-                  font: 'var(--font-heading-md)',
-                  fontFamily: 'var(--font-family)',
-                  color: 'var(--color-text-primary)',
-                  marginBottom: 14,
-                }}
-              >
-                이수 학점
-              </h3>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  gap: 6,
-                  marginBottom: 12,
-                }}
-              >
-                <span
-                  style={{
-                    font: 'var(--font-heading-xl)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-primary)',
-                  }}
-                >
-                  {stats.completedCredits}
-                </span>
-                <span
-                  style={{
-                    font: 'var(--font-body-base)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
-                  / {stats.totalCredits} 학점
-                </span>
-              </div>
-              <ProgressBar
-                value={(stats.completedCredits / Math.max(stats.totalCredits, 1)) * 100}
-                color="var(--color-accent-indigo)"
-                height={8}
-              />
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 8 }}>
+                필수 과목 학점
+              </p>
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 28, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.1 }}>
+                {stats.completedRequiredCredits}<span style={{ fontSize: 16, fontWeight: 400, color: 'var(--color-text-secondary)', marginLeft: 4 }}>학점</span>
+              </p>
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 'auto', paddingTop: 16 }}>
+                총 이수: {stats.completedCredits}학점 (필수 {stats.completedRequiredCredits} + 선택 {stats.completedElectiveCredits})
+              </p>
+            </Card>
+
+            {/* 카드 3: 선택 과목 학점 */}
+            <Card style={{ padding: '20px' }}>
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 8 }}>
+                선택 과목 학점
+              </p>
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 28, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.1 }}>
+                {stats.completedElectiveCredits}<span style={{ fontSize: 16, fontWeight: 400, color: 'var(--color-text-secondary)', marginLeft: 4 }}>학점</span>
+              </p>
+              <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-muted)', marginTop: 'auto', paddingTop: 16 }}>
+                총 이수: {stats.completedCredits}학점 (필수 {stats.completedRequiredCredits} + 선택 {stats.completedElectiveCredits})
+              </p>
             </Card>
           </div>
 
