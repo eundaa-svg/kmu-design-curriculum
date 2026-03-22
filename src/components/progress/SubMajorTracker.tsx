@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useCountUp } from '../../hooks/useCountUp'
 import { ChevronDown, ChevronUp, CheckCheck, RotateCcw } from 'lucide-react'
 import { departments } from '../../data'
 import { useSubMajor, type SubMajorType } from '../../hooks/useSubMajor'
@@ -37,7 +38,7 @@ function CourseRow({
         }}
       >
         {completed && (
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <svg className="check-icon-enter" width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M2 5L4 7L8 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
@@ -223,6 +224,8 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
   const setType = (type: SubMajorType) => setState({ ...state, type, departmentId: '' })
   const setDept = (departmentId: string) => setState({ ...state, departmentId })
 
+  const animatedCredits = useCountUp(subProgress?.completedCredits ?? 0, 400)
+
   return (
     <div style={{ marginBottom: 24 }}>
       {/* 토글 버튼 */}
@@ -308,7 +311,7 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 16 }}>
                     <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
-                      {subProgress.completedCredits}
+                      {animatedCredits}
                     </span>
                     <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>
                       / {MINOR_REQUIRED_CREDITS} 학점
@@ -373,7 +376,7 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
                       </h3>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
                         <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
-                          {subProgress.completedCredits}
+                          {animatedCredits}
                         </span>
                         <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>학점</span>
                       </div>

@@ -22,9 +22,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           background: 'var(--color-bg-card)',
           border: '1px solid var(--color-border)',
           borderRadius: '14px',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+          boxShadow: 'var(--shadow-sm)',
           padding: paddingMap[padding],
-          transition: hover ? 'box-shadow 200ms ease, transform 200ms ease' : undefined,
+          transition: 'box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-fast)',
           cursor: hover ? 'pointer' : undefined,
           ...style,
         }}
@@ -32,8 +32,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           hover
             ? (e) => {
                 const el = e.currentTarget
-                el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'
-                el.style.transform = 'translateY(-1px)'
+                el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'
+                el.style.transform = 'translateY(-2px)'
               }
             : undefined
         }
@@ -41,11 +41,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           hover
             ? (e) => {
                 const el = e.currentTarget
-                el.style.boxShadow = '0 1px 2px rgba(0,0,0,0.03)'
+                el.style.boxShadow = 'var(--shadow-sm)'
                 el.style.transform = 'translateY(0)'
               }
             : undefined
         }
+        onMouseDown={hover ? (e) => { e.currentTarget.style.transform = 'scale(0.98)' } : undefined}
+        onMouseUp={hover ? (e) => { e.currentTarget.style.transform = 'translateY(-2px)' } : undefined}
         {...props}
       >
         {children}

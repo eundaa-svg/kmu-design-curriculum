@@ -12,7 +12,7 @@ export default function Settings() {
   const [nicknameInput, setNicknameInput] = useState(nickname)
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ font: 'var(--font-heading-xl)', fontFamily: 'var(--font-family)', color: 'var(--color-text-primary)' }}>
           설정

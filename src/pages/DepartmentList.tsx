@@ -10,7 +10,7 @@ const DEPT_COLORS = [
 
 export default function DepartmentList() {
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ marginBottom: 28 }}>
         <h1
           style={{

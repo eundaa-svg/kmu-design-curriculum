@@ -80,7 +80,7 @@ export default function CourseSearch() {
   ]
 
   return (
-    <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 1120, margin: '0 auto' }}>
 
       {/* ═══════════════════════════════
           상단 검색 영역

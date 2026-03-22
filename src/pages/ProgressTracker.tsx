@@ -8,6 +8,7 @@ import {
 import { useStore } from '../store/useStore'
 import { useDepartment } from '../hooks/useDepartment'
 import { useProgress } from '../hooks/useProgress'
+import { useCountUp } from '../hooks/useCountUp'
 import { useRecommendedCourses } from '../hooks/useRecommendedCourses'
 import { departments } from '../data'
 import type { Course } from '../types'
@@ -29,6 +30,7 @@ export default function ProgressTracker() {
   const currentSemester = progress?.currentSemester ?? 1
 
   const recommended = useRecommendedCourses(department, completedSet, currentYear, currentSemester)
+  const animatedCredits = useCountUp(stats.completedCredits, 400)
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
@@ -49,7 +51,7 @@ export default function ProgressTracker() {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 1000, margin: '0 auto' }}>
       {/* ── A-1. 상단 컨트롤 바 ── */}
       <div
         style={{
@@ -175,7 +177,7 @@ export default function ProgressTracker() {
               </h3>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
                 <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
-                  {stats.completedCredits}
+                  {animatedCredits}
                 </span>
                 <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>
                   학점
@@ -652,7 +654,7 @@ function CourseRow({ course, completed, onToggle, onSelect }: CourseRowProps) {
         }}
       >
         {completed && (
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <svg className="check-icon-enter" width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M2 5L4 7L8 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}

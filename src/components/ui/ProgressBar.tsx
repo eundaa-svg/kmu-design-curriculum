@@ -48,7 +48,7 @@ export default function ProgressBar({
             width: `${pct}%`,
             background: color,
             borderRadius: height,
-            transition: 'width 600ms ease',
+            transition: 'width 0.5s ease-out, background-color var(--transition-slow)',
           }}
         />
       </div>

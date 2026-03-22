@@ -45,7 +45,7 @@ export default function GraduationCheck() {
   }
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 800, margin: '0 auto' }}>
       <h1
         style={{
           font: 'var(--font-heading-xl)',

@@ -68,7 +68,7 @@ export default function DashboardHome() {
   const countPct = useCountUp(achievePct, 800, 1)
 
   return (
-    <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+    <div className="page-enter" style={{ maxWidth: 1120, margin: '0 auto' }}>
 
       {/* ══════════════════════════════════════
           섹션 1: 요약 통계 카드

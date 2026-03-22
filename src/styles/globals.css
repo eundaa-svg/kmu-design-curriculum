@@ -52,6 +52,11 @@
   --space-xl: 24px;
   --space-2xl: 32px;
   --space-3xl: 48px;
+
+  /* Transitions */
+  --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -99,4 +104,63 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #4E5968;
+}
+
+/* 버튼 기본 인터랙션 */
+button {
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast), transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* 체크박스 팝인 애니메이션 */
+@keyframes check-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.check-icon-enter {
+  animation: check-pop 0.25s ease-out forwards;
+}
+
+/* 숫자 펄스 */
+@keyframes num-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.num-pulse {
+  animation: num-pulse 0.35s ease-out;
+}
+
+/* 페이지 페이드인 */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 0.3s ease-out both;
+}
+
+/* IntersectionObserver 스크롤 진입 */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.scroll-reveal {
+  opacity: 0;
+}
+.scroll-reveal.visible {
+  animation: slide-up 0.35s ease-out both;
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
