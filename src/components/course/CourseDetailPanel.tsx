@@ -82,9 +82,9 @@ export default function CourseDetailPanel({
             onKeyDown={handleKeyDown}
             style={{
               position: 'fixed',
-              top: 64,
+              top: 0,
               right: 0,
-              height: 'calc(100vh - 64px)',
+              height: '100vh',
               width: 'min(420px, 100vw)',
               maxWidth: '100vw',
               background: 'var(--color-bg-card)',
