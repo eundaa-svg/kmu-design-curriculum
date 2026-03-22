@@ -66,8 +66,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const steps = [
     { title: '닉네임을 입력해주세요', sub: '대시보드에서 사용할 이름입니다.' },
     { title: '소속 학과를 선택해주세요', sub: '선택한 학과를 기준으로 커리큘럼과 이수 현황을 제공합니다.' },
-    { title: '현재 학년과 학기를 선택해주세요', sub: '현재 학년/학기를 기준으로 추천 과목을 안내합니다.' },
-    { title: '이미 이수한 학년이 있나요?', sub: '해당 학년의 전체 과목을 이수 완료로 표시합니다. 나중에 개별 수정 가능합니다.' },
+    { title: '현재 학년과 학기를 알려주세요', sub: '현재 학년/학기를 기준으로 추천 과목을 안내합니다.' },
   ]
 
   const canNext =
@@ -181,29 +180,44 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
               />
             )}
             {step === 2 && (
-              <YearSemSelect
-                year={selectedYear}
-                sem={selectedSem}
-                onYear={setSelectedYear}
-                onSem={setSelectedSem}
-                firstRef={firstFocusRef}
-              />
-            )}
-            {step === 3 && (
-              <BulkSelect
-                deptId={selectedDept}
-                currentYear={selectedYear}
-                currentSemester={selectedSem}
-                selected={bulkYears}
-                onToggle={(y) =>
-                  setBulkYears((prev) =>
-                    prev.includes(y) ? prev.filter((x) => x !== y) : [...prev, y]
-                  )
-                }
-                firstSemChecked={bulkFirstSem}
-                onToggleFirstSem={() => setBulkFirstSem((v) => !v)}
-                firstRef={firstFocusRef}
-              />
+              <div>
+                <YearSemSelect
+                  year={selectedYear}
+                  sem={selectedSem}
+                  onYear={setSelectedYear}
+                  onSem={setSelectedSem}
+                  firstRef={firstFocusRef}
+                />
+                <AnimatePresence>
+                  {!(selectedYear === 1 && selectedSem === 1) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ marginTop: 24 }}
+                    >
+                      <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 10 }}>
+                        이미 이수한 학년이 있나요?
+                      </p>
+                      <BulkSelect
+                        deptId={selectedDept}
+                        currentYear={selectedYear}
+                        currentSemester={selectedSem}
+                        selected={bulkYears}
+                        onToggle={(y) =>
+                          setBulkYears((prev) =>
+                            prev.includes(y) ? prev.filter((x) => x !== y) : [...prev, y]
+                          )
+                        }
+                        firstSemChecked={bulkFirstSem}
+                        onToggleFirstSem={() => setBulkFirstSem((v) => !v)}
+                        firstRef={firstFocusRef}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>
@@ -233,25 +247,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           </button>
 
           <div style={{ display: 'flex', gap: 8 }}>
-            {step === steps.length - 1 && (
-              <button
-                onClick={handleComplete}
-                style={{
-                  height: 40,
-                  padding: '0 16px',
-                  borderRadius: 10,
-                  border: '1px solid var(--color-border)',
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-family)',
-                  fontSize: 14,
-                  color: 'var(--color-text-secondary)',
-                  transition: 'all 150ms',
-                }}
-              >
-                건너뛰기
-              </button>
-            )}
             <button
               onClick={() => {
                 if (!canNext) return
