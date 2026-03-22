@@ -64,13 +64,12 @@ function CourseRow({
 
 /* ── 학년별 아코디언 ── */
 function YearAccordion({
-  dept, completedIds, toggleCourse, bulkComplete, isMinor,
+  dept, completedIds, toggleCourse, bulkComplete,
 }: {
   dept: Department
   completedIds: Set<string>
   toggleCourse: (id: string) => void
   bulkComplete: (ids: string[]) => void
-  isMinor: boolean
 }) {
   const [openYears, setOpenYears] = useState<Set<number>>(new Set([1, 2, 3, 4]))
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
@@ -82,9 +81,8 @@ function YearAccordion({
       return next
     })
 
-  const filteredCourses = isMinor
-    ? dept.courses.filter(c => c.category === 'required')
-    : dept.courses
+  // 부전공/다전공 모두 전체 과목 표시 (학점 합산으로만 판정)
+  const filteredCourses = dept.courses
 
   const commons = filteredCourses.filter(c => c.semester === 0)
 
@@ -200,15 +198,16 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
   const availableDepts = departments.filter(d => d.id !== currentDeptId)
   const selectedDept = state.departmentId ? departments.find(d => d.id === state.departmentId) : undefined
 
+  const MINOR_REQUIRED_CREDITS = 18
+
   // progress stats for sub-major
   const subProgress = selectedDept
     ? (() => {
         const isMinor = state.type === 'minor'
-        const courses = isMinor ? selectedDept.courses.filter(c => c.category === 'required') : selectedDept.courses
-        let requiredCourses = 0, completedRequired = 0, totalCredits = 0, completedCredits = 0
+        const courses = selectedDept.courses // 항상 전체 과목
+        let requiredCourses = 0, completedRequired = 0, completedCredits = 0
         let completedRequiredCredits = 0, completedElectiveCredits = 0
         for (const c of courses) {
-          totalCredits += c.credits
           if (c.category === 'required') requiredCourses++
           if (completedIds.has(c.id)) {
             completedCredits += c.credits
@@ -216,7 +215,8 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
             else completedElectiveCredits += c.credits
           }
         }
-        return { requiredCourses, completedRequired, totalCredits, completedCredits, completedRequiredCredits, completedElectiveCredits }
+        const minorMet = isMinor && completedCredits >= MINOR_REQUIRED_CREDITS
+        return { requiredCourses, completedRequired, completedCredits, completedRequiredCredits, completedElectiveCredits, minorMet }
       })()
     : null
 
@@ -300,64 +300,96 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
           {/* 학과 선택 후 콘텐츠 */}
           {selectedDept && subProgress && (
             <>
-              {/* 통계 카드 2열 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 24 }} className="progress-stats-grid">
-                {/* 카드1: 필수 과목 */}
-                <Card style={{ padding: '20px' }}>
-                  <h3 style={{ fontFamily: 'var(--font-family)', fontSize: 15, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 14 }}>
-                    필수 과목 이수
-                  </h3>
-                  <ProgressBar
-                    value={(subProgress.completedRequired / Math.max(subProgress.requiredCourses, 1)) * 100}
-                    color="var(--color-accent-blue)"
-                    height={8}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-                    <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-                      {subProgress.completedRequired} / {subProgress.requiredCourses} 과목
-                    </span>
-                    <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-accent-blue)' }}>
-                      {Math.round((subProgress.completedRequired / Math.max(subProgress.requiredCourses, 1)) * 100)}%
-                    </span>
-                  </div>
-                  {subProgress.completedRequired < subProgress.requiredCourses && (
-                    <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-accent-red)', marginTop: 8, fontWeight: 500 }}>
-                      ⚠ {subProgress.requiredCourses - subProgress.completedRequired}개 필수 과목 미이수
-                    </p>
-                  )}
-                </Card>
-
-                {/* 카드2: 이수 학점 */}
-                <Card style={{ padding: '20px' }}>
+              {state.type === 'minor' ? (
+                /* ── 부전공 모드: 단일 카드 ── */
+                <Card style={{ padding: '20px', marginBottom: 24 }}>
                   <h3 style={{ fontFamily: 'var(--font-family)', fontSize: 15, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16 }}>
-                    이수 학점
+                    부전공 이수 조건
                   </h3>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 16 }}>
                     <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
                       {subProgress.completedCredits}
                     </span>
-                    <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>학점</span>
+                    <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>
+                      / {MINOR_REQUIRED_CREDITS} 학점
+                    </span>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-secondary)' }}>전공필수</span>
-                      <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' }}>{subProgress.completedRequiredCredits}학점</span>
-                    </div>
-                    {state.type === 'double' && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-secondary)' }}>전공선택</span>
-                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' }}>{subProgress.completedElectiveCredits}학점</span>
-                      </div>
-                    )}
-                  </div>
+                  <ProgressBar
+                    value={Math.min(100, (subProgress.completedCredits / MINOR_REQUIRED_CREDITS) * 100)}
+                    color={subProgress.minorMet ? 'var(--color-accent-green)' : 'var(--color-accent-blue)'}
+                    height={8}
+                  />
+                  <p style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-secondary)', marginTop: 12 }}>
+                    전공 과목 중 {MINOR_REQUIRED_CREDITS}학점 이상 이수하면 부전공이 인정됩니다.
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 500, color: subProgress.minorMet ? 'var(--color-accent-green)' : 'var(--color-accent-red)', marginTop: 8 }}>
+                    {subProgress.minorMet
+                      ? '✓ 부전공 이수 조건 충족'
+                      : `⚠ ${MINOR_REQUIRED_CREDITS - subProgress.completedCredits}학점 더 이수 필요`}
+                  </p>
                 </Card>
-              </div>
+              ) : (
+                /* ── 다전공 모드: 2열 카드 ── */
+                <>
+                  {/* 다전공 안내 */}
+                  <div style={{ background: 'var(--color-bg-hover)', padding: 16, borderRadius: 8, marginBottom: 16 }}>
+                    <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                      ℹ <strong>다전공 안내</strong><br />
+                      제1전공의 졸업요건에 준하여 전공필수 과목 이수 및 전공 최저이수학점을 충족해야 합니다.<br />
+                      (전공 간 중복인정: 최저이수학점 40학점 이상 시 전공당 최대 15학점, 40학점 미만 시 최대 12학점)
+                    </p>
+                  </div>
 
-              {/* 부전공 안내 */}
-              {state.type === 'minor' && (
-                <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-muted)', background: 'var(--color-accent-amber-light)', border: '1px solid var(--color-accent-amber)', borderRadius: 8, padding: '10px 14px', marginBottom: 16 }}>
-                  ※ 부전공 학생은 전공필수 과목 위주로 이수하세요. 선택 과목은 표시되지 않습니다.
-                </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 24 }} className="progress-stats-grid">
+                    {/* 카드1: 필수 과목 */}
+                    <Card style={{ padding: '20px' }}>
+                      <h3 style={{ fontFamily: 'var(--font-family)', fontSize: 15, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 14 }}>
+                        필수 과목 이수
+                      </h3>
+                      <ProgressBar
+                        value={(subProgress.completedRequired / Math.max(subProgress.requiredCourses, 1)) * 100}
+                        color="var(--color-accent-blue)"
+                        height={8}
+                      />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-text-secondary)' }}>
+                          {subProgress.completedRequired} / {subProgress.requiredCourses} 과목
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-accent-blue)' }}>
+                          {Math.round((subProgress.completedRequired / Math.max(subProgress.requiredCourses, 1)) * 100)}%
+                        </span>
+                      </div>
+                      {subProgress.completedRequired < subProgress.requiredCourses && (
+                        <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, color: 'var(--color-accent-red)', marginTop: 8, fontWeight: 500 }}>
+                          ⚠ {subProgress.requiredCourses - subProgress.completedRequired}개 필수 과목 미이수
+                        </p>
+                      )}
+                    </Card>
+
+                    {/* 카드2: 이수 학점 */}
+                    <Card style={{ padding: '20px' }}>
+                      <h3 style={{ fontFamily: 'var(--font-family)', fontSize: 15, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16 }}>
+                        이수 학점
+                      </h3>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
+                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
+                          {subProgress.completedCredits}
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>학점</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-secondary)' }}>전공필수</span>
+                          <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' }}>{subProgress.completedRequiredCredits}학점</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-secondary)' }}>전공선택</span>
+                          <span style={{ fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)' }}>{subProgress.completedElectiveCredits}학점</span>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </>
               )}
 
               {/* 학년별 아코디언 */}
@@ -369,7 +401,6 @@ export default function SubMajorTracker({ currentDeptId }: { currentDeptId: stri
                 completedIds={completedIds}
                 toggleCourse={(id) => toggleCourse(id, state.departmentId)}
                 bulkComplete={(ids) => bulkCompleteAll(ids, state.departmentId)}
-                isMinor={state.type === 'minor'}
               />
             </>
           )}
