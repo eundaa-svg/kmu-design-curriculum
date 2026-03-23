@@ -95,16 +95,31 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           background: '#111111',
         }}
       >
-        <img
-          src="/kmu_logo.png"
-          alt="KMU Design"
+        <div
           style={{
-            width: collapsed ? 36 : 120,
-            height: 'auto',
-            display: 'block',
-            transition: 'width 250ms ease',
+            width: 32,
+            height: 32,
+            borderRadius: 8,
+            background: '#111111',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
           }}
-        />
+        >
+          <span
+            style={{
+              color: '#FFFFFF',
+              fontSize: 18,
+              fontWeight: 800,
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              lineHeight: 1,
+              userSelect: 'none',
+            }}
+          >
+            K
+          </span>
+        </div>
       </div>
 
       {/* Nav */}
