@@ -72,47 +72,27 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     >
       {/* Logo */}
       <div
+        onClick={() => navigate('/')}
         style={{
-          padding: collapsed ? '16px 0' : '16px 12px',
-          paddingBottom: 24,
+          padding: collapsed ? '12px 0' : '12px 16px',
           borderBottom: '1px solid var(--color-border)',
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          justifyContent: collapsed ? 'center' : 'flex-start',
+          justifyContent: 'center',
           flexShrink: 0,
+          cursor: 'pointer',
         }}
       >
-        <svg
-          width={32}
-          height={32}
-          viewBox="0 0 32 32"
-          fill="none"
-          style={{ flexShrink: 0 }}
-        >
-          <rect width={32} height={32} rx={8} fill="var(--color-accent-blue)" />
-          <path
-            d="M8 22 L16 10 L24 22"
-            stroke="white"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <circle cx={16} cy={17} r={3} fill="white" opacity={0.6} />
-        </svg>
-        {!collapsed && (
-          <span
-            style={{
-              font: 'var(--font-heading-md)',
-              fontFamily: 'var(--font-family)',
-              color: 'var(--color-text-primary)',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            조형대학
-          </span>
-        )}
+        <img
+          src="/kmu_logo.png"
+          alt="KMU Design"
+          style={{
+            width: collapsed ? 36 : 120,
+            height: 'auto',
+            display: 'block',
+            transition: 'width 250ms ease',
+          }}
+        />
       </div>
 
       {/* Nav */}
