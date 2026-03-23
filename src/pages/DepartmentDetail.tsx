@@ -16,7 +16,7 @@ import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import RoadmapView from './dept/RoadmapView'
 import CategoryView from './dept/CategoryView'
 import ListView from './dept/ListView'
-import DepartmentGraphic from '../components/department/DepartmentGraphic'
+import DepartmentParticleText from '../components/department/DepartmentParticleText'
 
 /* ── 학과 메타 ── */
 const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
@@ -113,8 +113,8 @@ export default function DepartmentDetail() {
         학과 목록
       </Link>
 
-      {/* ══════════════════ 학과 그래픽 ══════════════════ */}
-      <DepartmentGraphic departmentId={department.id} />
+      {/* ══════════════════ 학과 파티클 그래픽 ══════════════════ */}
+      <DepartmentParticleText departmentId={department.id} />
 
       {/* ══════════════════ A. 학과 헤더 ══════════════════ */}
       <div style={{ paddingBottom: 24 }}>
