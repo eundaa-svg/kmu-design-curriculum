@@ -4,15 +4,15 @@ interface Props {
   departmentId: string
 }
 
-const CONFIG: Record<string, { line1: string; line2: string; bgColor: string; particleColor: string }> = {
+const CONFIG: Record<string, { line1: string; line2: string; line3?: string; bgColor: string; particleColor: string }> = {
   'industrial-design':   { line1: 'DEPT. OF', line2: 'INDUSTRIAL DESIGN',                   bgColor: '#FF0017', particleColor: '#FFFFFF' },
   'visual-design':       { line1: 'DEPT. OF', line2: 'VISUAL COMMUNICATION DESIGN',          bgColor: '#FF006A', particleColor: '#FFFFFF' },
-  'metal-craft':         { line1: 'DEPT. OF', line2: 'METAL CRAFT',                          bgColor: '#FFC900', particleColor: '#FFFFFF' },
+  'metal-craft':         { line1: 'DEPT. OF', line2: 'METALWORK & JEWELRY',                  bgColor: '#FFC900', particleColor: '#FFFFFF' },
   'ceramic-craft':       { line1: 'DEPT. OF', line2: 'CERAMIC CRAFT',                        bgColor: '#FF7700', particleColor: '#FFFFFF' },
   'fashion-design':      { line1: 'DEPT. OF', line2: 'FASHION DESIGN',                       bgColor: '#8E008E', particleColor: '#FFFFFF' },
   'spatial-design':      { line1: 'DEPT. OF', line2: 'SPATIAL DESIGN',                       bgColor: '#008AC2', particleColor: '#FFFFFF' },
   'moving-image-design': { line1: 'DEPT. OF', line2: 'ENTERTAINMENT DESIGN',                  bgColor: '#00BCB5', particleColor: '#FFFFFF' },
-  'automotive-design':   { line1: 'DEPT. OF', line2: 'AUTOMOTIVE & TRANSPORTATION DESIGN',   bgColor: '#2B50B6', particleColor: '#FFFFFF' },
+  'automotive-design':   { line1: 'DEPT. OF', line2: 'AUTOMOTIVE &', line3: 'TRANSPORTATION DESIGN', bgColor: '#2B50B6', particleColor: '#FFFFFF' },
   'ai-design':           { line1: 'DEPT. OF', line2: 'AI DESIGN',                            bgColor: '#111111', particleColor: '#00FF00' },
 }
 
@@ -88,9 +88,13 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       const fontFace = '"Helvetica Neue", Helvetica, Arial, sans-serif'
 
       // 2행 폰트 크기: 캔버스 너비의 80%를 차지하도록 자동 조절
-      let fontSize2 = Math.floor(h * 0.38)
+      // 3줄인 경우 line2/line3 중 더 긴 쪽 기준
+      const longestLine = cfg.line3
+        ? (cfg.line2.length >= cfg.line3.length ? cfg.line2 : cfg.line3)
+        : cfg.line2
+      let fontSize2 = Math.floor(h * (cfg.line3 ? 0.3 : 0.38))
       octx.font = `900 ${fontSize2}px ${fontFace}`
-      const measured2 = octx.measureText(cfg.line2).width
+      const measured2 = octx.measureText(longestLine).width
       if (measured2 > w * 0.82) {
         fontSize2 = Math.floor(fontSize2 * ((w * 0.82) / measured2))
       }
@@ -99,23 +103,35 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       const fontSize1 = Math.max(10, Math.floor(fontSize2 * 0.4))
       // 줄 간격: 2행 폰트 크기의 20%
       const lineGap = Math.floor(fontSize2 * 0.2)
-      // 두 줄 전체 높이 = fontSize1 + lineGap + fontSize2
-      const totalH = fontSize1 + lineGap + fontSize2
-      const centerY = h / 2
-      // 1행 y: 중앙에서 올라감
-      const y1 = centerY - totalH / 2 + fontSize1 / 2
-      // 2행 y: 1행 아래 + 간격
-      const y2 = y1 + fontSize1 / 2 + lineGap + fontSize2 / 2
 
+      const centerY = h / 2
       octx.textAlign = 'center'
       octx.textBaseline = 'middle'
       octx.fillStyle = '#FFFFFF'
 
-      octx.font = `700 ${fontSize1}px ${fontFace}`
-      octx.fillText(cfg.line1, w / 2, y1)
+      if (cfg.line3) {
+        // 3줄: line1 + line2 + line3
+        const totalH = fontSize1 + lineGap + fontSize2 + lineGap + fontSize2
+        const y1 = centerY - totalH / 2 + fontSize1 / 2
+        const y2 = y1 + fontSize1 / 2 + lineGap + fontSize2 / 2
+        const y3 = y2 + fontSize2 / 2 + lineGap + fontSize2 / 2
 
-      octx.font = `900 ${fontSize2}px ${fontFace}`
-      octx.fillText(cfg.line2, w / 2, y2)
+        octx.font = `700 ${fontSize1}px ${fontFace}`
+        octx.fillText(cfg.line1, w / 2, y1)
+        octx.font = `900 ${fontSize2}px ${fontFace}`
+        octx.fillText(cfg.line2, w / 2, y2)
+        octx.fillText(cfg.line3, w / 2, y3)
+      } else {
+        // 2줄: line1 + line2
+        const totalH = fontSize1 + lineGap + fontSize2
+        const y1 = centerY - totalH / 2 + fontSize1 / 2
+        const y2 = y1 + fontSize1 / 2 + lineGap + fontSize2 / 2
+
+        octx.font = `700 ${fontSize1}px ${fontFace}`
+        octx.fillText(cfg.line1, w / 2, y1)
+        octx.font = `900 ${fontSize2}px ${fontFace}`
+        octx.fillText(cfg.line2, w / 2, y2)
+      }
 
       const imageData = octx.getImageData(0, 0, w, h)
       const data = imageData.data
