@@ -40,7 +40,14 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   )
   const [hoveredDept, setHoveredDept] = useState<{ id: string; color: string } | null>(null)
   const [wireframeVisible, setWireframeVisible] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY })
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
 
   const isDeptActive = location.pathname.startsWith('/department')
 
@@ -309,22 +316,23 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <div
           style={{
             position: 'fixed',
-            left: w + 40,
-            top: '50%',
-            transform: `translateY(-50%) scale(${wireframeVisible ? 1 : 0.9})`,
+            left: mousePos.x + 20,
+            top: mousePos.y + 20,
             opacity: wireframeVisible ? 1 : 0,
             transition: wireframeVisible
-              ? 'opacity 300ms ease-out, transform 300ms ease-out'
-              : 'opacity 200ms ease-in, transform 200ms ease-in',
-            zIndex: 10,
+              ? 'opacity 150ms ease-out'
+              : 'opacity 200ms ease-in',
+            zIndex: 9999,
             pointerEvents: 'none',
-            width: 300,
-            height: 300,
+            width: 150,
+            height: 150,
           }}
         >
           <DeptWireframe
             departmentId={hoveredDept.id}
             color={hoveredDept.color}
+            mouseX={mousePos.x}
+            mouseY={mousePos.y}
           />
         </div>
       )}
