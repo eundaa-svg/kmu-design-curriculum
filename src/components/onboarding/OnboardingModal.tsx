@@ -5,12 +5,6 @@ import { departments } from '../../data'
 import { useStore } from '../../store/useStore'
 import { useToast } from '../../hooks/useToast'
 
-const DEPT_COLORS: Record<string, string> = {
-  'industrial-design': '#FF0017', 'visual-design': '#FF006A',
-  'metal-craft': '#FFC900', 'ceramic-craft': '#FF7700',
-  'fashion-design': '#8E008E', 'spatial-design': '#008AC2',
-  'moving-image': '#00BCB5', 'automotive-design': '#2B50B6', 'ai-design': '#00CC00',
-}
 
 interface OnboardingModalProps {
   onComplete: () => void
@@ -82,7 +76,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(0,0,0,0.45)',
+        background: 'rgba(0,0,0,0.5)',
         zIndex: 100,
         display: 'flex',
         alignItems: 'center',
@@ -97,10 +91,10 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         style={{
           width: 480,
           maxWidth: '100%',
-          background: 'var(--color-bg-card)',
+          background: '#FFFFFF',
           borderRadius: 16,
           padding: '32px',
-          boxShadow: '0 24px 48px rgba(0,0,0,0.18)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
           maxHeight: '90vh',
           overflowY: 'auto',
         }}
@@ -114,7 +108,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 flex: 1,
                 height: 4,
                 borderRadius: 2,
-                background: i <= step ? 'var(--color-accent-blue)' : 'var(--color-border)',
+                background: i <= step ? '#111111' : '#DDDDDD',
                 transition: 'background 300ms',
               }}
             />
@@ -127,13 +121,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           style={{
             font: 'var(--font-heading-lg)',
             fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-primary)',
+            color: '#111111',
+            fontWeight: 700,
             marginBottom: 6,
           }}
         >
           {steps[step].title}
         </h2>
-        <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: 'var(--color-text-secondary)', marginBottom: 24 }}>
+        <p style={{ font: 'var(--font-body-sm)', fontFamily: 'var(--font-family)', color: '#888888', marginBottom: 24 }}>
           {steps[step].sub}
         </p>
 
@@ -158,18 +153,25 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 style={{
                   width: '100%',
                   height: 48,
-                  border: '1px solid var(--color-border)',
+                  border: '1px solid #E5E5E5',
                   borderRadius: 10,
                   padding: '0 16px',
                   fontFamily: 'var(--font-family)',
                   fontSize: 15,
-                  color: 'var(--color-text-primary)',
+                  color: '#111111',
                   outline: 'none',
-                  background: 'var(--color-bg-primary)',
-                  transition: 'border-color 150ms',
+                  background: '#F5F5F5',
+                  transition: 'border-color 150ms, box-shadow 150ms',
+                  boxSizing: 'border-box',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent-blue)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#111111'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17,17,17,0.08)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#E5E5E5'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
               />
             )}
             {step === 1 && (
@@ -197,7 +199,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                       transition={{ duration: 0.2 }}
                       style={{ marginTop: 24 }}
                     >
-                      <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 10 }}>
+                      <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: '#888888', marginBottom: 10 }}>
                         이미 이수한 학년이 있나요?
                       </p>
                       <BulkSelect
@@ -230,16 +232,28 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
               height: 40,
               padding: '0 16px',
               borderRadius: 10,
-              border: '1px solid var(--color-border)',
+              border: '1px solid #E5E5E5',
               background: 'transparent',
               cursor: step === 0 ? 'default' : 'pointer',
               fontFamily: 'var(--font-family)',
               fontSize: 14,
-              color: step === 0 ? 'var(--color-border)' : 'var(--color-text-secondary)',
+              color: step === 0 ? '#CCCCCC' : '#888888',
               display: 'flex',
               alignItems: 'center',
               gap: 5,
               transition: 'all 150ms',
+            }}
+            onMouseEnter={(e) => {
+              if (step > 0) {
+                e.currentTarget.style.color = '#111111'
+                e.currentTarget.style.borderColor = '#111111'
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (step > 0) {
+                e.currentTarget.style.color = '#888888'
+                e.currentTarget.style.borderColor = '#E5E5E5'
+              }
             }}
           >
             <ChevronLeft size={16} />
@@ -259,8 +273,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 padding: '0 20px',
                 borderRadius: 10,
                 border: 'none',
-                background: canNext ? 'var(--color-accent-blue)' : 'var(--color-border)',
-                color: canNext ? '#fff' : 'var(--color-text-muted)',
+                background: canNext ? '#111111' : '#CCCCCC',
+                color: '#FFFFFF',
                 cursor: canNext ? 'pointer' : 'default',
                 fontFamily: 'var(--font-family)',
                 fontSize: 14,
@@ -269,6 +283,12 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 alignItems: 'center',
                 gap: 6,
                 transition: 'all 150ms',
+              }}
+              onMouseEnter={(e) => {
+                if (canNext) e.currentTarget.style.background = '#333333'
+              }}
+              onMouseLeave={(e) => {
+                if (canNext) e.currentTarget.style.background = '#111111'
               }}
             >
               {step === steps.length - 1 ? (
@@ -295,7 +315,6 @@ function DeptGrid({
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
       {departments.map((dept, i) => {
-        const color = DEPT_COLORS[dept.id] ?? '#64748B'
         const isSelected = selected === dept.id
         return (
           <button
@@ -309,16 +328,22 @@ function DeptGrid({
               gap: 6,
               padding: '14px 8px',
               borderRadius: 10,
-              border: `2px solid ${isSelected ? color : 'var(--color-border)'}`,
-              background: isSelected ? `${color}12` : 'var(--color-bg-primary)',
+              border: `1px solid ${isSelected ? '#111111' : '#E5E5E5'}`,
+              background: isSelected ? '#111111' : '#FFFFFF',
               cursor: 'pointer',
               transition: 'all 150ms',
             }}
             onMouseEnter={(e) => {
-              if (!isSelected) e.currentTarget.style.borderColor = color
+              if (!isSelected) {
+                e.currentTarget.style.background = '#F5F5F5'
+                e.currentTarget.style.borderColor = '#CCCCCC'
+              }
             }}
             onMouseLeave={(e) => {
-              if (!isSelected) e.currentTarget.style.borderColor = 'var(--color-border)'
+              if (!isSelected) {
+                e.currentTarget.style.background = '#FFFFFF'
+                e.currentTarget.style.borderColor = '#E5E5E5'
+              }
             }}
           >
             <span
@@ -326,7 +351,7 @@ function DeptGrid({
                 fontFamily: 'var(--font-family)',
                 fontSize: 11,
                 fontWeight: isSelected ? 600 : 400,
-                color: isSelected ? color : 'var(--color-text-secondary)',
+                color: isSelected ? '#FFFFFF' : '#888888',
                 textAlign: 'center',
                 lineHeight: '16px',
               }}
@@ -350,28 +375,42 @@ function YearSemSelect({
   onSem: (s: 1 | 2) => void
   firstRef: React.RefObject<HTMLButtonElement | null>
 }) {
+  const selBtnStyle = (active: boolean) => ({
+    flex: 1,
+    height: 44,
+    borderRadius: 10,
+    border: `2px solid ${active ? '#111111' : '#E5E5E5'}`,
+    background: active ? '#111111' : '#FFFFFF',
+    color: active ? '#FFFFFF' : '#888888',
+    fontFamily: 'var(--font-family)',
+    fontSize: 14,
+    fontWeight: active ? 600 : 400,
+    cursor: 'pointer',
+    transition: 'all 150ms',
+  })
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
-        <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 10 }}>학년</p>
+        <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: '#888888', marginBottom: 10 }}>학년</p>
         <div style={{ display: 'flex', gap: 8 }}>
           {[1, 2, 3, 4].map((y, i) => (
             <button
               key={y}
               ref={i === 0 ? firstRef : undefined}
               onClick={() => onYear(y)}
-              style={{
-                flex: 1,
-                height: 44,
-                borderRadius: 10,
-                border: `2px solid ${year === y ? 'var(--color-accent-blue)' : 'var(--color-border)'}`,
-                background: year === y ? 'var(--color-accent-blue-light)' : 'var(--color-bg-primary)',
-                color: year === y ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-family)',
-                fontSize: 14,
-                fontWeight: year === y ? 600 : 400,
-                cursor: 'pointer',
-                transition: 'all 150ms',
+              style={selBtnStyle(year === y)}
+              onMouseEnter={(e) => {
+                if (year !== y) {
+                  e.currentTarget.style.background = '#F5F5F5'
+                  e.currentTarget.style.color = '#111111'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (year !== y) {
+                  e.currentTarget.style.background = '#FFFFFF'
+                  e.currentTarget.style.color = '#888888'
+                }
               }}
             >
               {y}학년
@@ -380,24 +419,24 @@ function YearSemSelect({
         </div>
       </div>
       <div>
-        <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: 10 }}>학기</p>
+        <p style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 600, color: '#888888', marginBottom: 10 }}>학기</p>
         <div style={{ display: 'flex', gap: 8 }}>
           {([1, 2] as const).map((s) => (
             <button
               key={s}
               onClick={() => onSem(s)}
-              style={{
-                flex: 1,
-                height: 44,
-                borderRadius: 10,
-                border: `2px solid ${sem === s ? 'var(--color-accent-blue)' : 'var(--color-border)'}`,
-                background: sem === s ? 'var(--color-accent-blue-light)' : 'var(--color-bg-primary)',
-                color: sem === s ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-family)',
-                fontSize: 14,
-                fontWeight: sem === s ? 600 : 400,
-                cursor: 'pointer',
-                transition: 'all 150ms',
+              style={selBtnStyle(sem === s)}
+              onMouseEnter={(e) => {
+                if (sem !== s) {
+                  e.currentTarget.style.background = '#F5F5F5'
+                  e.currentTarget.style.color = '#111111'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (sem !== s) {
+                  e.currentTarget.style.background = '#FFFFFF'
+                  e.currentTarget.style.color = '#888888'
+                }
               }}
             >
               {s}학기
@@ -427,7 +466,7 @@ function BulkSelect({
 
   if (prevYears.length === 0 && !showFirstSem) {
     return (
-      <p style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: 'var(--color-text-muted)', textAlign: 'center', padding: '20px 0' }}>
+      <p style={{ fontFamily: 'var(--font-family)', fontSize: 14, color: '#AAAAAA', textAlign: 'center', padding: '20px 0' }}>
         1학년이므로 이전 이수 학년이 없습니다.
       </p>
     )
@@ -442,23 +481,24 @@ function BulkSelect({
       style={{
         display: 'flex', alignItems: 'center', gap: 12,
         padding: '14px 16px', borderRadius: 10,
-        border: `1.5px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-        background: isChecked ? 'var(--color-accent-green-light)' : 'var(--color-bg-primary)',
+        border: `1.5px solid ${isChecked ? '#111111' : '#E5E5E5'}`,
+        background: isChecked ? '#F5F5F5' : '#FFFFFF',
         cursor: 'pointer', transition: 'all 150ms',
+        width: '100%',
       }}
     >
       <span style={{
         width: 22, height: 22, borderRadius: 6,
-        border: `2px solid ${isChecked ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-        background: isChecked ? 'var(--color-accent-green)' : 'transparent',
+        border: `2px solid ${isChecked ? '#111111' : '#CCCCCC'}`,
+        background: isChecked ? '#111111' : '#FFFFFF',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0, transition: 'all 150ms',
       }}>
-        {isChecked && <Check size={13} color="#fff" strokeWidth={3} />}
+        {isChecked && <Check size={13} color="#FFFFFF" strokeWidth={3} />}
       </span>
       <span style={{
         fontFamily: 'var(--font-family)', fontSize: 14, fontWeight: 500,
-        color: isChecked ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
+        color: '#111111',
       }}>
         {label}
       </span>
