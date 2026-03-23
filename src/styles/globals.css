@@ -83,10 +83,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Focus visible */
-:focus-visible {
+/* Focus: 마우스 클릭 시 아웃라인 숨김, 키보드 접근 시만 표시 */
+*:focus {
+  outline: none;
+  background-color: inherit;
+}
+*:focus-visible {
   outline: 2px solid #111111;
   outline-offset: 2px;
+}
+
+/* 탭 하이라이트 제거 (모바일/일부 브라우저) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 링크 기본 포커스 배경 제거 */
+a:focus {
+  background: transparent;
 }
 
 /* Scrollbar */

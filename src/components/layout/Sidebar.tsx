@@ -222,8 +222,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                       }}
                       onMouseLeave={(e) => {
                         const el = e.currentTarget
+                        // active 여부와 무관하게 hover 배경은 항상 초기화
+                        // (active 상태의 배경은 transparent이므로 덮어써도 무방)
+                        el.style.background = 'transparent'
                         if (!el.classList.contains('active')) {
-                          el.style.background = 'transparent'
                           el.style.color = '#999999'
                         }
                         setWireframeVisible(false)
