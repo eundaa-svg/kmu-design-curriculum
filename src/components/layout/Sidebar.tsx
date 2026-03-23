@@ -71,8 +71,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         width: w,
         minWidth: w,
         height: '100vh',
-        background: 'var(--color-bg-sidebar)',
-        borderRight: '1px solid var(--color-border)',
+        background: '#FFFFFF',
+        borderRight: '1px solid #E5E5E5',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -145,8 +145,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               gap: 12,
               padding: collapsed ? '0' : '0 12px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              background: isDeptActive ? 'var(--color-accent-blue-light)' : 'transparent',
-              color: isDeptActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
+              background: isDeptActive ? '#111111' : 'transparent',
+              color: isDeptActive ? '#FFFFFF' : '#888888',
               cursor: 'pointer',
               transition: 'background 150ms, color 150ms',
               fontFamily: 'var(--font-family)',
@@ -155,14 +155,16 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             }}
             onMouseEnter={(e) => {
               if (!isDeptActive) {
-                e.currentTarget.style.background = '#F1F5F9'
-                e.currentTarget.style.color = 'var(--color-text-primary)'
+                e.currentTarget.style.background = '#F5F5F5'
+                e.currentTarget.style.color = '#111111'
+                e.currentTarget.style.fontWeight = '500'
               }
             }}
             onMouseLeave={(e) => {
               if (!isDeptActive) {
                 e.currentTarget.style.background = 'transparent'
-                e.currentTarget.style.color = 'var(--color-text-secondary)'
+                e.currentTarget.style.color = '#888888'
+                e.currentTarget.style.fontWeight = '400'
               }
             }}
           >
@@ -203,16 +205,16 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         textDecoration: 'none',
                         font: 'var(--font-body-sm)',
                         fontFamily: 'var(--font-family)',
-                        color: isActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-                        background: isActive ? 'var(--color-accent-blue-light)' : 'transparent',
-                        fontWeight: isActive ? 500 : 400,
+                        color: isActive ? '#111111' : '#999999',
+                        background: 'transparent',
+                        fontWeight: isActive ? 600 : 400,
                         transition: 'background 150ms, color 150ms',
                       })}
                       onMouseEnter={(e) => {
                         const el = e.currentTarget
                         if (!el.classList.contains('active')) {
-                          el.style.background = '#F1F5F9'
-                          el.style.color = deptColor
+                          el.style.background = '#F5F5F5'
+                          el.style.color = '#111111'
                         }
                         if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
                         setHoveredDept({ id: dept.id, color: deptColor })
@@ -222,7 +224,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         const el = e.currentTarget
                         if (!el.classList.contains('active')) {
                           el.style.background = 'transparent'
-                          el.style.color = 'var(--color-text-secondary)'
+                          el.style.color = '#999999'
                         }
                         setWireframeVisible(false)
                         hideTimerRef.current = setTimeout(() => setHoveredDept(null), 300)
@@ -292,19 +294,25 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           style={{
             width: 32,
             height: 32,
-            border: '1px solid var(--color-border)',
+            border: '1px solid #E5E5E5',
             borderRadius: 8,
-            background: 'var(--color-bg-card)',
+            background: '#FFFFFF',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'var(--color-text-secondary)',
+            color: '#999999',
             flexShrink: 0,
-            transition: 'background 150ms',
+            transition: 'background 150ms, color 150ms',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-bg-primary)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-bg-card)')}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#F5F5F5'
+            e.currentTarget.style.color = '#111111'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#FFFFFF'
+            e.currentTarget.style.color = '#999999'
+          }}
         >
           {collapsed ? <ChevronsRight size={16} /> : <ChevronsLeft size={16} />}
         </button>
@@ -365,22 +373,26 @@ function NavItem({ to, icon, label, collapsed, end }: NavItemProps) {
         fontFamily: 'var(--font-family)',
         fontSize: 15,
         fontWeight: isActive ? 600 : 400,
-        color: isActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-        background: isActive ? 'var(--color-accent-blue-light)' : 'transparent',
+        color: isActive ? '#FFFFFF' : '#888888',
+        background: isActive ? '#111111' : 'transparent',
         transition: 'background 150ms, color 150ms',
       })}
       onMouseEnter={(e) => {
-        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue-light)'
-        if (!isActive) {
-          e.currentTarget.style.background = 'var(--color-bg-hover)'
-          e.currentTarget.style.color = 'var(--color-text-primary)'
+        const el = e.currentTarget
+        const active = el.style.background === 'rgb(17, 17, 17)' || el.style.background === '#111111'
+        if (!active) {
+          el.style.background = '#F5F5F5'
+          el.style.color = '#111111'
+          el.style.fontWeight = '500'
         }
       }}
       onMouseLeave={(e) => {
-        const isActive = e.currentTarget.style.background === 'var(--color-accent-blue-light)'
-        if (!isActive) {
-          e.currentTarget.style.background = 'transparent'
-          e.currentTarget.style.color = 'var(--color-text-secondary)'
+        const el = e.currentTarget
+        const active = el.style.background === 'rgb(17, 17, 17)' || el.style.background === '#111111'
+        if (!active) {
+          el.style.background = 'transparent'
+          el.style.color = '#888888'
+          el.style.fontWeight = '400'
         }
       }}
     >
