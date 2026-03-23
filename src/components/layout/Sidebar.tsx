@@ -81,6 +81,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           justifyContent: 'center',
           flexShrink: 0,
           cursor: 'pointer',
+          background: '#000',
         }}
       >
         <img
