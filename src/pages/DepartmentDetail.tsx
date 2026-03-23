@@ -16,6 +16,11 @@ import CategoryView from './dept/CategoryView'
 import ListView from './dept/ListView'
 import DepartmentParticleText from '../components/department/DepartmentParticleText'
 
+const DEPT_DISPLAY_NAME: Record<string, string> = {
+  'moving-image-design': 'ENTERTAINMENT DESIGN',
+  'metal-craft': 'METALWORK & JEWELRY',
+}
+
 /* ── 학과 메타 ── */
 const DEPT_META: Record<string, { color: string }> = {
   'industrial-design':  { color: '#FF0017' },
@@ -139,7 +144,7 @@ export default function DepartmentDetail() {
             letterSpacing: '1.5px',
           }}
         >
-          {'DEPT. OF ' + department.nameEng.toUpperCase()}
+          {'DEPT. OF ' + (DEPT_DISPLAY_NAME[department.id] ?? department.nameEng.toUpperCase())}
         </p>
 
         {/* 교육목표 (접기/펼치기) */}
