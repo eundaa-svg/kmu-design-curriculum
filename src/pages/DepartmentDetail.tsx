@@ -148,13 +148,15 @@ export default function DepartmentDetail() {
             </h1>
             <p
               style={{
-                font: 'var(--font-body-sm)',
                 fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-muted)',
+                fontSize: 13,
+                fontWeight: 500,
+                color: '#8B95A1',
                 marginTop: 3,
+                letterSpacing: '1.5px',
               }}
             >
-              {department.nameEng}
+              {'DEPT. OF ' + department.nameEng.toUpperCase()}
             </p>
           </div>
         </div>
