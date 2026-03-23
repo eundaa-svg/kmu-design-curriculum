@@ -26,15 +26,15 @@ import ProgressCircle from '../components/ui/ProgressCircle'
 
 /* ─── 학과별 Lucide 아이콘 + 색상 매핑 ─── */
 const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  'industrial-design':  { icon: <Cpu size={20} />,    color: '#FF0017', bg: 'rgba(255,0,23,0.1)' },
-  'visual-design':      { icon: <Eye size={20} />,    color: '#FF006A', bg: 'rgba(255,0,106,0.1)' },
-  'metal-craft':        { icon: <Gem size={20} />,    color: '#FFC900', bg: 'rgba(255,201,0,0.1)' },
-  'ceramic-craft':      { icon: <Coffee size={20} />, color: '#FF7700', bg: 'rgba(255,119,0,0.1)' },
-  'fashion-design':     { icon: <Shirt size={20} />,  color: '#8E008E', bg: 'rgba(142,0,142,0.1)' },
-  'spatial-design':     { icon: <Home size={20} />,   color: '#008AC2', bg: 'rgba(0,138,194,0.1)' },
-  'moving-image':       { icon: <Film size={20} />,   color: '#00BCB5', bg: 'rgba(0,188,181,0.1)' },
-  'automotive-design':  { icon: <Car size={20} />,    color: '#2B50B6', bg: 'rgba(43,80,182,0.1)' },
-  'ai-design':          { icon: <Brain size={20} />,  color: '#00CC00', bg: 'rgba(0,255,0,0.1)' },
+  'industrial-design':   { icon: <Cpu size={20} />,    color: '#FF0017', bg: 'rgba(255,0,23,0.15)' },
+  'visual-design':       { icon: <Eye size={20} />,    color: '#FF006A', bg: 'rgba(255,0,106,0.15)' },
+  'metal-craft':         { icon: <Gem size={20} />,    color: '#FFC900', bg: 'rgba(255,201,0,0.15)' },
+  'ceramic-craft':       { icon: <Coffee size={20} />, color: '#FF7700', bg: 'rgba(255,119,0,0.15)' },
+  'fashion-design':      { icon: <Shirt size={20} />,  color: '#8E008E', bg: 'rgba(142,0,142,0.15)' },
+  'spatial-design':      { icon: <Home size={20} />,   color: '#008AC2', bg: 'rgba(0,138,194,0.15)' },
+  'moving-image-design': { icon: <Film size={20} />,   color: '#00BCB5', bg: 'rgba(0,188,181,0.15)' },
+  'automotive-design':   { icon: <Car size={20} />,    color: '#2B50B6', bg: 'rgba(43,80,182,0.15)' },
+  'ai-design':           { icon: <Brain size={20} />,  color: '#00FF00', bg: 'rgba(0,255,0,0.15)' },
 }
 
 /* ─── Framer Motion variants ─── */
@@ -455,12 +455,12 @@ function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClic
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
       style={{
-        background: 'var(--color-bg-card)',
-        border: `1px solid ${isSelected ? meta.color : 'var(--color-border)'}`,
+        background: '#111111',
+        border: `1px solid ${isSelected ? meta.color : '#222222'}`,
         borderRadius: 14,
         boxShadow: isSelected
-          ? `0 0 0 3px ${meta.color}22`
-          : '0 1px 2px rgba(0,0,0,0.03)',
+          ? `0 4px 16px ${meta.color}33`
+          : '0 2px 8px rgba(0,0,0,0.2)',
         padding: '20px',
         cursor: 'pointer',
         transition: 'box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease',
@@ -471,15 +471,15 @@ function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClic
       onMouseEnter={(e) => {
         const el = e.currentTarget
         el.style.borderColor = meta.color
-        el.style.boxShadow = `0 4px 12px rgba(0,0,0,0.06), 0 0 0 3px ${meta.color}18`
-        el.style.transform = 'translateY(-1px)'
+        el.style.boxShadow = `0 4px 16px ${meta.color}33`
+        el.style.transform = 'translateY(-2px)'
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget
-        el.style.borderColor = isSelected ? meta.color : 'var(--color-border)'
+        el.style.borderColor = isSelected ? meta.color : '#222222'
         el.style.boxShadow = isSelected
-          ? `0 0 0 3px ${meta.color}22`
-          : '0 1px 2px rgba(0,0,0,0.03)'
+          ? `0 4px 16px ${meta.color}33`
+          : '0 2px 8px rgba(0,0,0,0.2)'
         el.style.transform = 'translateY(0)'
       }}
     >
@@ -504,7 +504,7 @@ function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClic
           style={{
             font: 'var(--font-heading-md)',
             fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-primary)',
+            color: meta.color,
             marginBottom: 2,
           }}
         >
@@ -514,7 +514,7 @@ function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClic
           style={{
             font: 'var(--font-body-sm)',
             fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-muted)',
+            color: 'rgba(255,255,255,0.5)',
           }}
         >
           {dept.shortName}
@@ -528,20 +528,20 @@ function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClic
           gap: 16,
           paddingTop: 12,
           paddingBottom: 16,
-          borderTop: '1px solid var(--color-border)',
+          borderTop: '1px solid #2a2a2a',
           flex: 1,
         }}
       >
-        <InlineStat label="전체" value={dept.courses.length} unit="과목" />
-        <InlineStat label="필수" value={requiredCount} unit="과목" color="var(--color-accent-blue)" />
-        <InlineStat label="캡스톤" value={capstoneCount} unit="과목" color="var(--color-accent-amber)" />
+        <InlineStat label="전체" value={dept.courses.length} unit="과목" valueColor="#FFFFFF" labelColor="rgba(255,255,255,0.4)" />
+        <InlineStat label="필수" value={requiredCount} unit="과목" valueColor="#FFFFFF" labelColor="rgba(255,255,255,0.4)" />
+        <InlineStat label="캡스톤" value={capstoneCount} unit="과목" valueColor="#FFFFFF" labelColor="rgba(255,255,255,0.4)" />
       </div>
 
       {/* 하단: CTA */}
       <div
         style={{
           paddingTop: 14,
-          borderTop: '1px solid var(--color-border)',
+          borderTop: '1px solid #2a2a2a',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -567,12 +567,14 @@ function InlineStat({
   label,
   value,
   unit,
-  color = 'var(--color-text-secondary)',
+  valueColor = 'var(--color-text-secondary)',
+  labelColor = 'var(--color-text-muted)',
 }: {
   label: string
   value: number
   unit: string
-  color?: string
+  valueColor?: string
+  labelColor?: string
 }) {
   return (
     <div>
@@ -580,7 +582,7 @@ function InlineStat({
         style={{
           font: 'var(--font-label)',
           fontFamily: 'var(--font-family)',
-          color: 'var(--color-text-muted)',
+          color: labelColor,
           marginBottom: 3,
         }}
       >
@@ -592,7 +594,7 @@ function InlineStat({
             fontFamily: 'var(--font-family)',
             fontSize: 16,
             fontWeight: 600,
-            color,
+            color: valueColor,
           }}
         >
           {value}
@@ -601,7 +603,7 @@ function InlineStat({
           style={{
             font: 'var(--font-label)',
             fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-muted)',
+            color: labelColor,
           }}
         >
           {unit}
