@@ -117,7 +117,7 @@ export default function CourseSearch() {
               width: '100%',
               height: 52,
               background: 'var(--color-bg-card)',
-              border: `2px solid ${rawQuery ? 'var(--color-accent-blue)' : 'var(--color-border)'}`,
+              border: `2px solid ${rawQuery ? '#111111' : 'var(--color-border)'}`,
               borderRadius: 14,
               paddingLeft: 48,
               paddingRight: rawQuery ? 44 : 16,
@@ -126,11 +126,11 @@ export default function CourseSearch() {
               color: 'var(--color-text-primary)',
               outline: 'none',
               transition: 'border-color 150ms, box-shadow 150ms',
-              boxShadow: rawQuery ? '0 0 0 4px var(--color-accent-blue-light)' : 'none',
+              boxShadow: rawQuery ? '0 0 0 3px rgba(17,17,17,0.08)' : 'none',
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-accent-blue)'
-              e.currentTarget.style.boxShadow = '0 0 0 4px var(--color-accent-blue-light)'
+              e.currentTarget.style.borderColor = '#111111'
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17,17,17,0.08)'
             }}
             onBlurCapture={(e) => {
               if (!rawQuery) {

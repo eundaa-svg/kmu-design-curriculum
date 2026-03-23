@@ -38,8 +38,8 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ...style,
           }}
           onFocus={(e) => {
-            e.currentTarget.style.borderColor = 'var(--color-accent-blue)'
-            e.currentTarget.style.boxShadow = '0 0 0 3px var(--color-accent-blue-light)'
+            e.currentTarget.style.borderColor = '#111111'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17,17,17,0.08)'
             props.onFocus?.(e)
           }}
           onBlur={(e) => {
