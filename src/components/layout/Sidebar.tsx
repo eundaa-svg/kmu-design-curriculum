@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -11,9 +11,9 @@ import {
   ChevronsRight,
   ChevronDown,
   ChevronRight,
-
 } from 'lucide-react'
 import { departments } from '../../data'
+import DeptWireframe from './DeptWireframe'
 
 const DEPT_COLORS = [
   '#FF0017', // 공업디자인
@@ -38,6 +38,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const [deptExpanded, setDeptExpanded] = useState(
     location.pathname.startsWith('/department')
   )
+  const [hoveredDept, setHoveredDept] = useState<{ id: string; color: string } | null>(null)
+  const [wireframeVisible, setWireframeVisible] = useState(false)
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const isDeptActive = location.pathname.startsWith('/department')
 
@@ -55,6 +58,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const w = collapsed ? 72 : 256
 
   return (
+    <>
     <aside
       style={{
         width: w,
@@ -176,52 +180,60 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               }}
             >
               <div style={{ paddingTop: 4, paddingBottom: 4 }}>
-                {departments.map((dept, i) => (
-                  <NavLink
-                    key={dept.id}
-                    to={`/department/${dept.id}`}
-                    style={({ isActive }) => ({
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      height: 34,
-                      borderRadius: 8,
-                      padding: '0 10px 0 28px',
-                      textDecoration: 'none',
-                      font: 'var(--font-body-sm)',
-                      fontFamily: 'var(--font-family)',
-                      color: isActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
-                      background: isActive ? 'var(--color-accent-blue-light)' : 'transparent',
-                      fontWeight: isActive ? 500 : 400,
-                      transition: 'background 150ms, color 150ms',
-                    })}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget
-                      if (!el.classList.contains('active')) {
-                        el.style.background = '#F1F5F9'
-                        el.style.color = 'var(--color-text-primary)'
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget
-                      if (!el.classList.contains('active')) {
-                        el.style.background = 'transparent'
-                        el.style.color = 'var(--color-text-secondary)'
-                      }
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        background: DEPT_COLORS[i % DEPT_COLORS.length],
-                        flexShrink: 0,
+                {departments.map((dept, i) => {
+                  const deptColor = DEPT_COLORS[i % DEPT_COLORS.length]
+                  return (
+                    <NavLink
+                      key={dept.id}
+                      to={`/department/${dept.id}`}
+                      style={({ isActive }) => ({
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        height: 34,
+                        borderRadius: 8,
+                        padding: '0 10px 0 28px',
+                        textDecoration: 'none',
+                        font: 'var(--font-body-sm)',
+                        fontFamily: 'var(--font-family)',
+                        color: isActive ? 'var(--color-accent-blue)' : 'var(--color-text-secondary)',
+                        background: isActive ? 'var(--color-accent-blue-light)' : 'transparent',
+                        fontWeight: isActive ? 500 : 400,
+                        transition: 'background 150ms, color 150ms',
+                      })}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget
+                        if (!el.classList.contains('active')) {
+                          el.style.background = '#F1F5F9'
+                          el.style.color = deptColor
+                        }
+                        if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+                        setHoveredDept({ id: dept.id, color: deptColor })
+                        setWireframeVisible(true)
                       }}
-                    />
-                    {dept.shortName}
-                  </NavLink>
-                ))}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget
+                        if (!el.classList.contains('active')) {
+                          el.style.background = 'transparent'
+                          el.style.color = 'var(--color-text-secondary)'
+                        }
+                        setWireframeVisible(false)
+                        hideTimerRef.current = setTimeout(() => setHoveredDept(null), 300)
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          background: deptColor,
+                          flexShrink: 0,
+                        }}
+                      />
+                      {dept.shortName}
+                    </NavLink>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -291,6 +303,32 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </button>
       </div>
     </aside>
+
+      {/* ── 3D 와이어프레임 오버레이 ── */}
+      {hoveredDept && (
+        <div
+          style={{
+            position: 'fixed',
+            left: w + 40,
+            top: '50%',
+            transform: `translateY(-50%) scale(${wireframeVisible ? 1 : 0.9})`,
+            opacity: wireframeVisible ? 1 : 0,
+            transition: wireframeVisible
+              ? 'opacity 300ms ease-out, transform 300ms ease-out'
+              : 'opacity 200ms ease-in, transform 200ms ease-in',
+            zIndex: 10,
+            pointerEvents: 'none',
+            width: 300,
+            height: 300,
+          }}
+        >
+          <DeptWireframe
+            departmentId={hoveredDept.id}
+            color={hoveredDept.color}
+          />
+        </div>
+      )}
+    </>
   )
 }
 
