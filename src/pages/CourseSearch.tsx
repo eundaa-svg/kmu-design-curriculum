@@ -553,8 +553,8 @@ function SearchCard({ course, query, completed, onClick }: SearchCardProps) {
     <button
       onClick={onClick}
       style={{
-        background: completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)',
-        border: `1px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
+        background: completed ? '#F5F5F5' : 'var(--color-bg-card)',
+        border: `1px solid ${completed ? '#111111' : 'var(--color-border)'}`,
         borderRadius: 12,
         padding: '14px 16px',
         textAlign: 'left',
@@ -573,7 +573,7 @@ function SearchCard({ course, query, completed, onClick }: SearchCardProps) {
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = completed ? 'var(--color-accent-green)' : 'var(--color-border)'
+        e.currentTarget.style.borderColor = completed ? '#111111' : 'var(--color-border)'
       }}
     >
       {/* 학과 배지 */}
@@ -602,7 +602,7 @@ function SearchCard({ course, query, completed, onClick }: SearchCardProps) {
           fontFamily: 'var(--font-family)',
           fontSize: 14,
           fontWeight: 500,
-          color: completed ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
+          color: completed ? '#111111' : 'var(--color-text-primary)',
           lineHeight: '20px',
           display: '-webkit-box',
           WebkitLineClamp: 2,
@@ -689,11 +689,11 @@ function SearchListView({
                   style={{
                     height: 48,
                     borderBottom: '1px solid var(--color-border)',
-                    background: done ? '#F0FDF4' : 'transparent',
+                    background: done ? '#F5F5F5' : 'transparent',
                     transition: 'background 150ms',
                   }}
                   onMouseEnter={(e) => { if (!done) e.currentTarget.style.background = '#F8FAFC' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = done ? '#F0FDF4' : 'transparent' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = done ? '#F5F5F5' : 'transparent' }}
                 >
                   <td style={{ padding: '0 12px', textAlign: 'center' }}>
                     <span
@@ -709,8 +709,8 @@ function SearchListView({
                         width: 18,
                         height: 18,
                         borderRadius: 5,
-                        border: `1.5px solid ${done ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-                        background: done ? 'var(--color-accent-green)' : 'transparent',
+                        border: `1.5px solid ${done ? '#111111' : 'var(--color-border)'}`,
+                        background: done ? '#111111' : 'transparent',
                         cursor: 'pointer',
                         transition: 'all 150ms',
                       }}
@@ -733,7 +733,7 @@ function SearchListView({
                       <Highlight
                         text={course.name}
                         query={query}
-                        style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 500, color: done ? 'var(--color-accent-green)' : 'var(--color-text-primary)' }}
+                        style={{ fontFamily: 'var(--font-family)', fontSize: 13, fontWeight: 500, color: done ? '#111111' : 'var(--color-text-primary)' }}
                       />
                     </button>
                   </td>

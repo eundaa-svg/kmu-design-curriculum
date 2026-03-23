@@ -332,9 +332,9 @@ export default function CourseDetailPanel({
                   width: '100%',
                   height: 44,
                   borderRadius: 10,
-                  border: `1px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-accent-blue)'}`,
-                  background: completed ? 'var(--color-accent-green)' : 'transparent',
-                  color: completed ? '#fff' : 'var(--color-accent-blue)',
+                  border: '1px solid #111111',
+                  background: completed ? '#111111' : '#FFFFFF',
+                  color: completed ? '#FFFFFF' : '#111111',
                   fontFamily: 'var(--font-family)',
                   fontSize: 15,
                   fontWeight: 500,
@@ -346,7 +346,7 @@ export default function CourseDetailPanel({
                   transition: 'all 200ms ease',
                 }}
                 onMouseEnter={(e) => {
-                  if (!completed) e.currentTarget.style.background = 'var(--color-accent-blue-light)'
+                  if (!completed) e.currentTarget.style.background = '#F5F5F5'
                 }}
                 onMouseLeave={(e) => {
                   if (!completed) e.currentTarget.style.background = 'transparent'

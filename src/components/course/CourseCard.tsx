@@ -40,9 +40,9 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
           el.style.background = `linear-gradient(135deg, ${hexToRgba(deptColor, 0.04)} 0%, ${hexToRgba(deptColor, 0.08)} 100%)`
           if (course.category === 'required') el.style.borderLeftColor = 'var(--color-accent-blue)'
         } else if (!isSelected) {
-          el.style.borderColor = completed ? 'var(--color-accent-green)' : 'var(--color-border)'
+          el.style.borderColor = completed ? '#111111' : 'var(--color-border)'
           el.style.boxShadow = 'none'
-          el.style.background = completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)'
+          el.style.background = completed ? '#F5F5F5' : 'var(--color-bg-card)'
           if (course.category === 'required') el.style.borderLeftColor = 'var(--color-accent-blue)'
         }
       }}
@@ -52,9 +52,9 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
         minHeight: 64,
         padding: '10px 12px',
         borderRadius: 10,
-        border: `1px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
+        border: `1px solid ${completed ? '#111111' : 'var(--color-border)'}`,
         borderLeft: `3px solid ${course.category === 'required' ? 'var(--color-accent-blue)' : 'transparent'}`,
-        background: completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)',
+        background: completed ? '#F5F5F5' : 'var(--color-bg-card)',
         boxShadow: 'none',
         cursor: 'pointer',
         textAlign: 'left',
@@ -84,8 +84,8 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
       onMouseLeave={(e) => {
         if (!isSelected) {
           const el = e.currentTarget
-          el.style.background = completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)'
-          el.style.borderColor = completed ? 'var(--color-accent-green)' : 'var(--color-border)'
+          el.style.background = completed ? '#F5F5F5' : 'var(--color-bg-card)'
+          el.style.borderColor = completed ? '#111111' : 'var(--color-border)'
           el.style.boxShadow = 'none'
           el.style.transform = 'scale(1)'
           el.style.zIndex = ''
@@ -103,7 +103,7 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
             fontFamily: 'var(--font-family)',
             fontSize: 13,
             fontWeight: 500,
-            color: completed ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
+            color: completed ? '#111111' : 'var(--color-text-primary)',
             lineHeight: '18px',
             display: '-webkit-box',
             WebkitLineClamp: 2,
@@ -131,8 +131,8 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
             width: 20,
             height: 20,
             borderRadius: 6,
-            border: `1.5px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-            background: completed ? 'var(--color-accent-green)' : 'transparent',
+            border: `1.5px solid ${completed ? '#111111' : 'var(--color-border)'}`,
+            background: completed ? '#111111' : 'transparent',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

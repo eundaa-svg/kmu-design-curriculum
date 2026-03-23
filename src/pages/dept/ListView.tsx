@@ -201,7 +201,7 @@ export default function ListView({ courses, completed, onToggle, onSelect, selec
                       style={{
                         height: 48,
                         borderBottom: '1px solid var(--color-border)',
-                        background: isSelected ? '#F5F5F5' : done ? '#F0FDF4' : 'transparent',
+                        background: isSelected ? '#F5F5F5' : done ? '#F5F5F5' : 'transparent',
                         outline: isSelected ? '2px solid #111111' : 'none',
                         outlineOffset: '-1px',
                         transition: 'background 150ms',
@@ -210,7 +210,7 @@ export default function ListView({ courses, completed, onToggle, onSelect, selec
                         if (!done && !isSelected) e.currentTarget.style.background = '#F8FAFC'
                       }}
                       onMouseLeave={(e) => {
-                        if (!isSelected) e.currentTarget.style.background = done ? '#F0FDF4' : 'transparent'
+                        if (!isSelected) e.currentTarget.style.background = done ? '#F5F5F5' : 'transparent'
                       }}
                     >
                       {/* 이수 체크박스 */}
@@ -233,8 +233,8 @@ export default function ListView({ courses, completed, onToggle, onSelect, selec
                             width: 20,
                             height: 20,
                             borderRadius: 6,
-                            border: `1.5px solid ${done ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
-                            background: done ? 'var(--color-accent-green)' : 'transparent',
+                            border: `1.5px solid ${done ? '#111111' : 'var(--color-border)'}`,
+                            background: done ? '#111111' : 'transparent',
                             cursor: 'pointer',
                             transition: 'all 150ms',
                           }}
@@ -258,7 +258,7 @@ export default function ListView({ courses, completed, onToggle, onSelect, selec
                             fontFamily: 'var(--font-family)',
                             fontSize: 14,
                             fontWeight: 500,
-                            color: done ? 'var(--color-accent-green)' : 'var(--color-text-primary)',
+                            color: done ? '#111111' : 'var(--color-text-primary)',
                             textAlign: 'left',
                             padding: 0,
                           }}
