@@ -31,16 +31,31 @@ const TAG_COLORS: Record<string, { bg: string; color: string }> = {
 export default function CourseCard({ course, completed, onToggle, onClick, isSelected }: CourseCardProps) {
   return (
     <button
+      ref={(el) => {
+        if (!el) return
+        const deptColor = getComputedStyle(el).getPropertyValue('--dept-color').trim()
+        if (isSelected && deptColor) {
+          el.style.borderColor = deptColor
+          el.style.boxShadow = `0 0 0 2px ${hexToRgba(deptColor, 0.35)}`
+          el.style.background = `linear-gradient(135deg, ${hexToRgba(deptColor, 0.04)} 0%, ${hexToRgba(deptColor, 0.08)} 100%)`
+          if (course.category === 'required') el.style.borderLeftColor = 'var(--color-accent-blue)'
+        } else if (!isSelected) {
+          el.style.borderColor = completed ? 'var(--color-accent-green)' : 'var(--color-border)'
+          el.style.boxShadow = 'none'
+          el.style.background = completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)'
+          if (course.category === 'required') el.style.borderLeftColor = 'var(--color-accent-blue)'
+        }
+      }}
       onClick={onClick}
       style={{
         width: '100%',
         minHeight: 64,
         padding: '10px 12px',
         borderRadius: 10,
-        border: `1px solid ${isSelected ? '#111111' : completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
+        border: `1px solid ${completed ? 'var(--color-accent-green)' : 'var(--color-border)'}`,
         borderLeft: `3px solid ${course.category === 'required' ? 'var(--color-accent-blue)' : 'transparent'}`,
-        background: isSelected ? '#F5F5F5' : completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)',
-        boxShadow: isSelected ? '0 0 0 2px #111111' : 'none',
+        background: completed ? 'var(--color-accent-green-light)' : 'var(--color-bg-card)',
+        boxShadow: 'none',
         cursor: 'pointer',
         textAlign: 'left',
         display: 'flex',
@@ -55,7 +70,7 @@ export default function CourseCard({ course, completed, onToggle, onClick, isSel
           const deptColor = getComputedStyle(el).getPropertyValue('--dept-color').trim()
           if (deptColor) {
             el.style.background = `linear-gradient(135deg, ${hexToRgba(deptColor, 0.04)} 0%, ${hexToRgba(deptColor, 0.08)} 100%)`
-            el.style.borderColor = hexToRgba(deptColor, 0.2)
+            el.style.borderColor = hexToRgba(deptColor, 0.3)
           }
           el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)'
           el.style.transform = 'scale(1.03)'
