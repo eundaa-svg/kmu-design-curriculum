@@ -11,7 +11,7 @@ const CONFIG: Record<string, { line1: string; line2: string; bgColor: string; pa
   'ceramic-craft':       { line1: 'DEPT. OF', line2: 'CERAMIC CRAFT',                        bgColor: '#FF7700', particleColor: '#FFFFFF' },
   'fashion-design':      { line1: 'DEPT. OF', line2: 'FASHION DESIGN',                       bgColor: '#8E008E', particleColor: '#FFFFFF' },
   'spatial-design':      { line1: 'DEPT. OF', line2: 'SPATIAL DESIGN',                       bgColor: '#008AC2', particleColor: '#FFFFFF' },
-  'moving-image-design': { line1: 'DEPT. OF', line2: 'MOVING IMAGE DESIGN',                  bgColor: '#00BCB5', particleColor: '#FFFFFF' },
+  'moving-image-design': { line1: 'DEPT. OF', line2: 'ENTERTAINMENT DESIGN',                  bgColor: '#00BCB5', particleColor: '#FFFFFF' },
   'automotive-design':   { line1: 'DEPT. OF', line2: 'AUTOMOTIVE & TRANSPORTATION DESIGN',   bgColor: '#2B50B6', particleColor: '#FFFFFF' },
   'ai-design':           { line1: 'DEPT. OF', line2: 'AI DESIGN',                            bgColor: '#111111', particleColor: '#00FF00' },
 }
