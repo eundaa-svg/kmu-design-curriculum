@@ -7,6 +7,7 @@ interface RoadmapViewProps {
   completed: Set<string>
   onToggle: (id: string, e: MouseEvent) => void
   onSelect: (course: Course) => void
+  selectedCourseId: string | null
 }
 
 const YEAR_SEM_COLS = [
@@ -16,7 +17,7 @@ const YEAR_SEM_COLS = [
   { year: 4, sem: 1 }, { year: 4, sem: 2 },
 ]
 
-export default function RoadmapView({ courses, completed, onToggle, onSelect }: RoadmapViewProps) {
+export default function RoadmapView({ courses, completed, onToggle, onSelect, selectedCourseId }: RoadmapViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const dragRef = useRef({ down: false, startX: 0, scrollX: 0 })
 
@@ -77,6 +78,7 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
                   completed={completed.has(c.id)}
                   onToggle={(e) => onToggle(c.id, e)}
                   onClick={() => onSelect(c)}
+                  isSelected={c.id === selectedCourseId}
                 />
               </div>
             ))}
@@ -196,6 +198,7 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
                         completed={completed.has(c.id)}
                         onToggle={(e) => onToggle(c.id, e)}
                         onClick={() => onSelect(c)}
+                        isSelected={c.id === selectedCourseId}
                       />
                     ))
                   )}

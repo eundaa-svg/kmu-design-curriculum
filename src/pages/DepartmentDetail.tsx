@@ -92,7 +92,7 @@ export default function DepartmentDetail() {
   }
 
   return (
-    <div ref={mainRef} style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <div ref={mainRef} style={{ maxWidth: 1200, margin: '0 auto', ['--dept-color' as string]: meta.color }}>
 
       {/* ── 뒤로가기 ── */}
       <Link
@@ -254,6 +254,7 @@ export default function DepartmentDetail() {
               completed={completed}
               onToggle={handleToggle}
               onSelect={handleSelect}
+              selectedCourseId={selectedCourse?.id ?? null}
             />
           )}
           {view === 'category' && (
@@ -262,6 +263,7 @@ export default function DepartmentDetail() {
               completed={completed}
               onToggle={handleToggle}
               onSelect={handleSelect}
+              selectedCourseId={selectedCourse?.id ?? null}
             />
           )}
           {view === 'list' && (
@@ -270,6 +272,7 @@ export default function DepartmentDetail() {
               completed={completed}
               onToggle={handleToggle}
               onSelect={handleSelect}
+              selectedCourseId={selectedCourse?.id ?? null}
             />
           )}
         </motion.div>

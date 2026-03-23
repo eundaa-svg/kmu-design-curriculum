@@ -9,12 +9,13 @@ interface ListViewProps {
   completed: Set<string>
   onToggle: (id: string, e: MouseEvent) => void
   onSelect: (course: Course) => void
+  selectedCourseId: string | null
 }
 
 type SortKey = 'name' | 'year' | 'credits' | 'category'
 type SortDir = 'asc' | 'desc'
 
-export default function ListView({ courses, completed, onToggle, onSelect }: ListViewProps) {
+export default function ListView({ courses, completed, onToggle, onSelect, selectedCourseId }: ListViewProps) {
   const [query, setQuery] = useState('')
   const [filterYear, setFilterYear] = useState<number | ''>('')
   const [filterSem, setFilterSem] = useState<number | ''>('')
@@ -193,20 +194,23 @@ export default function ListView({ courses, completed, onToggle, onSelect }: Lis
               ) : (
                 filtered.map((c) => {
                   const done = completed.has(c.id)
+                  const isSelected = c.id === selectedCourseId
                   return (
                     <tr
                       key={c.id}
                       style={{
                         height: 48,
                         borderBottom: '1px solid var(--color-border)',
-                        background: done ? '#F0FDF4' : 'transparent',
+                        background: isSelected ? '#F5F5F5' : done ? '#F0FDF4' : 'transparent',
+                        outline: isSelected ? '2px solid #111111' : 'none',
+                        outlineOffset: '-1px',
                         transition: 'background 150ms',
                       }}
                       onMouseEnter={(e) => {
-                        if (!done) e.currentTarget.style.background = '#F8FAFC'
+                        if (!done && !isSelected) e.currentTarget.style.background = '#F8FAFC'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = done ? '#F0FDF4' : 'transparent'
+                        if (!isSelected) e.currentTarget.style.background = done ? '#F0FDF4' : 'transparent'
                       }}
                     >
                       {/* 이수 체크박스 */}

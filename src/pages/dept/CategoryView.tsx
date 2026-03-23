@@ -8,6 +8,7 @@ interface CategoryViewProps {
   completed: Set<string>
   onToggle: (id: string, e: MouseEvent) => void
   onSelect: (course: Course) => void
+  selectedCourseId: string | null
 }
 
 function groupByConcentration(courses: Course[]): [string, Course[]][] {
@@ -24,7 +25,7 @@ function groupByConcentration(courses: Course[]): [string, Course[]][] {
   return [...common, ...rest]
 }
 
-export default function CategoryView({ courses, completed, onToggle, onSelect }: CategoryViewProps) {
+export default function CategoryView({ courses, completed, onToggle, onSelect, selectedCourseId }: CategoryViewProps) {
   const groups = groupByConcentration(courses)
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
 
@@ -119,6 +120,7 @@ export default function CategoryView({ courses, completed, onToggle, onSelect }:
                     completed={completed.has(c.id)}
                     onToggle={(e) => onToggle(c.id, e)}
                     onClick={() => onSelect(c)}
+                    isSelected={c.id === selectedCourseId}
                   />
                 ))}
               </div>
