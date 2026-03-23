@@ -109,22 +109,24 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
           }}
         >
           {([
-            { year: 1, bg: '#EBF5FF', color: '#1B64DA' },
-            { year: 2, bg: '#E6FCF5', color: '#0D9488' },
-            { year: 3, bg: '#FFF9DB', color: '#B45309' },
-            { year: 4, bg: '#FFF0F0', color: '#DC2626' },
+            { year: 1, bg: '#E5E5E5', color: '#111111' },
+            { year: 2, bg: '#999999', color: '#FFFFFF' },
+            { year: 3, bg: '#555555', color: '#FFFFFF' },
+            { year: 4, bg: '#111111', color: '#FFFFFF' },
           ]).map(({ year, bg, color }) => (
             <div
               key={year}
               style={{
                 textAlign: 'center',
-                padding: '6px 0',
+                padding: '8px 0',
                 background: bg,
                 borderRadius: 8,
                 fontFamily: 'var(--font-family)',
-                fontSize: 13,
-                fontWeight: 600,
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: '1px',
                 color,
+                border: '1px solid rgba(0,0,0,0.1)',
               }}
             >
               {year}학년
@@ -144,6 +146,8 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
           {YEAR_SEM_COLS.map(({ year, sem }) => {
             const key = `${year}-${sem}`
             const colCourses = byCols[key] ?? []
+            const semLabelColors: Record<number, string> = { 1: '#666666', 2: '#888888', 3: '#AAAAAA', 4: '#CCCCCC' }
+            const semLabelColor = semLabelColors[year] ?? '#888888'
             return (
               <div
                 key={key}
@@ -160,9 +164,9 @@ export default function RoadmapView({ courses, completed, onToggle, onSelect }: 
                     fontFamily: 'var(--font-family)',
                     fontSize: 12,
                     fontWeight: 500,
-                    color: 'var(--color-text-secondary)',
+                    color: semLabelColor,
                     textAlign: 'center',
-                    borderBottom: `2px solid ${sem === 1 ? '#BAE6FD' : '#DDD6FE'}`,
+                    borderBottom: `2px solid ${semLabelColor}`,
                     marginBottom: 10,
                   }}
                 >
