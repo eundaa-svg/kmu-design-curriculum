@@ -66,21 +66,21 @@ export default function GraduationCheck() {
           borderRadius: 14,
           padding: '20px 24px',
           marginBottom: 20,
-          background: grad.allMet ? 'var(--color-accent-green-light)' : 'var(--color-accent-amber-light)',
-          border: `1px solid ${grad.allMet ? 'var(--color-accent-green)' : 'var(--color-accent-amber)'}`,
+          background: '#111111',
+          border: 'none',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: grad.allMet ? 0 : 10 }}>
           {grad.allMet ? (
-            <CheckCircle size={28} style={{ color: 'var(--color-accent-green)', flexShrink: 0 }} />
+            <CheckCircle size={28} style={{ color: '#FFFFFF', flexShrink: 0 }} />
           ) : (
-            <AlertTriangle size={28} style={{ color: 'var(--color-accent-amber)', flexShrink: 0 }} />
+            <AlertTriangle size={28} style={{ color: '#FFFFFF', flexShrink: 0 }} />
           )}
           <h2
             style={{
               font: 'var(--font-heading-md)',
               fontFamily: 'var(--font-family)',
-              color: grad.allMet ? 'var(--color-accent-green)' : 'var(--color-accent-amber)',
+              color: '#FFFFFF',
             }}
           >
             {grad.allMet
@@ -99,9 +99,9 @@ export default function GraduationCheck() {
                   fontWeight: 500,
                   padding: '3px 9px',
                   borderRadius: 6,
-                  background: 'rgba(245,158,11,0.15)',
-                  color: 'var(--color-accent-amber)',
-                  border: '1px solid rgba(245,158,11,0.3)',
+                  background: 'rgba(255,255,255,0.15)',
+                  color: '#FFFFFF',
+                  border: '1px solid rgba(255,255,255,0.3)',
                 }}
               >
                 {r.label}
@@ -543,7 +543,7 @@ function ReqItem({ req, isLast, expanded, onToggle, completedSet, onSelectCourse
             width: 32,
             height: 32,
             borderRadius: '50%',
-            background: req.met ? 'var(--color-accent-green-light)' : 'var(--color-accent-red-light)',
+            background: 'transparent',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -551,9 +551,9 @@ function ReqItem({ req, isLast, expanded, onToggle, completedSet, onSelectCourse
           }}
         >
           {req.met ? (
-            <Check size={15} style={{ color: 'var(--color-accent-green)' }} strokeWidth={2.5} />
+            <Check size={18} style={{ color: 'var(--color-accent-green)' }} strokeWidth={2.5} />
           ) : (
-            <X size={15} style={{ color: 'var(--color-accent-red)' }} strokeWidth={2.5} />
+            <X size={18} style={{ color: '#FF0000' }} strokeWidth={2.5} />
           )}
         </div>
 
@@ -564,7 +564,7 @@ function ReqItem({ req, isLast, expanded, onToggle, completedSet, onSelectCourse
               fontFamily: 'var(--font-family)',
               fontSize: 14,
               fontWeight: 500,
-              color: 'var(--color-text-primary)',
+              color: '#111111',
               marginBottom: 2,
             }}
           >
