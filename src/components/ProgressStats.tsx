@@ -1,16 +1,16 @@
 import { useStore } from '../store/useStore';
 
 export default function ProgressStats() {
-  const { departments, myDepartmentId, studentProgress, resetProgress } = useStore();
+  const { departments, myDepartmentId, completedCourseIds, resetProgress } = useStore();
   const dept = departments.find(d => d.id === myDepartmentId);
-  if (!dept || !studentProgress) return null;
+  if (!dept) return null;
 
   const total = dept.courses.length;
-  const completed = studentProgress.completedCourseIds.length;
+  const completed = completedCourseIds.length;
   const requiredCourses = dept.courses.filter(c => c.category === 'required');
-  const completedRequired = requiredCourses.filter(c => studentProgress.completedCourseIds.includes(c.id)).length;
+  const completedRequired = requiredCourses.filter(c => completedCourseIds.includes(c.id)).length;
   const completedCredits = dept.courses
-    .filter(c => studentProgress.completedCourseIds.includes(c.id))
+    .filter(c => completedCourseIds.includes(c.id))
     .reduce((sum, c) => sum + c.credits, 0);
 
   const stats = [

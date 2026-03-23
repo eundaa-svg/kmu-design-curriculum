@@ -48,12 +48,9 @@ export default function DepartmentDetail() {
   const view: ViewMode = ['roadmap', 'category', 'list'].includes(viewParam) ? viewParam : 'roadmap'
 
   const department = useDepartment(deptId)
-  const { studentProgress, toggleCourseComplete } = useStore()
-  // stats 계산은 해당 학과 progress만 사용 (이수율 표시용)
-  const progress = studentProgress?.departmentId === deptId ? studentProgress : null
-  const stats = useProgress(department, progress)
-  // completed Set은 studentProgress 전체에서 빌드 — 어느 학과를 보든 체크 가능
-  const completed = new Set(studentProgress?.completedCourseIds ?? [])
+  const { completedCourseIds, toggleCourseComplete } = useStore()
+  const stats = useProgress(department, completedCourseIds)
+  const completed = new Set(completedCourseIds)
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
   const [goalExpanded, setGoalExpanded] = useState(false)

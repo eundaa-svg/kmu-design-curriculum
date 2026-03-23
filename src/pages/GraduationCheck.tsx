@@ -17,9 +17,9 @@ import { minorRequirements, doubleMajorRequirements, type TransferRequirement } 
 
 
 export default function GraduationCheck() {
-  const { myDepartmentId, studentProgress, toggleCourseComplete } = useStore()
+  const { myDepartmentId, completedCourseIds, toggleCourseComplete } = useStore()
   const department = useDepartment(myDepartmentId)
-  const completedSet = new Set(studentProgress?.completedCourseIds ?? [])
+  const completedSet = new Set(completedCourseIds)
 
   const grad = useGraduationCheck(department, completedSet)
 

@@ -37,7 +37,7 @@ export default function CourseSearch() {
     sort, setSort, results, isSearching, isInitial,
   } = useSearch()
   const { recents, add: addRecent, remove: removeRecent } = useRecentSearches()
-  const { studentProgress, toggleCourseComplete } = useStore()
+  const { completedCourseIds, toggleCourseComplete } = useStore()
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
@@ -54,7 +54,7 @@ export default function CourseSearch() {
   const handleKey = (e: KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') commitSearch() }
 
   /* 이수 상태 */
-  const completedSet = new Set(studentProgress?.completedCourseIds ?? [])
+  const completedSet = new Set(completedCourseIds)
 
   /* 활성 필터 배지용 */
   const activeFilterBadges: { label: string; onRemove: () => void }[] = [

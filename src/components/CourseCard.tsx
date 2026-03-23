@@ -8,8 +8,8 @@ interface Props {
 }
 
 export default function CourseCard({ course, compact, isShared }: Props) {
-  const { studentProgress, toggleCourseComplete } = useStore();
-  const isCompleted = studentProgress?.completedCourseIds.includes(course.id) ?? false;
+  const { completedCourseIds, toggleCourseComplete } = useStore();
+  const isCompleted = completedCourseIds.includes(course.id);
 
   const bgColor = isCompleted
     ? 'bg-[#10B981] text-white border-[#10B981]'

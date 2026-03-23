@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { Department, StudentProgress } from '../types'
+import type { Department } from '../types'
 
 export interface ProgressStats {
   totalCourses: number
@@ -16,10 +16,10 @@ export interface ProgressStats {
 
 export function useProgress(
   department: Department | undefined,
-  progress: StudentProgress | null
+  completedCourseIds: string[]
 ): ProgressStats {
   return useMemo(() => {
-    if (!department || !progress) {
+    if (!department) {
       return {
         totalCourses: 0,
         completedCourses: 0,
@@ -33,7 +33,7 @@ export function useProgress(
         percentage: 0,
       }
     }
-    const completed = new Set(progress.completedCourseIds)
+    const completed = new Set(completedCourseIds)
     const totalCourses = department.courses.length
     let completedCourses = 0
     let requiredCourses = 0
@@ -74,5 +74,5 @@ export function useProgress(
       capstoneCompleted,
       percentage,
     }
-  }, [department, progress])
+  }, [department, completedCourseIds])
 }

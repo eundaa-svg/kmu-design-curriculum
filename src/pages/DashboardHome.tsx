@@ -55,10 +55,10 @@ const deptContainerVariants: Variants = {
 /* ─────────────────────────────────────── */
 export default function DashboardHome() {
   const navigate = useNavigate()
-  const { myDepartmentId, studentProgress } = useStore()
+  const { myDepartmentId, completedCourseIds } = useStore()
   const department = useDepartment(myDepartmentId)
 
-  const completedCount = studentProgress?.completedCourseIds.length ?? 0
+  const completedCount = completedCourseIds.length
   const deptTotalCourses = department?.courses.length ?? 0
   const achievePct =
     deptTotalCourses > 0 ? (completedCount / deptTotalCourses) * 100 : 0

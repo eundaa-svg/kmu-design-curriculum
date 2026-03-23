@@ -1,17 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Department, StudentProgress } from '../types';
+import type { Department } from '../types';
 import { departments } from '../data';
 
 interface StoreState {
   departments: Department[];
-  /** 내 소속 학과 — 온보딩/설정에서만 변경, 커리큘럼 탐색과 무관 */
+  /** 내 소속 학과 — 온보딩/설정에서만 변경 */
   myDepartmentId: string | null;
-  studentProgress: StudentProgress | null;
+  /** 이수 완료 과목 ID 목록 — departmentId와 무관하게 독립 관리 */
+  completedCourseIds: string[];
+  currentYear: number;
+  currentSemester: 1 | 2;
   nickname: string;
 
   setMyDepartment: (id: string) => void;
-  setStudentProgress: (progress: StudentProgress) => void;
   toggleCourseComplete: (courseId: string) => void;
   bulkComplete: (courseIds: string[]) => void;
   resetProgress: () => void;
@@ -25,83 +27,65 @@ export const useStore = create<StoreState>()(
     (set, get) => ({
       departments,
       myDepartmentId: null,
-      studentProgress: null,
+      completedCourseIds: [],
+      currentYear: 1,
+      currentSemester: 1,
       nickname: '',
 
       setMyDepartment: (id) => {
-        const dept = departments.find(d => d.id === id);
-        if (!dept) return;
-        set({
-          myDepartmentId: id,
-          studentProgress: get().studentProgress?.departmentId === id
-            ? get().studentProgress
-            : { departmentId: id, completedCourseIds: [], currentYear: 1, currentSemester: 1 }
-        });
+        if (!departments.find(d => d.id === id)) return;
+        set({ myDepartmentId: id });
       },
 
-      setStudentProgress: (progress) => set({ studentProgress: progress }),
-
       toggleCourseComplete: (courseId) => {
-        let progress = get().studentProgress;
-        // progress가 없으면 myDepartmentId 기준으로 초기화
-        if (!progress) {
-          const dept = get().myDepartmentId;
-          if (!dept) return;
-          progress = { departmentId: dept, completedCourseIds: [], currentYear: 1, currentSemester: 1 };
-        }
-        const isCompleted = progress.completedCourseIds.includes(courseId);
+        const ids = get().completedCourseIds;
         set({
-          studentProgress: {
-            ...progress,
-            completedCourseIds: isCompleted
-              ? progress.completedCourseIds.filter(id => id !== courseId)
-              : [...progress.completedCourseIds, courseId]
-          }
+          completedCourseIds: ids.includes(courseId)
+            ? ids.filter(id => id !== courseId)
+            : [...ids, courseId],
         });
       },
 
       bulkComplete: (courseIds) => {
-        const progress = get().studentProgress;
-        if (!progress) return;
-        const existing = new Set(progress.completedCourseIds);
+        const existing = new Set(get().completedCourseIds);
         courseIds.forEach(id => existing.add(id));
-        set({ studentProgress: { ...progress, completedCourseIds: [...existing] } });
+        set({ completedCourseIds: [...existing] });
       },
 
-      resetProgress: () => {
-        const dept = get().myDepartmentId;
-        if (!dept) return;
-        set({
-          studentProgress: { departmentId: dept, completedCourseIds: [], currentYear: 1, currentSemester: 1 }
-        });
-      },
+      resetProgress: () => set({ completedCourseIds: [] }),
 
-      setCurrentYear: (year) => {
-        const progress = get().studentProgress;
-        if (!progress) return;
-        set({ studentProgress: { ...progress, currentYear: year } });
-      },
+      setCurrentYear: (year) => set({ currentYear: year }),
 
-      setCurrentSemester: (sem) => {
-        const progress = get().studentProgress;
-        if (!progress) return;
-        set({ studentProgress: { ...progress, currentSemester: sem } });
-      },
+      setCurrentSemester: (sem) => set({ currentSemester: sem }),
 
       setNickname: (name) => set({ nickname: name }),
     }),
     {
       name: 'curriculum-store',
-      // localStorage 키 마이그레이션: selectedDepartmentId → myDepartmentId
-      migrate: (state: unknown) => {
-        const s = state as Record<string, unknown>
+      version: 2,
+      migrate: (state: unknown, version: number) => {
+        const s = state as Record<string, unknown>;
+        // v0→v1: selectedDepartmentId → myDepartmentId
         if ('selectedDepartmentId' in s && !('myDepartmentId' in s)) {
-          s.myDepartmentId = s.selectedDepartmentId
-          delete s.selectedDepartmentId
+          s.myDepartmentId = s.selectedDepartmentId;
+          delete s.selectedDepartmentId;
         }
-        return s as unknown as StoreState
+        // v0/v1→v2: studentProgress 중첩 구조 → 플랫 구조
+        if (version < 2 && s.studentProgress && typeof s.studentProgress === 'object') {
+          const sp = s.studentProgress as Record<string, unknown>;
+          if (!s.completedCourseIds && Array.isArray(sp.completedCourseIds)) {
+            s.completedCourseIds = sp.completedCourseIds;
+          }
+          if (!s.currentYear && typeof sp.currentYear === 'number') {
+            s.currentYear = sp.currentYear;
+          }
+          if (!s.currentSemester && typeof sp.currentSemester === 'number') {
+            s.currentSemester = sp.currentSemester;
+          }
+          delete s.studentProgress;
+        }
+        return s as unknown as StoreState;
       },
-      version: 1,
     }
   )
 );
