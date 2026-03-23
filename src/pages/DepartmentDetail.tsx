@@ -3,8 +3,6 @@ import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
-  Cpu, Eye, Gem, Coffee, Shirt, Home, Film, Car, Brain,
-  BookOpen,
   ChevronDown, ChevronUp,
 } from 'lucide-react'
 import { useDepartment } from '../hooks/useDepartment'
@@ -19,16 +17,16 @@ import ListView from './dept/ListView'
 import DepartmentParticleText from '../components/department/DepartmentParticleText'
 
 /* ── 학과 메타 ── */
-const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  'industrial-design':  { icon: <Cpu size={22} />,    color: '#FF0017', bg: 'rgba(255,0,23,0.1)' },
-  'visual-design':      { icon: <Eye size={22} />,    color: '#FF006A', bg: 'rgba(255,0,106,0.1)' },
-  'metal-craft':        { icon: <Gem size={22} />,    color: '#FFC900', bg: 'rgba(255,201,0,0.1)' },
-  'ceramic-craft':      { icon: <Coffee size={22} />, color: '#FF7700', bg: 'rgba(255,119,0,0.1)' },
-  'fashion-design':     { icon: <Shirt size={22} />,  color: '#8E008E', bg: 'rgba(142,0,142,0.1)' },
-  'spatial-design':     { icon: <Home size={22} />,   color: '#008AC2', bg: 'rgba(0,138,194,0.1)' },
-  'moving-image':       { icon: <Film size={22} />,   color: '#00BCB5', bg: 'rgba(0,188,181,0.1)' },
-  'automotive-design':  { icon: <Car size={22} />,    color: '#2B50B6', bg: 'rgba(43,80,182,0.1)' },
-  'ai-design':          { icon: <Brain size={22} />,  color: '#00CC00', bg: 'rgba(0,255,0,0.1)' },
+const DEPT_META: Record<string, { color: string }> = {
+  'industrial-design':  { color: '#FF0017' },
+  'visual-design':      { color: '#FF006A' },
+  'metal-craft':        { color: '#FFC900' },
+  'ceramic-craft':      { color: '#FF7700' },
+  'fashion-design':     { color: '#8E008E' },
+  'spatial-design':     { color: '#008AC2' },
+  'moving-image-design':{ color: '#00BCB5' },
+  'automotive-design':  { color: '#2B50B6' },
+  'ai-design':          { color: '#00CC00' },
 }
 
 type ViewMode = 'roadmap' | 'category' | 'list'
@@ -73,7 +71,7 @@ export default function DepartmentDetail() {
     )
   }
 
-  const meta = DEPT_META[department.id] ?? { icon: <BookOpen size={22} />, color: '#64748B', bg: '#F1F5F9' }
+  const meta = DEPT_META[department.id] ?? { color: '#64748B' }
   const completed = new Set(progress?.completedCourseIds ?? [])
 
   const handleToggle = (id: string, e: MouseEvent) => {
@@ -117,52 +115,35 @@ export default function DepartmentDetail() {
       <DepartmentParticleText departmentId={department.id} />
 
       {/* ══════════════════ A. 학과 헤더 ══════════════════ */}
-      <div style={{ paddingBottom: 24 }}>
-        {/* 아이콘 + 학과명 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 }}>
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: '50%',
-              background: meta.bg,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: meta.color,
-              flexShrink: 0,
-            }}
-          >
-            {meta.icon}
-          </div>
-          <div>
-            <h1
-              style={{
-                font: 'var(--font-heading-xl)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-primary)',
-                lineHeight: 1.2,
-              }}
-            >
-              {department.name}
-            </h1>
-            <p
-              style={{
-                fontFamily: 'var(--font-family)',
-                fontSize: 13,
-                fontWeight: 500,
-                color: '#8B95A1',
-                marginTop: 3,
-                letterSpacing: '1.5px',
-              }}
-            >
-              {'DEPT. OF ' + department.nameEng.toUpperCase()}
-            </p>
-          </div>
-        </div>
+      <div style={{ paddingBottom: 24, textAlign: 'center' }}>
+        {/* 학과명 */}
+        <h1
+          style={{
+            fontFamily: 'var(--font-family)',
+            fontSize: 26,
+            fontWeight: 700,
+            color: 'var(--color-text-primary)',
+            lineHeight: 1.2,
+            marginBottom: 6,
+          }}
+        >
+          {department.name}
+        </h1>
+        <p
+          style={{
+            fontFamily: 'var(--font-family)',
+            fontSize: 13,
+            fontWeight: 500,
+            color: '#8B95A1',
+            marginBottom: 14,
+            letterSpacing: '1.5px',
+          }}
+        >
+          {'DEPT. OF ' + department.nameEng.toUpperCase()}
+        </p>
 
         {/* 교육목표 (접기/펼치기) */}
-        <div style={{ marginTop: 10, marginLeft: 66 }}>
+        <div style={{ marginTop: 0 }}>
           <p
             style={{
               font: 'var(--font-body-sm)',
@@ -201,7 +182,7 @@ export default function DepartmentDetail() {
         </div>
 
         {/* 통계 배지 + 프로그레스 */}
-        <div style={{ marginTop: 16, marginLeft: 66, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
           <StatBadge label={`전체 ${stats.totalCourses}과목`} variant="gray" />
           <StatBadge label={`필수 ${stats.requiredCourses}과목`} variant="blue" />
           <StatBadge
