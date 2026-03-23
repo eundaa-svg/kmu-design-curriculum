@@ -14,7 +14,7 @@ export default function CourseCard({ course, compact, isShared }: Props) {
   const bgColor = isCompleted
     ? 'bg-[#10B981] text-white border-[#10B981]'
     : course.category === 'required'
-    ? 'bg-white border-[#2563EB] text-[#2563EB]'
+    ? 'bg-white border-[#111111] text-[#111111]'
     : 'bg-white border-gray-200 text-[#1E293B]';
 
   if (compact) {

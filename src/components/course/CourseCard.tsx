@@ -13,7 +13,7 @@ export interface CourseCardProps {
 
 const TAG_COLORS: Record<string, { bg: string; color: string }> = {
   '인문': { bg: '#EEF2FF', color: '#6366F1' },
-  '소통': { bg: '#EFF6FF', color: '#2563EB' },
+  '소통': { bg: '#F5F5F5', color: '#111111' },
   '글로벌': { bg: '#F0FDF4', color: '#16A34A' },
   '창의': { bg: '#FFFBEB', color: '#D97706' },
   '전문': { bg: '#FFF1F2', color: '#E11D48' },

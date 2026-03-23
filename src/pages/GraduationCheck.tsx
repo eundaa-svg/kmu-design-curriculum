@@ -274,7 +274,7 @@ function DeptDropdown({ departments: depts, selectedId, onChange, placeholder }:
           width: '100%',
           height: 44,
           background: '#FFFFFF',
-          border: `1px solid ${open ? '#3182F6' : '#E5E8EB'}`,
+          border: `1px solid ${open ? '#111111' : '#E5E8EB'}`,
           borderRadius: 10,
           padding: '0 16px',
           fontFamily: 'var(--font-family)',
@@ -284,7 +284,7 @@ function DeptDropdown({ departments: depts, selectedId, onChange, placeholder }:
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          boxShadow: open ? '0 0 0 3px rgba(49,130,246,0.1)' : 'none',
+          boxShadow: open ? '0 0 0 3px rgba(17,17,17,0.08)' : 'none',
           transition: 'border-color 150ms, box-shadow 150ms',
           textAlign: 'left',
         }}
@@ -332,12 +332,12 @@ function DeptDropdown({ departments: depts, selectedId, onChange, placeholder }:
                     width: '100%',
                     height: 40,
                     padding: '0 16px',
-                    background: isSelected ? '#EBF5FF' : 'transparent',
+                    background: isSelected ? '#F5F5F5' : 'transparent',
                     border: 'none',
                     cursor: 'pointer',
                     fontFamily: 'var(--font-family)',
                     fontSize: 14,
-                    color: isSelected ? '#3182F6' : '#191F28',
+                    color: isSelected ? '#111111' : '#191F28',
                     textAlign: 'left',
                     transition: 'background 100ms',
                   }}
@@ -434,8 +434,8 @@ function TransferRequirementCard({ req }: { req: TransferRequirement }) {
                             fontFamily: 'var(--font-family)',
                             fontSize: 11,
                             fontWeight: 500,
-                            background: '#EBF5FF',
-                            color: '#3182F6',
+                            background: '#F5F5F5',
+                            color: '#111111',
                             borderRadius: 4,
                             padding: '1px 7px',
                             marginBottom: 6,
@@ -498,7 +498,7 @@ function TransferRequirementCard({ req }: { req: TransferRequirement }) {
 
 function parseSelectionMethod(method: string): { label: string; bg: string; color: string }[] {
   const badges: { label: string; bg: string; color: string }[] = []
-  if (method.includes('서류심사')) badges.push({ label: '서류심사', bg: '#EBF5FF', color: '#3182F6' })
+  if (method.includes('서류심사')) badges.push({ label: '서류심사', bg: '#F5F5F5', color: '#111111' })
   if (method.includes('면접')) badges.push({ label: '면접', bg: '#E6FCF5', color: '#20C997' })
   if (method.includes('포트폴리오')) badges.push({ label: '포트폴리오', bg: '#FFF9DB', color: '#F59F00' })
   if (method.includes('실기')) badges.push({ label: '실기', bg: '#FFF0F0', color: '#F03E3E' })

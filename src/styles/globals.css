@@ -20,9 +20,9 @@
   --color-text-white: #FFFFFF;
 
   /* 액센트 */
-  --color-accent-blue: #3182F6;
-  --color-accent-blue-light: #EBF5FF;
-  --color-accent-blue-dark: #1B64DA;
+  --color-accent-blue: #111111;
+  --color-accent-blue-light: #F5F5F5;
+  --color-accent-blue-dark: #000000;
   --color-accent-green: #20C997;
   --color-accent-green-light: #E6FCF5;
   --color-accent-amber: #F59F00;

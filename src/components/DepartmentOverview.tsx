@@ -21,7 +21,7 @@ export default function DepartmentOverview() {
         </div>
       </div>
       <div className="bg-blue-50 rounded-xl p-4 mb-3">
-        <p className="text-sm font-semibold text-[#2563EB] mb-1">교육목표</p>
+        <p className="text-sm font-semibold text-[#111111] mb-1">교육목표</p>
         <p className="text-sm text-gray-600">{dept.educationGoal}</p>
       </div>
       {notices.length > 0 && (

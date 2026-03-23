@@ -18,7 +18,7 @@ export default function CurriculumMap() {
       {/* 범례 */}
       <div className="flex items-center gap-4 mb-6 text-xs">
         <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded border-2 border-[#2563EB] bg-white"></div>
+          <div className="w-3 h-3 rounded border-2 border-[#111111] bg-white"></div>
           <span className="text-gray-600">필수 과목</span>
         </div>
         <div className="flex items-center gap-1.5">

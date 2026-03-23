@@ -14,7 +14,7 @@ export default function ProgressStats() {
     .reduce((sum, c) => sum + c.credits, 0);
 
   const stats = [
-    { label: '이수 과목', value: `${completed}/${total}`, color: '#2563EB' },
+    { label: '이수 과목', value: `${completed}/${total}`, color: '#111111' },
     { label: '필수 과목', value: `${completedRequired}/${requiredCourses.length}`, color: '#10B981' },
     { label: '이수 학점', value: `${completedCredits}학점`, color: '#6366F1' },
     { label: '진행률', value: `${Math.round((completed / total) * 100)}%`, color: '#F59E0B' },

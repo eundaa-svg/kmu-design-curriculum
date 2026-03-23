@@ -63,7 +63,7 @@ export default function Header() {
               cursor: 'pointer',
               fontFamily: 'var(--font-family)',
               fontSize: 12,
-              color: '#3182F6',
+              color: '#111111',
               padding: 0,
               lineHeight: 1,
             }}

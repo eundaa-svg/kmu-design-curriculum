@@ -22,7 +22,7 @@ const DEPT_COLORS: Record<string, string> = {
 
 const ALL_TAGS = ['인문', '소통', '글로벌', '창의', '전문']
 const TAG_COLORS: Record<string, string> = {
-  '인문': '#6366F1', '소통': '#2563EB', '글로벌': '#16A34A', '창의': '#D97706', '전문': '#E11D48',
+  '인문': '#6366F1', '소통': '#111111', '글로벌': '#16A34A', '창의': '#D97706', '전문': '#E11D48',
 }
 const SORT_LABELS: Record<SortMode, string> = {
   relevance: '관련도순', department: '학과순', year: '학년순', credits: '학점순',

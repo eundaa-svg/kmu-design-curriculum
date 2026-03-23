@@ -9,7 +9,6 @@ import { useDepartment } from '../hooks/useDepartment'
 import { useStore } from '../store/useStore'
 import { useProgress } from '../hooks/useProgress'
 import type { Course } from '../types'
-import ProgressBar from '../components/ui/ProgressBar'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 import RoadmapView from './dept/RoadmapView'
 import CategoryView from './dept/CategoryView'
@@ -194,17 +193,6 @@ export default function DepartmentDetail() {
             label={`캡스톤 ${department.courses.filter((c) => c.isCapstone).length}과목`}
             variant="amber"
           />
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10, minWidth: 200 }}>
-            <span style={{ fontFamily: 'var(--font-family)', fontSize: 12, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
-              {stats.completedCourses}/{stats.totalCourses} 이수
-            </span>
-            <div style={{ flex: 1 }}>
-              <ProgressBar value={stats.percentage} height={6} color={meta.color} />
-            </div>
-            <span style={{ fontFamily: 'var(--font-family)', fontSize: 12, fontWeight: 600, color: meta.color, whiteSpace: 'nowrap' }}>
-              {stats.percentage}%
-            </span>
-          </div>
         </div>
       </div>
 
