@@ -22,10 +22,12 @@ import SubMajorTracker from '../components/progress/SubMajorTracker'
 export default function ProgressTracker() {
   const { myDepartmentId, studentProgress, setMyDepartment, toggleCourseComplete, bulkComplete, resetProgress } = useStore()
   const department = useDepartment(myDepartmentId)
-  const progress = studentProgress?.departmentId === myDepartmentId ? studentProgress : null
+  // departmentId 일치 여부와 무관하게 저장된 progress를 그대로 사용.
+  // useProgress는 department.courses로 필터링하므로 항상 올바른 결과를 냄.
+  const progress = studentProgress ?? null
   const stats = useProgress(department, progress)
 
-  const completedSet = new Set(progress?.completedCourseIds ?? [])
+  const completedSet = new Set(studentProgress?.completedCourseIds ?? [])
   const currentYear = progress?.currentYear ?? 1
   const currentSemester = progress?.currentSemester ?? 1
 
