@@ -4,16 +4,16 @@ interface Props {
   departmentId: string
 }
 
-const CONFIG: Record<string, { text: string; bgColor: string; particleColor: string }> = {
-  'industrial-design':   { text: 'Industrial',    bgColor: '#FF0017', particleColor: '#FFFFFF' },
-  'visual-design':       { text: 'Visual',         bgColor: '#FF006A', particleColor: '#FFFFFF' },
-  'metal-craft':         { text: 'Metal Craft',    bgColor: '#FFC900', particleColor: '#FFFFFF' },
-  'ceramic-craft':       { text: 'Ceramic',        bgColor: '#FF7700', particleColor: '#FFFFFF' },
-  'fashion-design':      { text: 'Fashion',        bgColor: '#8E008E', particleColor: '#FFFFFF' },
-  'spatial-design':      { text: 'Spatial',        bgColor: '#008AC2', particleColor: '#FFFFFF' },
-  'moving-image-design': { text: 'Moving Image',   bgColor: '#00BCB5', particleColor: '#FFFFFF' },
-  'automotive-design':   { text: 'Automotive',     bgColor: '#2B50B6', particleColor: '#FFFFFF' },
-  'ai-design':           { text: 'AI Design',      bgColor: '#111111', particleColor: '#00FF00' },
+const CONFIG: Record<string, { line1: string; line2: string; bgColor: string; particleColor: string }> = {
+  'industrial-design':   { line1: 'DEPT. OF', line2: 'INDUSTRIAL DESIGN',                   bgColor: '#FF0017', particleColor: '#FFFFFF' },
+  'visual-design':       { line1: 'DEPT. OF', line2: 'VISUAL COMMUNICATION DESIGN',          bgColor: '#FF006A', particleColor: '#FFFFFF' },
+  'metal-craft':         { line1: 'DEPT. OF', line2: 'METAL CRAFT',                          bgColor: '#FFC900', particleColor: '#FFFFFF' },
+  'ceramic-craft':       { line1: 'DEPT. OF', line2: 'CERAMIC CRAFT',                        bgColor: '#FF7700', particleColor: '#FFFFFF' },
+  'fashion-design':      { line1: 'DEPT. OF', line2: 'FASHION DESIGN',                       bgColor: '#8E008E', particleColor: '#FFFFFF' },
+  'spatial-design':      { line1: 'DEPT. OF', line2: 'SPATIAL DESIGN',                       bgColor: '#008AC2', particleColor: '#FFFFFF' },
+  'moving-image-design': { line1: 'DEPT. OF', line2: 'MOVING IMAGE DESIGN',                  bgColor: '#00BCB5', particleColor: '#FFFFFF' },
+  'automotive-design':   { line1: 'DEPT. OF', line2: 'AUTOMOTIVE & TRANSPORTATION DESIGN',   bgColor: '#2B50B6', particleColor: '#FFFFFF' },
+  'ai-design':           { line1: 'DEPT. OF', line2: 'AI DESIGN',                            bgColor: '#111111', particleColor: '#00FF00' },
 }
 
 class Particle {
@@ -32,13 +32,11 @@ class Particle {
   }
 
   update(mouseX: number, mouseY: number, mouseActive: boolean) {
-    // 복원력 (스프링)
     const dx = this.originX - this.x
     const dy = this.originY - this.y
     this.vx += dx * 0.08
     this.vy += dy * 0.08
 
-    // 마우스 반발력
     if (mouseActive) {
       const mdx = this.x - mouseX
       const mdy = this.y - mouseY
@@ -51,10 +49,8 @@ class Particle {
       }
     }
 
-    // 마찰
     this.vx *= 0.9
     this.vy *= 0.9
-
     this.x += this.vx
     this.y += this.vy
   }
@@ -84,26 +80,43 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       const h = canvas.height
       const isMobile = w < 600
 
-      // offscreen canvas에 텍스트 렌더링
       const off = document.createElement('canvas')
       off.width = w
       off.height = h
       const octx = off.getContext('2d')!
 
-      // 폰트 크기: 텍스트가 캔버스 너비의 80%를 차지하도록
-      let fontSize = Math.floor(h * 0.55)
-      octx.font = `900 ${fontSize}px "Helvetica Neue", Helvetica, Arial, sans-serif`
-      let measured = octx.measureText(cfg.text).width
-      if (measured > w * 0.82) {
-        fontSize = Math.floor(fontSize * ((w * 0.82) / measured))
+      const fontFace = '"Helvetica Neue", Helvetica, Arial, sans-serif'
+
+      // 2행 폰트 크기: 캔버스 너비의 80%를 차지하도록 자동 조절
+      let fontSize2 = Math.floor(h * 0.38)
+      octx.font = `900 ${fontSize2}px ${fontFace}`
+      const measured2 = octx.measureText(cfg.line2).width
+      if (measured2 > w * 0.82) {
+        fontSize2 = Math.floor(fontSize2 * ((w * 0.82) / measured2))
       }
-      octx.font = `900 ${fontSize}px "Helvetica Neue", Helvetica, Arial, sans-serif`
-      octx.fillStyle = '#FFFFFF'
+
+      // 1행 폰트 크기: 2행의 40%
+      const fontSize1 = Math.max(10, Math.floor(fontSize2 * 0.4))
+      // 줄 간격: 2행 폰트 크기의 20%
+      const lineGap = Math.floor(fontSize2 * 0.2)
+      // 두 줄 전체 높이 = fontSize1 + lineGap + fontSize2
+      const totalH = fontSize1 + lineGap + fontSize2
+      const centerY = h / 2
+      // 1행 y: 중앙에서 올라감
+      const y1 = centerY - totalH / 2 + fontSize1 / 2
+      // 2행 y: 1행 아래 + 간격
+      const y2 = y1 + fontSize1 / 2 + lineGap + fontSize2 / 2
+
       octx.textAlign = 'center'
       octx.textBaseline = 'middle'
-      octx.fillText(cfg.text, w / 2, h / 2)
+      octx.fillStyle = '#FFFFFF'
 
-      // 픽셀 데이터 추출
+      octx.font = `700 ${fontSize1}px ${fontFace}`
+      octx.fillText(cfg.line1, w / 2, y1)
+
+      octx.font = `900 ${fontSize2}px ${fontFace}`
+      octx.fillText(cfg.line2, w / 2, y2)
+
       const imageData = octx.getImageData(0, 0, w, h)
       const data = imageData.data
       const gap = isMobile ? 4 : 3
@@ -112,7 +125,6 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       for (let y = 0; y < h; y += gap) {
         for (let x = 0; x < w; x += gap) {
           const idx = (y * w + x) * 4
-          // alpha 채널이 충분히 밝은 픽셀만 파티클 생성
           if (data[idx + 3] > 128) {
             newParticles.push(new Particle(x, y))
           }
@@ -133,13 +145,11 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       if (!running) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // 배경
       ctx.fillStyle = cfg.bgColor
       ctx.beginPath()
       ctx.roundRect(0, 0, canvas.width, canvas.height, 16)
       ctx.fill()
 
-      // 파티클 업데이트 & 렌더링
       ctx.fillStyle = cfg.particleColor
       for (const p of particles) {
         p.update(mouseX, mouseY, mouseActive)
@@ -151,7 +161,6 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       animId = requestAnimationFrame(draw)
     }
 
-    // 마우스 이벤트
     function onMouseMove(e: MouseEvent) {
       const rect = canvas.getBoundingClientRect()
       const scaleX = canvas.width / rect.width
@@ -160,11 +169,8 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       mouseY = (e.clientY - rect.top) * scaleY
       mouseActive = true
     }
-    function onMouseLeave() {
-      mouseActive = false
-    }
+    function onMouseLeave() { mouseActive = false }
 
-    // 터치 이벤트
     function onTouchMove(e: TouchEvent) {
       e.preventDefault()
       const rect = canvas.getBoundingClientRect()
@@ -175,17 +181,11 @@ export default function DepartmentParticleText({ departmentId }: Props) {
       mouseY = (t.clientY - rect.top) * scaleY
       mouseActive = true
     }
-    function onTouchEnd() {
-      mouseActive = false
-    }
+    function onTouchEnd() { mouseActive = false }
 
-    // ResizeObserver
-    const ro = new ResizeObserver(() => {
-      resize()
-    })
+    const ro = new ResizeObserver(() => { resize() })
     ro.observe(containerRef.current)
 
-    // IntersectionObserver (화면 밖이면 애니메이션 정지)
     const io = new IntersectionObserver(
       ([entry]) => {
         running = entry.isIntersecting
