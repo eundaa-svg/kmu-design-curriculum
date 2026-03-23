@@ -20,9 +20,9 @@ import NoDeptSelected from '../components/ui/NoDeptSelected'
 import SubMajorTracker from '../components/progress/SubMajorTracker'
 
 export default function ProgressTracker() {
-  const { selectedDepartmentId, studentProgress, selectDepartment, toggleCourseComplete, bulkComplete, resetProgress } = useStore()
-  const department = useDepartment(selectedDepartmentId)
-  const progress = studentProgress?.departmentId === selectedDepartmentId ? studentProgress : null
+  const { myDepartmentId, studentProgress, setMyDepartment, toggleCourseComplete, bulkComplete, resetProgress } = useStore()
+  const department = useDepartment(myDepartmentId)
+  const progress = studentProgress?.departmentId === myDepartmentId ? studentProgress : null
   const stats = useProgress(department, progress)
 
   const completedSet = new Set(progress?.completedCourseIds ?? [])
@@ -75,8 +75,8 @@ export default function ProgressTracker() {
 
         {/* 학과 드롭다운 */}
         <select
-          value={selectedDepartmentId ?? ''}
-          onChange={(e) => { if (e.target.value) selectDepartment(e.target.value) }}
+          value={myDepartmentId ?? ''}
+          onChange={(e) => { if (e.target.value) setMyDepartment(e.target.value) }}
           style={{
             height: 40,
             padding: '0 12px',
@@ -197,8 +197,8 @@ export default function ProgressTracker() {
           </div>
 
           {/* ── A-2.5 다전공/부전공 트래커 ── */}
-          {selectedDepartmentId && (
-            <SubMajorTracker currentDeptId={selectedDepartmentId} />
+          {myDepartmentId && (
+            <SubMajorTracker currentDeptId={myDepartmentId} />
           )}
 
           {/* ── A-3. 학년별 상세 현황 ── */}
@@ -477,7 +477,7 @@ export default function ProgressTracker() {
                         {reason}
                       </p>
                       <Link
-                        to={`/department/${selectedDepartmentId}?view=roadmap`}
+                        to={`/department/${myDepartmentId}?view=roadmap`}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',

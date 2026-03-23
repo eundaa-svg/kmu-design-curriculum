@@ -55,8 +55,8 @@ const deptContainerVariants: Variants = {
 /* ─────────────────────────────────────── */
 export default function DashboardHome() {
   const navigate = useNavigate()
-  const { selectedDepartmentId, studentProgress } = useStore()
-  const department = useDepartment(selectedDepartmentId)
+  const { myDepartmentId, studentProgress } = useStore()
+  const department = useDepartment(myDepartmentId)
 
   const completedCount = studentProgress?.completedCourseIds.length ?? 0
   const deptTotalCourses = department?.courses.length ?? 0
@@ -231,7 +231,7 @@ export default function DashboardHome() {
                   meta={meta}
                   requiredCount={requiredCount}
                   capstoneCount={capstoneCount}
-                  isSelected={selectedDepartmentId === dept.id}
+                  isSelected={myDepartmentId === dept.id}
                   onClick={() => navigate(`/department/${dept.id}`)}
                 />
               </motion.div>

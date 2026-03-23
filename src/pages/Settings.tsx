@@ -6,7 +6,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useToast } from '../hooks/useToast'
 
 export default function Settings() {
-  const { selectedDepartmentId, selectDepartment, resetProgress, nickname, setNickname } = useStore()
+  const { myDepartmentId, setMyDepartment, resetProgress, nickname, setNickname } = useStore()
   const toast = useToast()
   const [editingNickname, setEditingNickname] = useState(false)
   const [nicknameInput, setNicknameInput] = useState(nickname)
@@ -104,23 +104,23 @@ export default function Settings() {
           {departments.map((dept) => (
             <button
               key={dept.id}
-              onClick={() => selectDepartment(dept.id)}
+              onClick={() => setMyDepartment(dept.id)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 padding: '6px 12px',
                 borderRadius: 8,
-                border: selectedDepartmentId === dept.id
+                border: myDepartmentId === dept.id
                   ? '1px solid var(--color-accent-blue)'
                   : '1px solid var(--color-border)',
-                background: selectedDepartmentId === dept.id
+                background: myDepartmentId === dept.id
                   ? 'var(--color-accent-blue-light)'
                   : 'var(--color-bg-card)',
                 cursor: 'pointer',
                 fontFamily: 'var(--font-family)',
                 fontSize: 13,
-                fontWeight: selectedDepartmentId === dept.id ? 500 : 400,
-                color: selectedDepartmentId === dept.id
+                fontWeight: myDepartmentId === dept.id ? 500 : 400,
+                color: myDepartmentId === dept.id
                   ? 'var(--color-accent-blue)'
                   : 'var(--color-text-secondary)',
                 transition: 'all 150ms',

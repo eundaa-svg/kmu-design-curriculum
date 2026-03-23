@@ -21,8 +21,8 @@ function useIsMobile() {
 }
 
 export default function AppLayout() {
-  const { selectedDepartmentId } = useStore()
-  const [onboardingDone, setOnboardingDone] = useState(() => !!selectedDepartmentId)
+  const { myDepartmentId } = useStore()
+  const [onboardingDone, setOnboardingDone] = useState(() => !!myDepartmentId)
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved !== null) return JSON.parse(saved)

@@ -1,7 +1,7 @@
 import { useStore } from '../store/useStore';
 
 export default function Sidebar() {
-  const { departments, selectedDepartmentId, selectDepartment } = useStore();
+  const { departments, myDepartmentId, setMyDepartment } = useStore();
 
   return (
     <aside className="w-64 bg-white border-r border-gray-100 flex flex-col shadow-sm">
@@ -14,9 +14,9 @@ export default function Sidebar() {
         {departments.map(dept => (
           <button
             key={dept.id}
-            onClick={() => selectDepartment(dept.id)}
+            onClick={() => setMyDepartment(dept.id)}
             className={`w-full text-left px-3 py-2.5 rounded-xl mb-1 flex items-center gap-3 transition-all duration-200 ${
-              selectedDepartmentId === dept.id
+              myDepartmentId === dept.id
                 ? 'bg-[#111111] text-white shadow-md'
                 : 'text-[#1E293B] hover:bg-gray-50'
             }`}

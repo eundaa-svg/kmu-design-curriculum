@@ -1,8 +1,8 @@
 import { useStore } from '../store/useStore';
 
 export default function ProgressStats() {
-  const { departments, selectedDepartmentId, studentProgress, resetProgress } = useStore();
-  const dept = departments.find(d => d.id === selectedDepartmentId);
+  const { departments, myDepartmentId, studentProgress, resetProgress } = useStore();
+  const dept = departments.find(d => d.id === myDepartmentId);
   if (!dept || !studentProgress) return null;
 
   const total = dept.courses.length;

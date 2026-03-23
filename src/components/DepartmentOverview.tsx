@@ -5,8 +5,8 @@ function isAccentNotice(text: string) {
 }
 
 export default function DepartmentOverview() {
-  const { departments, selectedDepartmentId } = useStore();
-  const dept = departments.find(d => d.id === selectedDepartmentId);
+  const { departments, myDepartmentId } = useStore();
+  const dept = departments.find(d => d.id === myDepartmentId);
   if (!dept) return null;
 
   const notices = dept.notices ?? [];

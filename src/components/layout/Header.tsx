@@ -6,9 +6,9 @@ import { useStore } from '../../store/useStore'
 export default function Header() {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
-  const { nickname, selectedDepartmentId, departments } = useStore()
+  const { nickname, myDepartmentId, departments } = useStore()
 
-  const dept = departments.find(d => d.id === selectedDepartmentId)
+  const dept = departments.find(d => d.id === myDepartmentId)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

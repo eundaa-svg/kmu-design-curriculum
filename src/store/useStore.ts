@@ -5,11 +5,12 @@ import { departments } from '../data';
 
 interface StoreState {
   departments: Department[];
-  selectedDepartmentId: string | null;
+  /** 내 소속 학과 — 온보딩/설정에서만 변경, 커리큘럼 탐색과 무관 */
+  myDepartmentId: string | null;
   studentProgress: StudentProgress | null;
   nickname: string;
 
-  selectDepartment: (id: string) => void;
+  setMyDepartment: (id: string) => void;
   setStudentProgress: (progress: StudentProgress) => void;
   toggleCourseComplete: (courseId: string) => void;
   bulkComplete: (courseIds: string[]) => void;
@@ -23,15 +24,15 @@ export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
       departments,
-      selectedDepartmentId: null,
+      myDepartmentId: null,
       studentProgress: null,
       nickname: '',
 
-      selectDepartment: (id) => {
+      setMyDepartment: (id) => {
         const dept = departments.find(d => d.id === id);
         if (!dept) return;
         set({
-          selectedDepartmentId: id,
+          myDepartmentId: id,
           studentProgress: get().studentProgress?.departmentId === id
             ? get().studentProgress
             : { departmentId: id, completedCourseIds: [], currentYear: 1, currentSemester: 1 }
@@ -63,7 +64,7 @@ export const useStore = create<StoreState>()(
       },
 
       resetProgress: () => {
-        const dept = get().selectedDepartmentId;
+        const dept = get().myDepartmentId;
         if (!dept) return;
         set({
           studentProgress: { departmentId: dept, completedCourseIds: [], currentYear: 1, currentSemester: 1 }
@@ -84,6 +85,18 @@ export const useStore = create<StoreState>()(
 
       setNickname: (name) => set({ nickname: name }),
     }),
-    { name: 'curriculum-store' }
+    {
+      name: 'curriculum-store',
+      // localStorage 키 마이그레이션: selectedDepartmentId → myDepartmentId
+      migrate: (state: unknown) => {
+        const s = state as Record<string, unknown>
+        if ('selectedDepartmentId' in s && !('myDepartmentId' in s)) {
+          s.myDepartmentId = s.selectedDepartmentId
+          delete s.selectedDepartmentId
+        }
+        return s as unknown as StoreState
+      },
+      version: 1,
+    }
   )
 );

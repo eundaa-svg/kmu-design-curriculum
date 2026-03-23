@@ -12,7 +12,7 @@ export default function NoDeptSelected({
   title = '학과를 먼저 선택해주세요',
   desc = '학과를 선택하면 커리큘럼 기반 이수 현황을 확인할 수 있습니다.',
 }: NoDeptSelectedProps) {
-  const { selectDepartment } = useStore()
+  const { setMyDepartment } = useStore()
   const navigate = useNavigate()
 
   return (
@@ -54,7 +54,7 @@ export default function NoDeptSelected({
       <select
         onChange={(e) => {
           if (!e.target.value) return
-          selectDepartment(e.target.value)
+          setMyDepartment(e.target.value)
           navigate(`/department/${e.target.value}`)
         }}
         defaultValue=""

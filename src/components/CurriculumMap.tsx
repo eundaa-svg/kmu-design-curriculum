@@ -2,8 +2,8 @@ import { useStore } from '../store/useStore';
 import CourseCard from './CourseCard';
 
 export default function CurriculumMap() {
-  const { departments, selectedDepartmentId } = useStore();
-  const dept = departments.find(d => d.id === selectedDepartmentId);
+  const { departments, myDepartmentId } = useStore();
+  const dept = departments.find(d => d.id === myDepartmentId);
   if (!dept) return null;
 
   const years = [1, 2, 3, 4];

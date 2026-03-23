@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -48,18 +48,13 @@ export default function DepartmentDetail() {
   const view: ViewMode = ['roadmap', 'category', 'list'].includes(viewParam) ? viewParam : 'roadmap'
 
   const department = useDepartment(deptId)
-  const { studentProgress, selectDepartment, toggleCourseComplete } = useStore()
+  const { studentProgress, toggleCourseComplete } = useStore()
   const progress = studentProgress?.departmentId === deptId ? studentProgress : null
   const stats = useProgress(department, progress)
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
   const [goalExpanded, setGoalExpanded] = useState(false)
   const mainRef = useRef<HTMLDivElement>(null)
-
-  /* 학과 선택 */
-  useEffect(() => {
-    if (deptId) selectDepartment(deptId)
-  }, [deptId, selectDepartment])
 
   /* 뷰 전환 시 스크롤 초기화 */
   const setView = (v: ViewMode) => {

@@ -21,7 +21,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const firstFocusRef = useRef<HTMLButtonElement>(null)
   const nicknameInputRef = useRef<HTMLInputElement>(null)
   const toast = useToast()
-  const { selectDepartment, setStudentProgress, bulkComplete, setNickname } = useStore()
+  const { setMyDepartment, setStudentProgress, bulkComplete, setNickname } = useStore()
 
   useEffect(() => {
     if (step === 0) {
@@ -33,7 +33,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
   const handleComplete = () => {
     setNickname(nickname.trim())
-    selectDepartment(selectedDept)
+    setMyDepartment(selectedDept)
     setStudentProgress({
       departmentId: selectedDept,
       completedCourseIds: [],
