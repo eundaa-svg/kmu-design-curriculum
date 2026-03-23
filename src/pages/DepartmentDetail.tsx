@@ -154,7 +154,7 @@ export default function DepartmentDetail() {
                 marginTop: 3,
               }}
             >
-              {department.shortName}
+              {department.nameEng}
             </p>
           </div>
         </div>
