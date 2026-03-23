@@ -246,9 +246,8 @@ export default function DashboardHome() {
       <div style={{ marginTop: 32 }}>
         <div
           style={{
-            background: 'var(--color-accent-blue-light)',
-            borderLeft: '4px solid var(--color-accent-blue)',
-            borderRadius: 14,
+            background: '#111111',
+            borderRadius: 12,
             padding: '20px 24px',
           }}
         >
@@ -257,14 +256,14 @@ export default function DashboardHome() {
               font: 'var(--font-body-base)',
               fontFamily: 'var(--font-family)',
               fontWeight: 600,
-              color: 'var(--color-accent-blue)',
+              color: '#FFFFFF',
               marginBottom: 12,
               display: 'flex',
               alignItems: 'center',
               gap: 6,
             }}
           >
-            <Info size={16} />
+            <Info size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />
             교과과정 안내
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -273,36 +272,43 @@ export default function DashboardHome() {
               '[공통 필수] S-TEAM Class와 사제동행세미나 중 1개를 반드시 이수해야 합니다.',
               '[현장실습] 현장실습 학점 인정에 관한 규정에 따라 전공 또는 일반선택으로 인정 가능합니다.',
               '[부전공] 전공과목 중 18학점 이상 이수 필요. [다전공] 필수 지정 과목 포함 최저이수학점 이상 이수 필요.',
-            ].map((text, i) => (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  padding: '8px 0',
-                  borderTop: i === 0 ? 'none' : '1px solid #DBEAFE',
-                }}
-              >
-                <Info
-                  size={15}
+            ].map((text, i) => {
+              const parts = text.split(/(\[[^\]]+\])/g)
+              return (
+                <div
+                  key={i}
                   style={{
-                    color: 'var(--color-accent-blue)',
-                    flexShrink: 0,
-                    marginTop: 2,
-                  }}
-                />
-                <p
-                  style={{
-                    font: 'var(--font-body-sm)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-secondary)',
-                    lineHeight: '20px',
+                    display: 'flex',
+                    gap: 8,
+                    padding: '8px 0',
+                    borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
                   }}
                 >
-                  {text}
-                </p>
-              </div>
-            ))}
+                  <Info
+                    size={15}
+                    style={{
+                      color: 'rgba(255,255,255,0.5)',
+                      flexShrink: 0,
+                      marginTop: 2,
+                    }}
+                  />
+                  <p
+                    style={{
+                      font: 'var(--font-body-sm)',
+                      fontFamily: 'var(--font-family)',
+                      color: '#FFFFFF',
+                      lineHeight: '20px',
+                    }}
+                  >
+                    {parts.map((part, j) =>
+                      /^\[.+\]$/.test(part) ? (
+                        <span key={j} style={{ color: 'rgba(255,255,255,0.6)' }}>{part}</span>
+                      ) : part
+                    )}
+                  </p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
