@@ -317,7 +317,7 @@ const GRAPHICS: Record<string, () => React.ReactElement> = {
   'ceramic-craft': CeramicCraft,
   'fashion-design': FashionDesign,
   'spatial-design': SpatialDesign,
-  'moving-image': MovingImage,
+  'moving-image-design': MovingImage,
   'automotive-design': AutomotiveDesign,
   'ai-design': AIDesign,
 }
