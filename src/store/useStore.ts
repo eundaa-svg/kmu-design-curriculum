@@ -42,8 +42,13 @@ export const useStore = create<StoreState>()(
       setStudentProgress: (progress) => set({ studentProgress: progress }),
 
       toggleCourseComplete: (courseId) => {
-        const progress = get().studentProgress;
-        if (!progress) return;
+        let progress = get().studentProgress;
+        // progress가 없으면 myDepartmentId 기준으로 초기화
+        if (!progress) {
+          const dept = get().myDepartmentId;
+          if (!dept) return;
+          progress = { departmentId: dept, completedCourseIds: [], currentYear: 1, currentSemester: 1 };
+        }
         const isCompleted = progress.completedCourseIds.includes(courseId);
         set({
           studentProgress: {

@@ -49,8 +49,11 @@ export default function DepartmentDetail() {
 
   const department = useDepartment(deptId)
   const { studentProgress, toggleCourseComplete } = useStore()
+  // stats 계산은 해당 학과 progress만 사용 (이수율 표시용)
   const progress = studentProgress?.departmentId === deptId ? studentProgress : null
   const stats = useProgress(department, progress)
+  // completed Set은 studentProgress 전체에서 빌드 — 어느 학과를 보든 체크 가능
+  const completed = new Set(studentProgress?.completedCourseIds ?? [])
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
   const [goalExpanded, setGoalExpanded] = useState(false)
@@ -71,7 +74,6 @@ export default function DepartmentDetail() {
   }
 
   const meta = DEPT_META[department.id] ?? { color: '#64748B' }
-  const completed = new Set(progress?.completedCourseIds ?? [])
 
   const handleToggle = (id: string, e: MouseEvent) => {
     e.stopPropagation()
