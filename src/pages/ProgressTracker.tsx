@@ -35,7 +35,6 @@ export default function ProgressTracker() {
   const animatedCredits = useCountUp(stats.completedCredits, 400)
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
-  const [showResetConfirm, setShowResetConfirm] = useState(false)
   const [openYears, setOpenYears] = useState<Set<number>>(new Set([1, 2, 3, 4]))
 
   const toggleYear = (y: number) =>
@@ -48,8 +47,9 @@ export default function ProgressTracker() {
   const handleBulkComplete = (courseIds: string[]) => bulkComplete(courseIds)
 
   const handleReset = () => {
-    resetProgress()
-    setShowResetConfirm(false)
+    if (window.confirm('모든 이수 기록을 초기화하시겠습니까?\n이수 완료한 모든 과목이 해제됩니다.')) {
+      resetProgress()
+    }
   }
 
   return (
@@ -101,7 +101,7 @@ export default function ProgressTracker() {
         {/* 초기화 버튼 */}
         {department && (
           <button
-            onClick={() => setShowResetConfirm(true)}
+            onClick={handleReset}
             style={{
               height: 40,
               padding: '0 14px',
@@ -512,74 +512,6 @@ export default function ProgressTracker() {
         onToggle={() => { if (selectedCourse) toggleCourseComplete(selectedCourse.id) }}
       />
 
-      {/* ── 초기화 확인 모달 ── */}
-      {showResetConfirm && (
-        <div
-          onClick={() => setShowResetConfirm(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.3)',
-            zIndex: 60,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: 'var(--color-bg-card)',
-              borderRadius: 16,
-              padding: '28px',
-              maxWidth: 380,
-              width: '90vw',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-            }}
-          >
-            <h3
-              style={{
-                font: 'var(--font-heading-md)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-primary)',
-                marginBottom: 10,
-              }}
-            >
-              이수 기록 초기화
-            </h3>
-            <p
-              style={{
-                font: 'var(--font-body-sm)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-secondary)',
-                marginBottom: 20,
-              }}
-            >
-              모든 이수 기록을 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-            </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => setShowResetConfirm(false)}
-                style={ghostBtnStyle}
-              >
-                취소
-              </button>
-              <button
-                onClick={handleReset}
-                style={{
-                  ...ghostBtnStyle,
-                  borderColor: 'var(--color-accent-red)',
-                  color: 'var(--color-accent-red)',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-accent-red-light)')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-              >
-                초기화
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <style>{`
         @media (max-width: 1023px) {
@@ -692,15 +624,3 @@ function CourseRow({ course, completed, onToggle, onSelect }: CourseRowProps) {
   )
 }
 
-const ghostBtnStyle: React.CSSProperties = {
-  height: 36,
-  padding: '0 16px',
-  borderRadius: 8,
-  border: '1px solid var(--color-border)',
-  background: 'transparent',
-  cursor: 'pointer',
-  fontFamily: 'var(--font-family)',
-  fontSize: 14,
-  color: 'var(--color-text-secondary)',
-  transition: 'all 150ms',
-}
