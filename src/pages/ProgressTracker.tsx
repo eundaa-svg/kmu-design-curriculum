@@ -173,7 +173,7 @@ export default function ProgressTracker() {
                 이수 학점
               </h3>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
-                <span style={{ fontFamily: 'var(--font-family)', fontSize: 36, fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
+                <span style={{ fontFamily: 'var(--font-family)', fontSize: 40, fontWeight: 800, color: 'var(--color-text-primary)', lineHeight: 1, letterSpacing: '-0.02em' }}>
                   {animatedCredits}
                 </span>
                 <span style={{ fontFamily: 'var(--font-family)', fontSize: 18, fontWeight: 400, color: 'var(--color-text-secondary)' }}>

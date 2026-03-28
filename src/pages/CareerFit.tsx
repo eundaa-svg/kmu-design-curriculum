@@ -37,12 +37,17 @@ function TopCard({ result, rank }: { result: ReturnType<typeof useCareerFit>[0];
   return (
     <div
       style={{
-        background: '#111111',
-        borderRadius: 14,
+        background: isFirst
+          ? 'linear-gradient(135deg, #1a1a2e 0%, #111111 60%, #0d0d0d 100%)'
+          : 'linear-gradient(135deg, #1c1c1c 0%, #111111 100%)',
+        borderRadius: isFirst ? 18 : 14,
         padding: isFirst ? 28 : 24,
         color: '#FFFFFF',
         flex: 1,
         minWidth: 0,
+        boxShadow: isFirst
+          ? '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.12)'
+          : '0 4px 16px rgba(0,0,0,0.12)',
       }}
     >
       <div style={{ fontSize: 12, opacity: 0.5, marginBottom: 8 }}>{RANK_LABEL[rank]}</div>
@@ -126,7 +131,7 @@ export default function CareerFit() {
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111111', margin: 0 }}>
+            <h1 style={{ fontSize: 32, fontWeight: 800, color: '#111111', margin: 0, letterSpacing: '-0.02em' }}>
               나의 커리어 적합도
             </h1>
             <button

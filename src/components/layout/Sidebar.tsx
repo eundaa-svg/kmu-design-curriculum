@@ -57,15 +57,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     if (isDeptActive) setDeptExpanded(true)
   }, [isDeptActive])
 
-  const navItems = [
-    { to: '/', icon: <LayoutDashboard size={20} />, label: '대시보드', exact: true },
-    { to: '/progress', icon: <CheckCircle size={20} />, label: '이수 현황' },
-    { to: '/career-fit', icon: <Target size={20} />, label: '커리어 적합도' },
-    { to: '/alumni', icon: <Users size={20} />, label: '조형대 커리어' },
-    { to: '/search', icon: <Search size={20} />, label: '교과목 검색' },
-    { to: '/graduation', icon: <GraduationCap size={20} />, label: '졸업 요건' },
-  ]
-
   const w = collapsed ? 72 : 256
 
   return (
@@ -254,16 +245,46 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           )}
         </div>
 
-        {/* Other nav items */}
-        {navItems.slice(1).map((item) => (
-          <NavItem
-            key={item.to}
-            to={item.to}
-            icon={item.icon}
-            label={item.label}
-            collapsed={collapsed}
-          />
-        ))}
+        {/* ── CURRICULUM group ── */}
+        {!collapsed && (
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#BBBBBB',
+              padding: '12px 12px 4px',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-family)',
+            }}
+          >
+            Curriculum
+          </div>
+        )}
+        {collapsed && <div style={{ height: 8 }} />}
+        <NavItem to="/progress" icon={<CheckCircle size={20} />} label="이수 현황" collapsed={collapsed} />
+        <NavItem to="/search" icon={<Search size={20} />} label="교과목 검색" collapsed={collapsed} />
+        <NavItem to="/graduation" icon={<GraduationCap size={20} />} label="졸업 요건" collapsed={collapsed} />
+
+        {/* ── CAREER group ── */}
+        {!collapsed && (
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#BBBBBB',
+              padding: '16px 12px 4px',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-family)',
+            }}
+          >
+            Career
+          </div>
+        )}
+        {collapsed && <div style={{ height: 8 }} />}
+        <NavItem to="/career-fit" icon={<Target size={20} />} label="커리어 적합도" collapsed={collapsed} />
+        <NavItem to="/alumni" icon={<Users size={20} />} label="조형대 커리어" collapsed={collapsed} />
 
         {/* Divider */}
         <div

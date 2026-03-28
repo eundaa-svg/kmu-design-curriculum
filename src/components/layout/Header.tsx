@@ -23,13 +23,18 @@ export default function Header() {
     <header
       style={{
         height: 64,
-        background: 'var(--color-bg-card)',
-        borderBottom: '1px solid var(--color-border)',
+        background: 'rgba(255,255,255,0.82)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
         display: 'flex',
         alignItems: 'center',
         gap: 16,
         padding: '0 32px',
         flexShrink: 0,
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
       }}
     >
       {/* Left */}

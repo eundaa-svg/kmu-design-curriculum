@@ -70,8 +70,8 @@ function AlumniModal({ alumni, onClose }: { alumni: Alumni; onClose: () => void 
         onClick={(e) => e.stopPropagation()}
         style={{
           width: 520, maxWidth: '95vw', maxHeight: '85vh',
-          background: '#FFFFFF', borderRadius: 20,
-          boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
+          background: '#FFFFFF', borderRadius: 24,
+          boxShadow: '0 24px 64px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
           overflow: 'hidden', position: 'relative',
           display: 'flex', flexDirection: 'column',
           fontFamily: 'var(--font-family)',
@@ -315,7 +315,7 @@ export default function AlumniPage() {
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111111', margin: 0 }}>
+            <h1 style={{ fontSize: 32, fontWeight: 800, color: '#111111', margin: 0, letterSpacing: '-0.02em' }}>
               조형대 졸업생은 어디서 일하고 있을까?
             </h1>
             <button
@@ -451,26 +451,27 @@ function AlumniCard({ alumni, onClick }: { alumni: Alumni; onClick: () => void }
     <div
       onClick={onClick}
       style={{
-        background: '#FFFFFF', border: '1px solid #E5E5E5',
-        borderRadius: 16, overflow: 'hidden', cursor: 'pointer',
+        background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.07)',
+        borderRadius: 20, overflow: 'hidden', cursor: 'pointer',
         transition: 'border-color 200ms, box-shadow 200ms, transform 200ms',
         fontFamily: 'var(--font-family)',
+        boxShadow: 'var(--shadow-card)',
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = '#111111'
-        el.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'
-        el.style.transform = 'translateY(-2px)'
+        el.style.borderColor = 'rgba(0,0,0,0.14)'
+        el.style.boxShadow = 'var(--shadow-card-hover)'
+        el.style.transform = 'translateY(-3px)'
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = '#E5E5E5'
-        el.style.boxShadow = 'none'
+        el.style.borderColor = 'rgba(0,0,0,0.07)'
+        el.style.boxShadow = 'var(--shadow-card)'
         el.style.transform = 'translateY(0)'
       }}
     >
       {/* Profile header */}
-      <div style={{ background: '#111111', padding: 24, color: '#FFFFFF', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #111111 100%)', padding: 24, color: '#FFFFFF', position: 'relative' }}>
         <div style={{
           position: 'absolute', top: 16, right: 16,
           border: '1px solid rgba(255,255,255,0.3)', borderRadius: 12,

@@ -66,7 +66,7 @@ export default function AppLayout() {
             flex: 1,
             overflowY: 'auto',
             padding: isMobile ? '20px 16px' : '32px',
-            background: 'var(--color-bg-primary)',
+            background: 'var(--color-bg-gradient)',
             position: 'relative',
           }}
         >

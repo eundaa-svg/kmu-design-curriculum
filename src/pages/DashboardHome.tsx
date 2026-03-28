@@ -109,7 +109,7 @@ export default function DashboardHome() {
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-            <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111111', margin: 0 }}>
+            <h1 style={{ fontSize: 32, fontWeight: 800, color: '#111111', margin: 0, letterSpacing: '-0.02em' }}>
               어떤 디자이너가 되고 싶으세요?
             </h1>
             <button
@@ -208,15 +208,18 @@ export default function DashboardHome() {
         {/* Career fit summary banner */}
         {topCareer && (
           <div style={{
-            background: '#F5F5F5', borderRadius: 12, padding: '16px 20px',
+            background: 'linear-gradient(135deg, #111111 0%, #2a2a3e 100%)',
+            borderRadius: 16, padding: '18px 24px',
             marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
           }}>
-            <span style={{ fontSize: 14, color: '#111111' }}>
-              현재 가장 가까운 커리어: <strong>{topCareer.jobName}</strong> {topCareer.percentage}%
+            <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>
+              현재 가장 가까운 커리어: <strong style={{ color: '#FFFFFF' }}>{topCareer.jobName}</strong>
+              <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.6)', fontSize: 13 }}>{topCareer.percentage}%</span>
             </span>
             <Link
               to="/career-fit"
-              style={{ fontSize: 13, color: '#111111', fontWeight: 600, textDecoration: 'none' }}
+              style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', fontWeight: 600, textDecoration: 'none' }}
             >
               상세 보기 →
             </Link>

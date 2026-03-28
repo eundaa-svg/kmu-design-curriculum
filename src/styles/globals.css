@@ -3,7 +3,8 @@
 
 :root {
   /* 배경 */
-  --color-bg-primary: #F7F8FA;
+  --color-bg-primary: #F4F5F8;
+  --color-bg-gradient: linear-gradient(180deg, #FFFFFF 0%, #F8F9FB 40%, #F3F4F8 100%);
   --color-bg-card: #FFFFFF;
   --color-bg-sidebar: #FFFFFF;
   --color-bg-hover: #F1F3F5;
@@ -31,13 +32,15 @@
   --color-accent-red-light: #FFF0F0;
 
   /* 그림자 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.06);
 
   /* Typography */
   --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading-xl: 700 26px/34px var(--font-family);
+  --font-heading-xl: 800 32px/40px var(--font-family);
   --font-heading-lg: 700 20px/28px var(--font-family);
   --font-heading-md: 600 16px/24px var(--font-family);
   --font-body-base: 400 14px/22px var(--font-family);

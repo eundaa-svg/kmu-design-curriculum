@@ -88,9 +88,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           width: 480,
           maxWidth: '100%',
           background: '#FFFFFF',
-          borderRadius: 16,
-          padding: '32px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          borderRadius: 24,
+          padding: '36px',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)',
           maxHeight: '90vh',
           overflowY: 'auto',
         }}

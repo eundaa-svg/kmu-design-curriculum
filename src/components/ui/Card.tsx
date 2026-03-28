@@ -20,9 +20,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         className={className}
         style={{
           background: 'var(--color-bg-card)',
-          border: '1px solid var(--color-border)',
-          borderRadius: '14px',
-          boxShadow: 'var(--shadow-sm)',
+          border: '1px solid rgba(0,0,0,0.06)',
+          borderRadius: '16px',
+          boxShadow: 'var(--shadow-card)',
           padding: paddingMap[padding],
           transition: 'box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-fast)',
           cursor: hover ? 'pointer' : undefined,
@@ -32,7 +32,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           hover
             ? (e) => {
                 const el = e.currentTarget
-                el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'
+                el.style.boxShadow = 'var(--shadow-card-hover)'
                 el.style.transform = 'translateY(-2px)'
               }
             : undefined
