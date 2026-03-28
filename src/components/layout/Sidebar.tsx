@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Target,
   Users,
+  Lightbulb,
 } from 'lucide-react'
 import { departments } from '../../data'
 import DeptWireframe from './DeptWireframe'
@@ -130,10 +131,11 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <NavItem
           to="/"
           icon={<LayoutDashboard size={20} />}
-          label="직군별 추천 수업"
+          label="홈"
           collapsed={collapsed}
           end
         />
+        <NavItem to="/recommend" icon={<Lightbulb size={20} />} label="직군별 추천" collapsed={collapsed} />
         <NavItem to="/career-fit" icon={<Target size={20} />} label="커리어 적합도" collapsed={collapsed} />
         <NavItem to="/alumni" icon={<Users size={20} />} label="졸업생 커리어" collapsed={collapsed} />
 

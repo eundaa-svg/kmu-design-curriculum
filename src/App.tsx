@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AppLayout from './components/layout/AppLayout'
 
+const Home = lazy(() => import('./pages/Home'))
 const DashboardHome = lazy(() => import('./pages/DashboardHome'))
 const DepartmentList = lazy(() => import('./pages/DepartmentList'))
 const DepartmentDetail = lazy(() => import('./pages/DepartmentDetail'))
@@ -45,13 +46,14 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<DashboardHome />} />
+            <Route index element={<Home />} />
+            <Route path="recommend" element={<DashboardHome />} />
             <Route path="department" element={<DepartmentList />} />
             <Route path="department/:deptId" element={<DepartmentDetail />} />
             <Route path="progress" element={<ProgressTracker />} />
             <Route path="search" element={<CourseSearch />} />
             <Route path="graduation" element={<GraduationCheck />} />
-            <Route path="recommend" element={<JobRecommend />} />
+            <Route path="job-recommend" element={<JobRecommend />} />
             <Route path="career-fit" element={<CareerFit />} />
             <Route path="alumni" element={<AlumniPage />} />
             <Route path="settings" element={<Settings />} />
