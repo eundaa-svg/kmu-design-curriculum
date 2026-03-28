@@ -11,6 +11,7 @@ const GraduationCheck = lazy(() => import('./pages/GraduationCheck'))
 const Settings = lazy(() => import('./pages/Settings'))
 const JobRecommend = lazy(() => import('./pages/JobRecommend'))
 const CareerFit = lazy(() => import('./pages/CareerFit'))
+const AlumniPage = lazy(() => import('./pages/Alumni'))
 
 function PageLoader() {
   return (
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="graduation" element={<GraduationCheck />} />
             <Route path="recommend" element={<JobRecommend />} />
             <Route path="career-fit" element={<CareerFit />} />
+            <Route path="alumni" element={<AlumniPage />} />
             <Route path="settings" element={<Settings />} />
 
           </Route>

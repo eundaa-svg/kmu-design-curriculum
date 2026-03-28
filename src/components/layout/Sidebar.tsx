@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ChevronRight,
   Target,
+  Users,
 } from 'lucide-react'
 import { departments } from '../../data'
 import DeptWireframe from './DeptWireframe'
@@ -60,6 +61,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     { to: '/', icon: <LayoutDashboard size={20} />, label: '대시보드', exact: true },
     { to: '/progress', icon: <CheckCircle size={20} />, label: '이수 현황' },
     { to: '/career-fit', icon: <Target size={20} />, label: '커리어 적합도' },
+    { to: '/alumni', icon: <Users size={20} />, label: '조형대 커리어' },
     { to: '/search', icon: <Search size={20} />, label: '교과목 검색' },
     { to: '/graduation', icon: <GraduationCap size={20} />, label: '졸업 요건' },
   ]
