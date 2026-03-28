@@ -130,6 +130,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'ad', courseId: 'vd-313', relevance: 'core' },
   { jobId: 'ad', courseId: 'vd-402', relevance: 'core' },
   { jobId: 'ad', courseId: 'vd-310', relevance: 'related' },
+  { jobId: 'ad', courseId: 'vd-401', relevance: 'related' },
   { jobId: 'ad', courseId: 'mi-304', relevance: 'related' },
   { jobId: 'ad', courseId: 'id-205', relevance: 'related' },
 
