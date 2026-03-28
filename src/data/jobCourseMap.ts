@@ -119,7 +119,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'bi-bx', courseId: 'vd-201', relevance: 'core' },
   { jobId: 'bi-bx', courseId: 'vd-309', relevance: 'related' },
   { jobId: 'bi-bx', courseId: 'vd-404', relevance: 'related' },
-  { jobId: 'bi-bx', courseId: 'fd-405', relevance: 'related' },
+
   { jobId: 'bi-bx', courseId: 'vd-206', relevance: 'related' },
 
   // ===== 출판·편집 디자이너 =====
