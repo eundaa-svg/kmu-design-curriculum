@@ -101,6 +101,8 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'content', courseId: 'vd-208', relevance: 'related' },
   { jobId: 'content', courseId: 'mi-115', relevance: 'related' },
   { jobId: 'content', courseId: 'vd-313', relevance: 'related' },
+  { jobId: 'content', courseId: 'vd-105', relevance: 'related' },
+  { jobId: 'content', courseId: 'vd-110', relevance: 'related' },
 
   // ===== 모바일 디자이너 =====
   { jobId: 'mobile', courseId: 'id-310', relevance: 'core' },
@@ -184,6 +186,8 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'space', courseId: 'sd-306', relevance: 'related' },
   { jobId: 'space', courseId: 'sd-208', relevance: 'related' },
   { jobId: 'space', courseId: 'sd-402', relevance: 'related' },
+  { jobId: 'space', courseId: 'ai-207', relevance: 'related' },
+  { jobId: 'space', courseId: 'ai-312', relevance: 'related' },
 
   // ===== 2D 디자이너 =====
   { jobId: '2d', courseId: 'vd-105', relevance: 'core' },
