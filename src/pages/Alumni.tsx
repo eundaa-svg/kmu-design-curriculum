@@ -209,9 +209,11 @@ function Slide2({ alumni }: { alumni: Alumni }) {
         ))}
       </div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <span style={{ padding: '4px 10px', borderRadius: 10, fontSize: 12, background: '#F5F5F5', color: '#666666' }}>
-          학점 {alumni.gpa}
-        </span>
+        {alumni.gpa > 0 && (
+          <span style={{ padding: '4px 10px', borderRadius: 10, fontSize: 12, background: '#F5F5F5', color: '#666666' }}>
+            학점 {alumni.gpa}
+          </span>
+        )}
         {alumni.languageScore && (
           <span style={{ padding: '4px 10px', borderRadius: 10, fontSize: 12, background: '#F5F5F5', color: '#666666' }}>
             {alumni.languageScore}
