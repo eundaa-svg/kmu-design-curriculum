@@ -249,7 +249,6 @@ function CtaSection({ myDepartmentId }: { myDepartmentId: string }) {
    메인 페이지
 ══════════════════════════════════════════════ */
 export default function Home() {
-  const navigate = useNavigate()
   const { myDepartmentId } = useStore()
   const firstDept = myDepartmentId ?? 'industrial-design'
 
@@ -264,23 +263,24 @@ export default function Home() {
 
       {/* ── A. 히어로 ── */}
       <section style={{
-        minHeight: '80vh',
+        minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         textAlign: 'center', padding: '80px 40px',
         position: 'relative', overflow: 'hidden',
+        background: '#111111',
       }}>
         {/* 도트 그리드 배경 */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, #D0D0D0 1px, transparent 1px)',
-          backgroundSize: '24px 24px', opacity: 0.4,
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
         }} />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* 라벨 */}
           <div style={{
-            fontSize: 11, letterSpacing: '0.25em', color: '#AAAAAA',
+            fontSize: 11, letterSpacing: '3px', color: 'rgba(255,255,255,0.3)',
             marginBottom: 20, fontWeight: 700, textTransform: 'uppercase',
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? 'translateY(0)' : 'translateY(16px)',
@@ -291,23 +291,31 @@ export default function Home() {
 
           {/* 메인 카피 */}
           <h1 style={{ margin: 0, lineHeight: 1.15 }}>
-            {['커리큘럼에서', '커리어까지'].map((line, i) => (
-              <div key={line} style={{
-                fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 800,
-                color: '#111111', letterSpacing: '-0.03em',
-                opacity: heroVisible ? 1 : 0,
-                transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'opacity 600ms ease, transform 600ms ease',
-                transitionDelay: `${100 + i * 150}ms`,
-              }}>
-                {line}
-              </div>
-            ))}
+            <div style={{
+              fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 800,
+              color: 'rgba(255,255,255,0.4)', letterSpacing: '-1px',
+              opacity: heroVisible ? 1 : 0,
+              transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 600ms ease, transform 600ms ease',
+              transitionDelay: '100ms',
+            }}>
+              커리큘럼에서
+            </div>
+            <div style={{
+              fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 800,
+              color: '#FFFFFF', letterSpacing: '-1px',
+              opacity: heroVisible ? 1 : 0,
+              transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 600ms ease, transform 600ms ease',
+              transitionDelay: '250ms',
+            }}>
+              커리어까지
+            </div>
           </h1>
 
           {/* 설명 */}
           <p style={{
-            fontSize: 16, color: '#999999',
+            fontSize: 15, color: 'rgba(255,255,255,0.5)',
             margin: '20px auto 0', maxWidth: 480, lineHeight: 1.7,
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -317,40 +325,14 @@ export default function Home() {
             조형대학 9개 학과 교육과정을 탐색하고,<br />나에게 맞는 커리어를 설계하세요.
           </p>
 
-          {/* CTA 버튼 */}
-          <div style={{
-            display: 'flex', justifyContent: 'center', gap: 12,
-            marginTop: 36, flexWrap: 'wrap',
-            opacity: heroVisible ? 1 : 0,
-            transition: 'opacity 600ms ease',
-            transitionDelay: '550ms',
-          }}>
-            <button
-              onClick={() => navigate('/recommend')}
-              style={{ background: '#111111', color: '#FFFFFF', borderRadius: 14, padding: '13px 26px', fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: 'var(--font-family)', transition: 'box-shadow 200ms' }}
-              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.18)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none' }}
-            >
-              직군별 추천 시작
-            </button>
-            <button
-              onClick={() => navigate(`/department/${firstDept}`)}
-              style={{ background: '#FFFFFF', color: '#111111', border: '1px solid #E0E0E0', borderRadius: 14, padding: '13px 26px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-family)', transition: 'border-color 200ms' }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#111111' }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E0E0E0' }}
-            >
-              커리큘럼 탐색
-            </button>
-          </div>
-
           {/* 스크롤 유도 */}
           <div style={{
-            marginTop: 48,
+            marginTop: 56,
             opacity: heroVisible ? 1 : 0,
             transition: 'opacity 600ms ease',
-            transitionDelay: '700ms',
+            transitionDelay: '600ms',
           }}>
-            <ChevronDown size={22} color="#CCCCCC" style={{ animation: 'bounce 2s ease infinite' }} />
+            <ChevronDown size={22} color="rgba(255,255,255,0.3)" style={{ animation: 'bounce 2s ease infinite' }} />
           </div>
         </div>
       </section>
