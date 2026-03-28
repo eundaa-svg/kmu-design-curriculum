@@ -499,6 +499,25 @@ export default function ProgressTracker() {
         </>
       )}
 
+      {/* ── 커리어 적합도 연결 카드 ── */}
+      <div style={{ padding: '0 32px 32px' }}>
+        <Link
+          to="/career-fit"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '16px 20px', background: '#F5F5F5', borderRadius: 12,
+            textDecoration: 'none', border: '1px solid #E5E5E5',
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#111111' }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = '#E5E5E5' }}
+        >
+          <span style={{ fontSize: 14, color: '#111111', fontFamily: 'var(--font-family)' }}>
+            이수한 과목으로 커리어 적합도 확인하기
+          </span>
+          <span style={{ fontSize: 14, color: '#111111', fontWeight: 600 }}>→</span>
+        </Link>
+      </div>
+
       {/* ── 교과목 상세 패널 ── */}
       <CourseDetailPanel
         course={selectedCourse}

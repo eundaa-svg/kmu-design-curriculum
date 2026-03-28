@@ -1,9 +1,11 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Info, X } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { designJobs, jobCourseMappings, getJobsForCourse } from '../data/jobCourseMap'
 import { getAllCourses } from '../data'
 import { useStore } from '../store/useStore'
+import { useCareerFit } from '../hooks/useCareerFit'
 import type { Course } from '../types'
 import CourseDetailPanel from '../components/course/CourseDetailPanel'
 
@@ -56,6 +58,8 @@ export default function DashboardHome() {
   }, [tooltipOpen])
 
   const allCourses = useMemo(() => getAllCourses() as CourseWithDept[], [])
+  const careerFitResults = useCareerFit()
+  const topCareer = careerFitResults.find((r) => r.percentage > 0)
 
   const toggleJob = (jobId: string) => {
     setSelectedJobIds((prev) =>
@@ -200,6 +204,24 @@ export default function DashboardHome() {
             관심있는 직군을 선택하면 추천 수업을 알려드려요.
           </p>
         </div>
+
+        {/* Career fit summary banner */}
+        {topCareer && (
+          <div style={{
+            background: '#F5F5F5', borderRadius: 12, padding: '16px 20px',
+            marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <span style={{ fontSize: 14, color: '#111111' }}>
+              현재 가장 가까운 커리어: <strong>{topCareer.jobName}</strong> {topCareer.percentage}%
+            </span>
+            <Link
+              to="/career-fit"
+              style={{ fontSize: 13, color: '#111111', fontWeight: 600, textDecoration: 'none' }}
+            >
+              상세 보기 →
+            </Link>
+          </div>
+        )}
 
         {/* Job filter */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 32, alignItems: 'center' }}>

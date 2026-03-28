@@ -10,6 +10,7 @@ const CourseSearch = lazy(() => import('./pages/CourseSearch'))
 const GraduationCheck = lazy(() => import('./pages/GraduationCheck'))
 const Settings = lazy(() => import('./pages/Settings'))
 const JobRecommend = lazy(() => import('./pages/JobRecommend'))
+const CareerFit = lazy(() => import('./pages/CareerFit'))
 
 function PageLoader() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="search" element={<CourseSearch />} />
             <Route path="graduation" element={<GraduationCheck />} />
             <Route path="recommend" element={<JobRecommend />} />
+            <Route path="career-fit" element={<CareerFit />} />
             <Route path="settings" element={<Settings />} />
 
           </Route>
