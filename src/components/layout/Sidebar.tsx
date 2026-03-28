@@ -111,7 +111,22 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           overflowX: 'hidden',
         }}
       >
-        {/* Dashboard */}
+        {/* ── CAREER group ── */}
+        {!collapsed && (
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#BBBBBB',
+              padding: '4px 12px 4px',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-family)',
+            }}
+          >
+            Career
+          </div>
+        )}
         <NavItem
           to="/"
           icon={<LayoutDashboard size={20} />}
@@ -119,6 +134,28 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           collapsed={collapsed}
           end
         />
+        <NavItem to="/career-fit" icon={<Target size={20} />} label="커리어 적합도" collapsed={collapsed} />
+        <NavItem to="/alumni" icon={<Users size={20} />} label="졸업생 커리어" collapsed={collapsed} />
+
+        {/* Divider */}
+        <div style={{ height: 1, background: 'var(--color-border)', margin: '12px 0' }} />
+
+        {/* ── CURRICULUM group ── */}
+        {!collapsed && (
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: '#BBBBBB',
+              padding: '4px 12px 4px',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-family)',
+            }}
+          >
+            Curriculum
+          </div>
+        )}
 
         {/* 커리큘럼 (expandable) */}
         <div>
@@ -245,46 +282,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           )}
         </div>
 
-        {/* ── CURRICULUM group ── */}
-        {!collapsed && (
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              color: '#BBBBBB',
-              padding: '12px 12px 4px',
-              textTransform: 'uppercase',
-              fontFamily: 'var(--font-family)',
-            }}
-          >
-            Curriculum
-          </div>
-        )}
-        {collapsed && <div style={{ height: 8 }} />}
         <NavItem to="/progress" icon={<CheckCircle size={20} />} label="이수 현황" collapsed={collapsed} />
         <NavItem to="/search" icon={<Search size={20} />} label="교과목 검색" collapsed={collapsed} />
         <NavItem to="/graduation" icon={<GraduationCap size={20} />} label="졸업 요건" collapsed={collapsed} />
-
-        {/* ── CAREER group ── */}
-        {!collapsed && (
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              color: '#BBBBBB',
-              padding: '16px 12px 4px',
-              textTransform: 'uppercase',
-              fontFamily: 'var(--font-family)',
-            }}
-          >
-            Career
-          </div>
-        )}
-        {collapsed && <div style={{ height: 8 }} />}
-        <NavItem to="/career-fit" icon={<Target size={20} />} label="커리어 적합도" collapsed={collapsed} />
-        <NavItem to="/alumni" icon={<Users size={20} />} label="졸업생 커리어" collapsed={collapsed} />
 
         {/* Divider */}
         <div
