@@ -115,7 +115,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <NavItem
           to="/"
           icon={<LayoutDashboard size={20} />}
-          label="대시보드"
+          label="홈"
           collapsed={collapsed}
           end
         />
@@ -284,7 +284,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         )}
         {collapsed && <div style={{ height: 8 }} />}
         <NavItem to="/career-fit" icon={<Target size={20} />} label="커리어 적합도" collapsed={collapsed} />
-        <NavItem to="/alumni" icon={<Users size={20} />} label="조형대 커리어" collapsed={collapsed} />
+        <NavItem to="/alumni" icon={<Users size={20} />} label="졸업생 커리어" collapsed={collapsed} />
 
         {/* Divider */}
         <div
