@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Users, Info } from 'lucide-react'
 import alumniData, { type Alumni } from '../data/alumniData'
 
 const DEPT_FILTERS = [
@@ -281,6 +281,26 @@ export default function AlumniPage() {
   const [deptFilter, setDeptFilter] = useState('all')
   const [jobFilter, setJobFilter] = useState('all')
   const [selectedAlumni, setSelectedAlumni] = useState<Alumni | null>(null)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const infoRef = useRef<HTMLButtonElement>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (!tooltipOpen) return
+    timerRef.current = setTimeout(() => setTooltipOpen(false), 3000)
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        tooltipRef.current && !tooltipRef.current.contains(e.target as Node) &&
+        infoRef.current && !infoRef.current.contains(e.target as Node)
+      ) setTooltipOpen(false)
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      document.removeEventListener('mousedown', onClickOutside)
+    }
+  }, [tooltipOpen])
 
   const filtered = alumniData.filter((a) => {
     if (deptFilter !== 'all' && a.departmentId !== deptFilter) return false
@@ -294,9 +314,55 @@ export default function AlumniPage() {
 
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111111', margin: 0 }}>
-            조형대 졸업생은 어디서 일하고 있을까?
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111111', margin: 0 }}>
+              조형대 졸업생은 어디서 일하고 있을까?
+            </h1>
+            <button
+              ref={infoRef}
+              onClick={() => setTooltipOpen((v) => !v)}
+              style={{
+                background: 'none', border: 'none', padding: 0,
+                marginLeft: 8, cursor: 'pointer', display: 'flex', alignItems: 'center',
+                color: tooltipOpen ? '#111111' : '#AAAAAA', transition: 'color 150ms',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#111111' }}
+              onMouseLeave={(e) => { if (!tooltipOpen) (e.currentTarget as HTMLButtonElement).style.color = '#AAAAAA' }}
+            >
+              <Info size={18} />
+            </button>
+
+            <AnimatePresence>
+              {tooltipOpen && (
+                <motion.div
+                  ref={tooltipRef}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute', top: 'calc(100% + 10px)', left: 0, zIndex: 30,
+                    background: '#111111', color: '#FFFFFF', borderRadius: 12,
+                    padding: '16px 20px', maxWidth: 360,
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.15)', fontSize: 13, lineHeight: 1.6,
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: -6, left: 20, width: 12, height: 6, overflow: 'hidden' }}>
+                    <div style={{ width: 12, height: 12, background: '#111111', transform: 'rotate(45deg)', transformOrigin: 'bottom left', marginTop: 4 }} />
+                  </div>
+                  <button
+                    onClick={() => setTooltipOpen(false)}
+                    style={{ position: 'absolute', top: 10, right: 10, background: 'none', border: 'none', color: '#AAAAAA', cursor: 'pointer', padding: 2, display: 'flex', alignItems: 'center' }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#FFFFFF' }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#AAAAAA' }}
+                  >
+                    <X size={14} />
+                  </button>
+                  본 정보는 국민대학교 경력개발지원단의 동문멘토상담 프로그램을 통해 수집된 데이터를 기반으로 구성되었습니다. 졸업생의 현재 소속이나 직무는 변경되었을 수 있습니다.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <p style={{ fontSize: 14, color: '#888888', marginTop: 8 }}>
             조형대학 졸업 선배들의 실제 커리어 스토리를 확인해보세요.
           </p>
