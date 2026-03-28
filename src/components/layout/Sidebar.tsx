@@ -130,7 +130,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <NavItem
           to="/"
           icon={<LayoutDashboard size={20} />}
-          label="홈"
+          label="직군별 추천 수업"
           collapsed={collapsed}
           end
         />
