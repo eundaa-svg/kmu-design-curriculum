@@ -71,6 +71,10 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'ui-gui', courseId: 'ai-203', relevance: 'core' },
   { jobId: 'ui-gui', courseId: 'ai-304', relevance: 'related' },
   { jobId: 'ui-gui', courseId: 'vd-105', relevance: 'related' },
+  { jobId: 'ui-gui', courseId: 'ai-208', relevance: 'related' },
+  { jobId: 'ui-gui', courseId: 'ai-303', relevance: 'related' },
+  { jobId: 'ui-gui', courseId: 'ai-310', relevance: 'related' },
+  { jobId: 'ui-gui', courseId: 'ai-306', relevance: 'related' },
 
   // ===== 제품 디자이너 =====
   { jobId: 'product', courseId: 'id-201', relevance: 'core' },
@@ -103,6 +107,9 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'mobile', courseId: 'ai-304', relevance: 'core' },
   { jobId: 'mobile', courseId: 'ai-203', relevance: 'core' },
   { jobId: 'mobile', courseId: 'id-302', relevance: 'related' },
+  { jobId: 'mobile', courseId: 'ai-208', relevance: 'related' },
+  { jobId: 'mobile', courseId: 'ai-303', relevance: 'related' },
+  { jobId: 'mobile', courseId: 'ai-310', relevance: 'related' },
 
   // ===== BI·BX 디자이너 =====
   { jobId: 'bi-bx', courseId: 'vd-310', relevance: 'core' },
@@ -111,6 +118,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'bi-bx', courseId: 'vd-309', relevance: 'related' },
   { jobId: 'bi-bx', courseId: 'vd-404', relevance: 'related' },
   { jobId: 'bi-bx', courseId: 'fd-405', relevance: 'related' },
+  { jobId: 'bi-bx', courseId: 'vd-206', relevance: 'related' },
 
   // ===== 출판·편집 디자이너 =====
   { jobId: 'publishing', courseId: 'vd-111', relevance: 'core' },
@@ -143,6 +151,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: '3d', courseId: 'mi-401', relevance: 'related' },
   { jobId: '3d', courseId: 'id-113', relevance: 'related' },
   { jobId: '3d', courseId: 'id-313', relevance: 'related' },
+  { jobId: '3d', courseId: 'ai-311', relevance: 'related' },
 
   // ===== 인테리어 디자이너 =====
   { jobId: 'interior', courseId: 'sd-201', relevance: 'core' },
