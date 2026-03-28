@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronDown, Check } from 'lucide-react'
 import { useStore } from '../store/useStore'
 
+const HERO_DEPTS = [
+  { name: 'Industrial Design',           path: '/department/industrial-design',  color: '#FF0017' },
+  { name: 'Visual Communication',        path: '/department/visual-design',       color: '#FF006A' },
+  { name: 'Metalwork & Jewelry',         path: '/department/metal-craft',         color: '#FFC900' },
+  { name: 'Ceramic Craft',               path: '/department/ceramic-craft',       color: '#FF7700' },
+  { name: 'Fashion Design',              path: '/department/fashion-design',      color: '#8E008E' },
+  { name: 'Spatial Design',              path: '/department/spatial-design',      color: '#008AC2' },
+  { name: 'Entertainment Design',        path: '/department/moving-image-design', color: '#00BCB5' },
+  { name: 'Automotive & Transportation', path: '/department/automotive-design',   color: '#2B50B6' },
+  { name: 'AI Design',                   path: '/department/ai-design',           color: '#00FF00' },
+]
+
 /* ── 스크롤 reveal 훅 ── */
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null)
@@ -249,27 +261,57 @@ function CtaSection({ myDepartmentId }: { myDepartmentId: string }) {
    메인 페이지
 ══════════════════════════════════════════════ */
 export default function Home() {
+  const navigate = useNavigate()
   const { myDepartmentId } = useStore()
   const firstDept = myDepartmentId ?? 'industrial-design'
 
   const [heroVisible, setHeroVisible] = useState(false)
+  const [hoveredDept, setHoveredDept] = useState<string | null>(null)
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
+  const heroRef = useRef<HTMLElement>(null)
+
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 50)
     return () => clearTimeout(t)
   }, [])
 
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    })
+  }
+
+  const hoveredColor = hoveredDept
+    ? HERO_DEPTS.find(d => d.path === hoveredDept)?.color ?? null
+    : null
+
   return (
     <div style={{ fontFamily: 'var(--font-family)' }}>
 
       {/* ── A. 히어로 ── */}
-      <section style={{
-        minHeight: '100vh',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center', padding: '80px 40px',
-        position: 'relative', overflow: 'hidden',
-        background: '#111111',
-      }}>
+      <section
+        ref={heroRef}
+        onMouseMove={handleHeroMouseMove}
+        style={{
+          minHeight: '100vh',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          textAlign: 'center', padding: '80px 40px',
+          position: 'relative', overflow: 'hidden',
+          background: '#111111',
+        }}
+      >
+        {/* 마우스 hover gradient (학과색) */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: hoveredColor
+            ? `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${hoveredColor}0f 0%, transparent 50%)`
+            : 'transparent',
+          transition: hoveredColor ? 'background 100ms ease' : 'background 300ms ease',
+        }} />
+
         {/* 도트 그리드 배경 */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -325,9 +367,46 @@ export default function Home() {
             조형대학 9개 학과 교육과정을 탐색하고,<br />나에게 맞는 커리어를 설계하세요.
           </p>
 
+          {/* 학과 리스트 */}
+          <div style={{
+            marginTop: 48,
+            maxWidth: 640, margin: '48px auto 0',
+            display: 'flex', flexWrap: 'wrap',
+            justifyContent: 'center', gap: '6px 0',
+            lineHeight: 2,
+            opacity: heroVisible ? 1 : 0,
+            transition: 'opacity 600ms ease',
+            transitionDelay: '500ms',
+          }}>
+            {HERO_DEPTS.map((dept, i) => (
+              <span key={dept.path} style={{ display: 'flex', alignItems: 'center' }}>
+                {i > 0 && (
+                  <span style={{ color: 'rgba(255,255,255,0.1)', padding: '0 6px', userSelect: 'none' }}>·</span>
+                )}
+                <span
+                  onClick={() => navigate(dept.path)}
+                  onMouseEnter={() => setHoveredDept(dept.path)}
+                  onMouseLeave={() => setHoveredDept(null)}
+                  style={{
+                    fontSize: 13, fontWeight: 500, letterSpacing: '0.5px',
+                    color: hoveredDept === dept.path ? dept.color : 'rgba(255,255,255,0.2)',
+                    textShadow: hoveredDept === dept.path
+                      ? `0 0 20px ${dept.color}66, 0 0 40px ${dept.color}33`
+                      : 'none',
+                    transition: 'color 200ms ease, text-shadow 200ms ease',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                  }}
+                >
+                  {dept.name}
+                </span>
+              </span>
+            ))}
+          </div>
+
           {/* 스크롤 유도 */}
           <div style={{
-            marginTop: 56,
+            marginTop: 48,
             opacity: heroVisible ? 1 : 0,
             transition: 'opacity 600ms ease',
             transitionDelay: '600ms',
