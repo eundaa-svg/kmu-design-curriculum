@@ -237,6 +237,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'character', courseId: 'mi-112', relevance: 'related' },
   { jobId: 'character', courseId: 'mi-305', relevance: 'related' },
   { jobId: 'character', courseId: 'id-214', relevance: 'related' },
+  { jobId: 'character', courseId: 'mi-208', relevance: 'related' },
 
   // ===== 패브릭 디자이너 =====
   { jobId: 'fabric', courseId: 'fd-108', relevance: 'core' },
