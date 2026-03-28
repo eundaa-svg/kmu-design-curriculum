@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Info, X } from 'lucide-react'
 import { designJobs, jobCourseMappings, getJobsForCourse } from '../data/jobCourseMap'
 import { getAllCourses } from '../data'
 import { useStore } from '../store/useStore'
@@ -30,7 +31,29 @@ type CourseWithDept = Course & { departmentId: string; departmentName: string }
 export default function DashboardHome() {
   const [selectedJobIds, setSelectedJobIds] = useState<string[]>([])
   const [selectedCourse, setSelectedCourse] = useState<CourseWithDept | null>(null)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const infoRef = useRef<HTMLButtonElement>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { myDepartmentId, completedCourseIds, toggleCourseComplete } = useStore()
+
+  useEffect(() => {
+    if (!tooltipOpen) return
+    timerRef.current = setTimeout(() => setTooltipOpen(false), 3000)
+    const onClickOutside = (e: MouseEvent) => {
+      if (
+        tooltipRef.current && !tooltipRef.current.contains(e.target as Node) &&
+        infoRef.current && !infoRef.current.contains(e.target as Node)
+      ) {
+        setTooltipOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      document.removeEventListener('mousedown', onClickOutside)
+    }
+  }, [tooltipOpen])
 
   const allCourses = useMemo(() => getAllCourses() as CourseWithDept[], [])
 
@@ -81,9 +104,98 @@ export default function DashboardHome() {
       <div style={{ flex: 1, overflowY: 'auto', padding: '40px 36px 80px', minWidth: 0 }}>
         {/* Header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111111', margin: 0 }}>
-            어떤 디자이너가 되고 싶으세요?
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111111', margin: 0 }}>
+              어떤 디자이너가 되고 싶으세요?
+            </h1>
+            <button
+              ref={infoRef}
+              onClick={() => setTooltipOpen((v) => !v)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                marginLeft: 8,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                color: tooltipOpen ? '#111111' : '#AAAAAA',
+                transition: 'color 150ms',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#111111' }}
+              onMouseLeave={(e) => { if (!tooltipOpen) (e.currentTarget as HTMLButtonElement).style.color = '#AAAAAA' }}
+            >
+              <Info size={18} />
+            </button>
+
+            <AnimatePresence>
+              {tooltipOpen && (
+                <motion.div
+                  ref={tooltipRef}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 10px)',
+                    left: 0,
+                    zIndex: 30,
+                    background: '#111111',
+                    color: '#FFFFFF',
+                    borderRadius: 12,
+                    padding: '16px 20px',
+                    maxWidth: 360,
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                    fontSize: 13,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {/* 삼각형 */}
+                  <div style={{
+                    position: 'absolute',
+                    top: -6,
+                    left: 20,
+                    width: 12,
+                    height: 6,
+                    overflow: 'hidden',
+                  }}>
+                    <div style={{
+                      width: 12,
+                      height: 12,
+                      background: '#111111',
+                      transform: 'rotate(45deg)',
+                      transformOrigin: 'bottom left',
+                      marginTop: 4,
+                    }} />
+                  </div>
+
+                  {/* X 버튼 */}
+                  <button
+                    onClick={() => setTooltipOpen(false)}
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      background: 'none',
+                      border: 'none',
+                      color: '#AAAAAA',
+                      cursor: 'pointer',
+                      padding: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#FFFFFF' }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = '#AAAAAA' }}
+                  >
+                    <X size={14} />
+                  </button>
+
+                  이 추천은 국민대학교 조형대학 교육과정을 바탕으로 구성되었으며, 실제 진로와 다를 수 있어요. 수강 신청 전에 학과 사무실이나 지도교수님과 상담하는 것을 권장합니다.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <p style={{ fontSize: 15, color: '#888888', marginTop: 8 }}>
             관심있는 직군을 선택하면 추천 수업을 알려드려요.
           </p>
