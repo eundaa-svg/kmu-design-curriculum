@@ -1,700 +1,312 @@
-import { useNavigate } from 'react-router-dom'
-import { motion, type Variants } from 'framer-motion'
-import {
-  BookOpen,
-  CheckCircle,
-  Cpu,
-  Eye,
-  Gem,
-  Coffee,
-  Shirt,
-  Home,
-  Film,
-  Car,
-  Brain,
-  ArrowRight,
-  Info,
-  TrendingUp,
-  GraduationCap,
-} from 'lucide-react'
-import { departments } from '../data'
+import { useState, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { designJobs, jobCourseMappings, getJobsForCourse } from '../data/jobCourseMap'
+import { getAllCourses } from '../data'
 import { useStore } from '../store/useStore'
-import { useDepartment } from '../hooks/useDepartment'
-import { useCountUp } from '../hooks/useCountUp'
-import Card from '../components/ui/Card'
-import ProgressCircle from '../components/ui/ProgressCircle'
+import type { Course } from '../types'
+import CourseDetailPanel from '../components/course/CourseDetailPanel'
 
-/* ─── 학과별 Lucide 아이콘 + 색상 매핑 ─── */
-const DEPT_META: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  'industrial-design':  { icon: <Cpu size={20} />,    color: '#FF0017', bg: 'rgba(255,0,23,0.1)' },
-  'visual-design':      { icon: <Eye size={20} />,    color: '#FF006A', bg: 'rgba(255,0,106,0.1)' },
-  'metal-craft':        { icon: <Gem size={20} />,    color: '#FFC900', bg: 'rgba(255,201,0,0.1)' },
-  'ceramic-craft':      { icon: <Coffee size={20} />, color: '#FF7700', bg: 'rgba(255,119,0,0.1)' },
-  'fashion-design':     { icon: <Shirt size={20} />,  color: '#8E008E', bg: 'rgba(142,0,142,0.1)' },
-  'spatial-design':     { icon: <Home size={20} />,   color: '#008AC2', bg: 'rgba(0,138,194,0.1)' },
-  'moving-image':       { icon: <Film size={20} />,   color: '#00BCB5', bg: 'rgba(0,188,181,0.1)' },
-  'automotive-design':  { icon: <Car size={20} />,    color: '#2B50B6', bg: 'rgba(43,80,182,0.1)' },
-  'ai-design':          { icon: <Brain size={20} />,  color: '#00CC00', bg: 'rgba(0,255,0,0.1)' },
+const DEPT_META: Record<string, { color: string; name: string }> = {
+  'industrial-design':   { color: '#FF0017', name: '공업디자인학과' },
+  'visual-design':       { color: '#FF006A', name: '시각디자인학과' },
+  'metal-craft':         { color: '#FFC900', name: '금속공예학과' },
+  'ceramic-craft':       { color: '#FF7700', name: '도자공예학과' },
+  'fashion-design':      { color: '#8E008E', name: '의상디자인학과' },
+  'spatial-design':      { color: '#008AC2', name: '공간디자인학과' },
+  'moving-image-design': { color: '#00BCB5', name: '영상디자인학과' },
+  'automotive-design':   { color: '#2B50B6', name: '자동차운송디자인학과' },
+  'ai-design':           { color: '#00CC00', name: 'AI디자인학과' },
 }
 
-/* ─── Framer Motion variants ─── */
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-}
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
-}
-const deptContainerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.04 } },
+function hexToRgba(hex: string, alpha: number) {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${alpha})`
 }
 
+type CourseWithDept = Course & { departmentId: string; departmentName: string }
 
-/* ─────────────────────────────────────── */
 export default function DashboardHome() {
-  const navigate = useNavigate()
-  const { myDepartmentId, completedCourseIds } = useStore()
-  const department = useDepartment(myDepartmentId)
+  const [selectedJobIds, setSelectedJobIds] = useState<string[]>([])
+  const [selectedCourse, setSelectedCourse] = useState<CourseWithDept | null>(null)
+  const { myDepartmentId, completedCourseIds, toggleCourseComplete } = useStore()
 
-  const completedCount = completedCourseIds.length
-  const deptTotalCourses = department?.courses.length ?? 0
-  const achievePct =
-    deptTotalCourses > 0 ? (completedCount / deptTotalCourses) * 100 : 0
+  const allCourses = useMemo(() => getAllCourses() as CourseWithDept[], [])
 
-  /* CountUp */
-  const countCompleted = useCountUp(completedCount, 800)
-  const countPct = useCountUp(achievePct, 800, 1)
+  const toggleJob = (jobId: string) => {
+    setSelectedJobIds((prev) =>
+      prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
+    )
+  }
 
-  return (
-    <div className="page-enter" style={{ maxWidth: 1120, margin: '0 auto' }}>
+  const recommendedCourses = useMemo(() => {
+    if (selectedJobIds.length === 0) return []
 
-      {/* ══════════════════════════════════════
-          섹션 1: 요약 통계 카드
-      ══════════════════════════════════════ */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 16,
-        }}
-        className="stats-grid"
-      >
-        {/* C: 이수 완료 */}
-        <motion.div variants={cardVariants}>
-          <StatCard
-            icon={<CheckCircle size={20} />}
-            iconColor="var(--color-accent-green)"
-            iconBg="var(--color-accent-green-light)"
-            value={countCompleted}
-            unit="과목"
-            label="이수 완료"
-            sub={completedCount === 0 ? '과목을 체크하세요' : undefined}
-          />
-        </motion.div>
+    const courseRelevanceMap = new Map<string, 'core' | 'related'>()
+    for (const mapping of jobCourseMappings) {
+      if (!selectedJobIds.includes(mapping.jobId)) continue
+      const existing = courseRelevanceMap.get(mapping.courseId)
+      if (!existing || (existing === 'related' && mapping.relevance === 'core')) {
+        courseRelevanceMap.set(mapping.courseId, mapping.relevance)
+      }
+    }
 
-        {/* D: 이수율 — 원형 프로그레스 */}
-        <motion.div variants={cardVariants}>
-          <Card style={{ height: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              {department ? (
-                <ProgressCircle
-                  value={achievePct}
-                  size={52}
-                  strokeWidth={5}
-                  color="var(--color-accent-green)"
-                />
-              ) : (
-                <div
-                  style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '50%',
-                    background: 'var(--color-bg-primary)',
-                    border: '5px solid var(--color-border)',
-                    flexShrink: 0,
-                  }}
-                />
-              )}
-              <div>
-                <p
-                  style={{
-                    font: 'var(--font-heading-lg)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-primary)',
-                    lineHeight: 1,
-                    marginBottom: 4,
-                  }}
-                >
-                  {department ? `${countPct}%` : '—'}
-                </p>
-                <p
-                  style={{
-                    font: 'var(--font-body-sm)',
-                    fontFamily: 'var(--font-family)',
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
-                  달성률
-                </p>
-                {!department && (
-                  <p
-                    style={{
-                      font: 'var(--font-body-sm)',
-                      fontFamily: 'var(--font-family)',
-                      color: 'var(--color-text-muted)',
-                      marginTop: 3,
-                      fontSize: 11,
-                    }}
-                  >
-                    학과를 먼저 선택하세요
-                  </p>
-                )}
-              </div>
-            </div>
-          </Card>
-        </motion.div>
-      </motion.div>
+    const results: Array<CourseWithDept & { relevance: 'core' | 'related' }> = []
+    for (const [courseId, relevance] of courseRelevanceMap) {
+      const course = allCourses.find((c) => c.id === courseId)
+      if (course) results.push({ ...course, relevance })
+    }
 
-      {/* ══════════════════════════════════════
-          섹션 2: 학과 그리드
-      ══════════════════════════════════════ */}
-      <div style={{ marginTop: 36 }}>
-        {/* 섹션 헤더 */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 16,
-          }}
-        >
-          <h2
-            style={{
-              font: 'var(--font-heading-lg)',
-              fontFamily: 'var(--font-family)',
-              color: 'var(--color-text-primary)',
-            }}
-          >
-            학과별 커리큘럼
-          </h2>
-          <button
-            onClick={() => navigate('/department')}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontFamily: 'var(--font-family)',
-              fontSize: 14,
-              color: 'var(--color-accent-blue)',
-              fontWeight: 500,
-              padding: '4px 0',
-            }}
-          >
-            전체 보기
-            <ArrowRight size={15} />
-          </button>
-        </div>
+    results.sort((a, b) => {
+      if (a.relevance !== b.relevance) return a.relevance === 'core' ? -1 : 1
+      if (a.year !== b.year) return a.year - b.year
+      return b.credits - a.credits
+    })
 
-        {/* 학과 카드 그리드 */}
-        <motion.div
-          variants={deptContainerVariants}
-          initial="hidden"
-          animate="visible"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 16,
-          }}
-          className="dept-grid"
-        >
-          {departments.map((dept) => {
-            const meta = DEPT_META[dept.id] ?? {
-              icon: <BookOpen size={20} />,
-              color: '#64748B',
-              bg: '#F1F5F9',
-            }
-            const requiredCount = dept.courses.filter((c) => c.category === 'required').length
-            const capstoneCount = dept.courses.filter((c) => c.isCapstone).length
+    return results
+  }, [selectedJobIds, allCourses])
 
-            return (
-              <motion.div key={dept.id} variants={cardVariants}>
-                <DeptCard
-                  dept={dept}
-                  meta={meta}
-                  requiredCount={requiredCount}
-                  capstoneCount={capstoneCount}
-                  isSelected={myDepartmentId === dept.id}
-                  onClick={() => navigate(`/department/${dept.id}`)}
-                />
-              </motion.div>
-            )
-          })}
-        </motion.div>
-      </div>
-
-      {/* ══════════════════════════════════════
-          섹션 3: 공통 안내사항
-      ══════════════════════════════════════ */}
-      <div style={{ marginTop: 32 }}>
-        <div
-          style={{
-            background: '#111111',
-            borderRadius: 12,
-            padding: '20px 24px',
-          }}
-        >
-          <p
-            style={{
-              font: 'var(--font-body-base)',
-              fontFamily: 'var(--font-family)',
-              fontWeight: 600,
-              color: '#FFFFFF',
-              marginBottom: 12,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-            }}
-          >
-            <Info size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />
-            교과과정 안내
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {[
-              '[2025학년도 교과과정 기준] 필수 지정 과목은 반드시 이수하여야 합니다.',
-              '[공통 필수] S-TEAM Class와 사제동행세미나 중 1개를 반드시 이수해야 합니다.',
-              '[현장실습] 현장실습 학점 인정에 관한 규정에 따라 전공 또는 일반선택으로 인정 가능합니다.',
-              '[부전공] 전공과목 중 18학점 이상 이수 필요. [다전공] 필수 지정 과목 포함 최저이수학점 이상 이수 필요.',
-            ].map((text, i) => {
-              const parts = text.split(/(\[[^\]]+\])/g)
-              return (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    gap: 8,
-                    padding: '8px 0',
-                    borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                  }}
-                >
-                  <Info
-                    size={15}
-                    style={{
-                      color: 'rgba(255,255,255,0.5)',
-                      flexShrink: 0,
-                      marginTop: 2,
-                    }}
-                  />
-                  <p
-                    style={{
-                      font: 'var(--font-body-sm)',
-                      fontFamily: 'var(--font-family)',
-                      color: '#FFFFFF',
-                      lineHeight: '20px',
-                    }}
-                  >
-                    {parts.map((part, j) =>
-                      /^\[.+\]$/.test(part) ? (
-                        <span key={j} style={{ color: 'rgba(255,255,255,0.6)' }}>{part}</span>
-                      ) : part
-                    )}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════
-          섹션 4: 빠른 액션
-      ══════════════════════════════════════ */}
-      <div
-        style={{
-          marginTop: 24,
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 16,
-          paddingBottom: 32,
-        }}
-        className="quick-grid"
-      >
-        <QuickActionCard
-          icon={<TrendingUp size={22} />}
-          iconColor="var(--color-accent-green)"
-          iconBg="var(--color-accent-green-light)"
-          title="이수 현황 확인하기"
-          desc="수강한 과목을 체크하고, 남은 필수 과목을 확인하세요."
-          btnLabel="이수 현황 바로가기"
-          onClick={() => navigate('/progress')}
-        />
-        <QuickActionCard
-          icon={<GraduationCap size={22} />}
-          iconColor="var(--color-accent-indigo)"
-          iconBg="#EEF2FF"
-          title="졸업 요건 확인하기"
-          desc="졸업에 필요한 필수 과목, 캡스톤, 학점 요건을 점검하세요."
-          btnLabel="졸업 요건 바로가기"
-          onClick={() => navigate('/graduation')}
-        />
-      </div>
-
-      {/* 반응형 CSS */}
-      <style>{`
-        @media (max-width: 1023px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .dept-grid  { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 767px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .dept-grid  { grid-template-columns: 1fr !important; }
-          .quick-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
-    </div>
-  )
-}
-
-/* ─────────────────────────────────────── */
-/* 요약 통계 카드 */
-interface StatCardProps {
-  icon: React.ReactNode
-  iconColor: string
-  iconBg: string
-  value: string
-  unit: string
-  label: string
-  sub?: string
-}
-function StatCard({ icon, iconColor, iconBg, value, unit, label, sub }: StatCardProps) {
-  return (
-    <Card style={{ height: '100%' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: '50%',
-            background: iconBg,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: iconColor,
-            flexShrink: 0,
-          }}
-        >
-          {icon}
-        </div>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
-            <span
-              style={{
-                font: 'var(--font-heading-lg)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-primary)',
-                lineHeight: 1,
-              }}
-            >
-              {value}
-            </span>
-            <span
-              style={{
-                font: 'var(--font-body-sm)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-secondary)',
-              }}
-            >
-              {unit}
-            </span>
-          </div>
-          <p
-            style={{
-              font: 'var(--font-body-sm)',
-              fontFamily: 'var(--font-family)',
-              color: 'var(--color-text-secondary)',
-              marginTop: 3,
-            }}
-          >
-            {label}
-          </p>
-          {sub && (
-            <p
-              style={{
-                font: 'var(--font-body-sm)',
-                fontFamily: 'var(--font-family)',
-                color: 'var(--color-text-muted)',
-                fontSize: 11,
-                marginTop: 2,
-              }}
-            >
-              {sub}
-            </p>
-          )}
-        </div>
-      </div>
-    </Card>
-  )
-}
-
-/* ─────────────────────────────────────── */
-/* 학과 카드 */
-interface DeptCardProps {
-  dept: (typeof departments)[0]
-  meta: { icon: React.ReactNode; color: string; bg: string }
-  requiredCount: number
-  capstoneCount: number
-  isSelected: boolean
-  onClick: () => void
-}
-function DeptCard({ dept, meta, requiredCount, capstoneCount, isSelected, onClick }: DeptCardProps) {
   return (
     <div
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick()}
       style={{
-        background: 'var(--color-bg-card)',
-        border: `1px solid ${isSelected ? meta.color : 'var(--color-border)'}`,
-        borderRadius: 14,
-        boxShadow: isSelected
-          ? `0 0 0 3px ${meta.color}22`
-          : '0 1px 2px rgba(0,0,0,0.03)',
-        padding: '20px',
-        cursor: 'pointer',
-        transition: 'box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease',
-        height: '100%',
         display: 'flex',
-        flexDirection: 'column',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget
-        el.style.borderColor = meta.color
-        el.style.boxShadow = `0 4px 12px rgba(0,0,0,0.06), 0 0 0 3px ${meta.color}18`
-        el.style.transform = 'translateY(-1px)'
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget
-        el.style.borderColor = isSelected ? meta.color : 'var(--color-border)'
-        el.style.boxShadow = isSelected
-          ? `0 0 0 3px ${meta.color}22`
-          : '0 1px 2px rgba(0,0,0,0.03)'
-        el.style.transform = 'translateY(0)'
+        gap: 0,
+        height: '100%',
+        overflow: 'hidden',
+        fontFamily: 'var(--font-family)',
       }}
     >
-      {/* 상단: 아이콘 + 이름 */}
-      <div style={{ paddingBottom: 16 }}>
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            background: meta.bg,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: meta.color,
-            marginBottom: 12,
-          }}
-        >
-          {meta.icon}
-        </div>
-        <p
-          style={{
-            font: 'var(--font-heading-md)',
-            fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-primary)',
-            marginBottom: 2,
-          }}
-        >
-          {dept.name}
-        </p>
-        <p
-          style={{
-            font: 'var(--font-body-sm)',
-            fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          {dept.shortName}
-        </p>
-      </div>
-
-      {/* 중단: 통계 */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 16,
-          paddingTop: 12,
-          paddingBottom: 16,
-          borderTop: '1px solid var(--color-border)',
-          flex: 1,
-        }}
-      >
-        <InlineStat label="전체" value={dept.courses.length} unit="과목" />
-        <InlineStat label="필수" value={requiredCount} unit="과목" color="var(--color-accent-blue)" />
-        <InlineStat label="캡스톤" value={capstoneCount} unit="과목" color="var(--color-accent-amber)" />
-      </div>
-
-      {/* 하단: CTA */}
-      <div
-        style={{
-          paddingTop: 14,
-          borderTop: '1px solid var(--color-border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <span
-          style={{
-            font: 'var(--font-body-sm)',
-            fontFamily: 'var(--font-family)',
-            color: meta.color,
-            fontWeight: 500,
-          }}
-        >
-          커리큘럼 보기
-        </span>
-        <ArrowRight size={15} style={{ color: meta.color }} />
-      </div>
-    </div>
-  )
-}
-
-function InlineStat({
-  label,
-  value,
-  unit,
-  color = 'var(--color-text-secondary)',
-}: {
-  label: string
-  value: number
-  unit: string
-  color?: string
-}) {
-  return (
-    <div>
-      <p
-        style={{
-          font: 'var(--font-label)',
-          fontFamily: 'var(--font-family)',
-          color: 'var(--color-text-muted)',
-          marginBottom: 3,
-        }}
-      >
-        {label}
-      </p>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-        <span
-          style={{
-            fontFamily: 'var(--font-family)',
-            fontSize: 16,
-            fontWeight: 600,
-            color,
-          }}
-        >
-          {value}
-        </span>
-        <span
-          style={{
-            font: 'var(--font-label)',
-            fontFamily: 'var(--font-family)',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          {unit}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-/* ─────────────────────────────────────── */
-/* 빠른 액션 카드 */
-interface QuickActionCardProps {
-  icon: React.ReactNode
-  iconColor: string
-  iconBg: string
-  title: string
-  desc: string
-  btnLabel: string
-  onClick: () => void
-}
-function QuickActionCard({ icon, iconColor, iconBg, title, desc, btnLabel, onClick }: QuickActionCardProps) {
-  return (
-    <Card style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            background: iconBg,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: iconColor,
-            flexShrink: 0,
-          }}
-        >
-          {icon}
-        </div>
-        <div>
-          <p
-            style={{
-              font: 'var(--font-body-base)',
-              fontFamily: 'var(--font-family)',
-              fontWeight: 600,
-              color: 'var(--color-text-primary)',
-            }}
-          >
-            {title}
-          </p>
-          <p
-            style={{
-              font: 'var(--font-body-sm)',
-              fontFamily: 'var(--font-family)',
-              color: 'var(--color-text-secondary)',
-              marginTop: 3,
-            }}
-          >
-            {desc}
+      {/* Main scroll area */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '40px 36px 80px', minWidth: 0 }}>
+        {/* Header */}
+        <div style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111111', margin: 0 }}>
+            어떤 디자이너가 되고 싶으세요?
+          </h1>
+          <p style={{ fontSize: 15, color: '#888888', marginTop: 8 }}>
+            관심있는 직군을 선택하면 추천 수업을 알려드려요.
           </p>
         </div>
+
+        {/* Job filter */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 32, alignItems: 'center' }}>
+          {designJobs.map((job) => {
+            const isSelected = selectedJobIds.includes(job.id)
+            return (
+              <button
+                key={job.id}
+                onClick={() => toggleJob(job.id)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 20,
+                  border: `1px solid ${isSelected ? '#111111' : '#E5E5E5'}`,
+                  background: isSelected ? '#111111' : '#FFFFFF',
+                  color: isSelected ? '#FFFFFF' : '#666666',
+                  fontSize: 13,
+                  fontWeight: isSelected ? 600 : 500,
+                  cursor: 'pointer',
+                  transition: 'all 150ms ease',
+                  fontFamily: 'var(--font-family)',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    const btn = e.currentTarget as HTMLButtonElement
+                    btn.style.borderColor = '#111111'
+                    btn.style.color = '#111111'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    const btn = e.currentTarget as HTMLButtonElement
+                    btn.style.borderColor = '#E5E5E5'
+                    btn.style.color = '#666666'
+                  }
+                }}
+              >
+                {job.name}
+              </button>
+            )
+          })}
+          {selectedJobIds.length > 0 && (
+            <button
+              onClick={() => setSelectedJobIds([])}
+              style={{
+                padding: '8px 14px',
+                borderRadius: 20,
+                border: '1px solid transparent',
+                background: 'transparent',
+                color: '#AAAAAA',
+                fontSize: 13,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-family)',
+                textDecoration: 'underline',
+              }}
+            >
+              전체 해제
+            </button>
+          )}
+        </div>
+
+        {/* Results */}
+        {selectedJobIds.length === 0 ? (
+          <div
+            style={{
+              marginTop: 80,
+              textAlign: 'center',
+              color: '#AAAAAA',
+              fontSize: 15,
+            }}
+          >
+            직군을 선택하면 추천 수업이 표시됩니다
+          </div>
+        ) : (
+          <>
+            <div style={{ fontSize: 15, fontWeight: 600, color: '#111111', marginBottom: 16 }}>
+              추천 수업 {recommendedCourses.length}개
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 16,
+              }}
+            >
+              <AnimatePresence mode="popLayout">
+                {recommendedCourses.map((course) => {
+                  const deptMeta = DEPT_META[course.departmentId]
+                  const deptColor = deptMeta?.color ?? '#888888'
+                  const deptName = deptMeta?.name ?? course.departmentName
+                  const isMyDept = course.departmentId === myDepartmentId
+                  const isCompleted = completedCourseIds.includes(course.id)
+                  const jobLinks = getJobsForCourse(course.id).filter((j) =>
+                    selectedJobIds.includes(j.job.id)
+                  )
+                  const isSelected = selectedCourse?.id === course.id
+
+                  return (
+                    <motion.div
+                      key={course.id}
+                      layout
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      onClick={() => setSelectedCourse(isSelected ? null : course)}
+                      style={{
+                        background: '#FFFFFF',
+                        border: `1px solid ${isSelected ? '#111111' : '#E5E5E5'}`,
+                        borderRadius: 12,
+                        padding: 20,
+                        cursor: 'pointer',
+                        transition: 'border-color 150ms, box-shadow 150ms, transform 150ms',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSelected) {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.borderColor = '#111111'
+                          el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'
+                          el.style.transform = 'translateY(-1px)'
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSelected) {
+                          const el = e.currentTarget as HTMLDivElement
+                          el.style.borderColor = '#E5E5E5'
+                          el.style.boxShadow = 'none'
+                          el.style.transform = 'translateY(0)'
+                        }
+                      }}
+                    >
+                      {/* Course name */}
+                      <div style={{ fontSize: 16, fontWeight: 600, color: '#111111', marginBottom: 8 }}>
+                        {course.name}
+                      </div>
+
+                      {/* Dept badge */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            padding: '2px 8px',
+                            borderRadius: 10,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            background: hexToRgba(deptColor, 0.1),
+                            color: deptColor,
+                          }}
+                        >
+                          {deptName}
+                        </span>
+                        {!isMyDept && myDepartmentId && (
+                          <span style={{ fontSize: 11, color: '#AAAAAA' }}>타과</span>
+                        )}
+                      </div>
+
+                      {/* Description */}
+                      {course.description && (
+                        <div
+                          style={{
+                            fontSize: 13,
+                            color: '#888888',
+                            marginBottom: 12,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {course.description}
+                        </div>
+                      )}
+
+                      {/* Tags */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center' }}>
+                        {jobLinks.map(({ job, relevance }) => (
+                          <span
+                            key={job.id}
+                            style={{
+                              padding: '3px 10px',
+                              borderRadius: 12,
+                              fontSize: 11,
+                              fontWeight: 500,
+                              background: relevance === 'core' ? '#111111' : '#F5F5F5',
+                              color: relevance === 'core' ? '#FFFFFF' : '#666666',
+                            }}
+                          >
+                            {job.name}
+                          </span>
+                        ))}
+                        <span style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
+                          <span style={{ padding: '3px 8px', borderRadius: 10, fontSize: 11, background: '#F5F5F5', color: '#888888' }}>
+                            {course.credits}학점
+                          </span>
+                          <span style={{ padding: '3px 8px', borderRadius: 10, fontSize: 11, background: '#F5F5F5', color: '#888888' }}>
+                            {course.year}학년
+                          </span>
+                          {isCompleted && (
+                            <span style={{ padding: '3px 8px', borderRadius: 10, fontSize: 11, background: '#111111', color: '#FFFFFF' }}>
+                              이수완료
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </AnimatePresence>
+            </div>
+          </>
+        )}
       </div>
-      <button
-        onClick={onClick}
-        style={{
-          alignSelf: 'flex-start',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          height: 36,
-          padding: '0 16px',
-          borderRadius: 8,
-          border: `1px solid ${iconColor}`,
-          background: 'transparent',
-          color: iconColor,
-          fontFamily: 'var(--font-family)',
-          fontSize: 13,
-          fontWeight: 500,
-          cursor: 'pointer',
-          transition: 'background 150ms',
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = iconBg)}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-      >
-        {btnLabel}
-        <ArrowRight size={14} />
-      </button>
-    </Card>
+
+      {/* Detail panel */}
+      <CourseDetailPanel
+        course={selectedCourse}
+        completed={selectedCourse ? completedCourseIds.includes(selectedCourse.id) : false}
+        onClose={() => setSelectedCourse(null)}
+        onToggle={() => selectedCourse && toggleCourseComplete(selectedCourse.id)}
+      />
+    </div>
   )
 }

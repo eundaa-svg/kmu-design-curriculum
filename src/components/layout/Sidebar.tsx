@@ -11,7 +11,6 @@ import {
   ChevronsRight,
   ChevronDown,
   ChevronRight,
-  Compass,
 } from 'lucide-react'
 import { departments } from '../../data'
 import DeptWireframe from './DeptWireframe'
@@ -59,7 +58,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const navItems = [
     { to: '/', icon: <LayoutDashboard size={20} />, label: '대시보드', exact: true },
     { to: '/progress', icon: <CheckCircle size={20} />, label: '이수 현황' },
-    { to: '/recommend', icon: <Compass size={20} />, label: '직군별 추천' },
     { to: '/search', icon: <Search size={20} />, label: '교과목 검색' },
     { to: '/graduation', icon: <GraduationCap size={20} />, label: '졸업 요건' },
   ]
