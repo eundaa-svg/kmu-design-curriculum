@@ -202,6 +202,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: '2d', courseId: 'vd-201', relevance: 'core' },
   { jobId: '2d', courseId: 'vd-306', relevance: 'related' },
   { jobId: '2d', courseId: 'mi-108', relevance: 'related' },
+  { jobId: '2d', courseId: 'vd-312', relevance: 'related' },
 
   // ===== 산업 디자이너 =====
   { jobId: 'industrial', courseId: 'id-201', relevance: 'core' },
