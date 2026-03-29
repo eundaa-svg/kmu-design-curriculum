@@ -42,7 +42,7 @@ function PageLoader() {
 
 export default function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<AppLayout />}>
