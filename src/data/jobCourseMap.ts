@@ -46,6 +46,8 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'graphic', courseId: 'vd-203', relevance: 'related' },
   { jobId: 'graphic', courseId: 'vd-308', relevance: 'related' },
   { jobId: 'graphic', courseId: 'id-114', relevance: 'related' },
+  { jobId: 'graphic', courseId: 'vd-105', relevance: 'related' },
+  { jobId: 'graphic', courseId: 'vd-110', relevance: 'related' },
 
   // ===== 웹 디자이너 =====
   { jobId: 'web', courseId: 'vd-304', relevance: 'core' },
