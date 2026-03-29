@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Target, Info, X, Check, Circle, ChevronDown, ChevronUp } from 'lucide-react'
 import { useCareerFit } from '../hooks/useCareerFit'
