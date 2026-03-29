@@ -4,5 +4,5 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/kmu-design-curriculum/',
+  base: process.env.GITHUB_ACTIONS ? '/kmu-design-curriculum/' : '/',
 })
