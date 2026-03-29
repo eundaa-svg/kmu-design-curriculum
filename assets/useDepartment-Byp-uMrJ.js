@@ -1,0 +1,1 @@
+import{c as e,r as t}from"./createLucideIcon-x8sN-Q_n.js";import{t as n}from"./data-CI-qZ2Jx.js";var r=e(t(),1);function i(e){return(0,r.useMemo)(()=>{if(e)return n.find(t=>t.id===e)},[e])}export{i as t};

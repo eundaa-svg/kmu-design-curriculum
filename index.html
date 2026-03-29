@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/kmu-design-curriculum/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>조형대학 커리큘럼</title>
+    <!-- GitHub Pages SPA redirect 수신 -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location));
+    </script>
+    <script>
+      (function () {
+        var saved = localStorage.getItem('theme');
+        if (!saved || saved === 'dark') {
+          saved = 'light';
+          localStorage.setItem('theme', 'light');
+        }
+        document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
+    <script type="module" crossorigin src="/kmu-design-curriculum/assets/index-D-tMXxGW.js"></script>
+    <link rel="modulepreload" crossorigin href="/kmu-design-curriculum/assets/createLucideIcon-x8sN-Q_n.js">
+    <link rel="modulepreload" crossorigin href="/kmu-design-curriculum/assets/search-DBVMXDk2.js">
+    <link rel="modulepreload" crossorigin href="/kmu-design-curriculum/assets/data-CI-qZ2Jx.js">
+    <link rel="modulepreload" crossorigin href="/kmu-design-curriculum/assets/useStore-BxBWxpZf.js">
+    <link rel="stylesheet" crossorigin href="/kmu-design-curriculum/assets/index-RWS1B1Id.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
