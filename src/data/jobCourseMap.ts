@@ -111,6 +111,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'content', courseId: 'vd-313', relevance: 'related' },
   { jobId: 'content', courseId: 'vd-105', relevance: 'related' },
   { jobId: 'content', courseId: 'vd-110', relevance: 'related' },
+  { jobId: 'content', courseId: 'vd-112', relevance: 'related' },
   { jobId: 'content', courseId: 'vd-204', relevance: 'related' },
 
   // ===== 모바일 디자이너 =====
