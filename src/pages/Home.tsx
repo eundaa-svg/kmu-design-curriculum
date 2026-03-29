@@ -372,36 +372,41 @@ export default function Home() {
             marginTop: 48,
             maxWidth: 640, margin: '48px auto 0',
             display: 'flex', flexWrap: 'wrap',
-            justifyContent: 'center', gap: '6px 0',
+            justifyContent: 'center', gap: 8,
             lineHeight: 2,
             opacity: heroVisible ? 1 : 0,
             transition: 'opacity 600ms ease',
             transitionDelay: '500ms',
           }}>
-            {HERO_DEPTS.map((dept, i) => (
-              <span key={dept.path} style={{ display: 'flex', alignItems: 'center' }}>
-                {i > 0 && (
-                  <span style={{ color: 'rgba(255,255,255,0.1)', padding: '0 6px', userSelect: 'none' }}>·</span>
-                )}
+            {HERO_DEPTS.map((dept) => {
+              const isHovered = hoveredDept === dept.path
+              const hex = dept.color.replace('#', '')
+              const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16)
+              return (
                 <span
+                  key={dept.path}
                   onClick={() => navigate(dept.path)}
                   onMouseEnter={() => setHoveredDept(dept.path)}
                   onMouseLeave={() => setHoveredDept(null)}
                   style={{
-                    fontSize: 13, fontWeight: 500, letterSpacing: '0.5px',
-                    color: hoveredDept === dept.path ? dept.color : 'rgba(255,255,255,0.2)',
-                    textShadow: hoveredDept === dept.path
-                      ? `0 0 20px ${dept.color}66, 0 0 40px ${dept.color}33`
-                      : 'none',
-                    transition: 'color 200ms ease, text-shadow 200ms ease',
+                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    fontWeight: 700, fontSize: 12, letterSpacing: '1.5px',
+                    textTransform: 'uppercase',
+                    padding: '8px 16px',
+                    borderRadius: 20,
+                    border: `1px solid ${isHovered ? dept.color : 'rgba(255,255,255,0.1)'}`,
+                    background: isHovered ? `rgba(${r},${g},${b},0.1)` : 'rgba(255,255,255,0.08)',
+                    color: isHovered ? dept.color : 'rgba(255,255,255,0.35)',
+                    textShadow: isHovered ? `0 0 20px rgba(${r},${g},${b},0.4)` : 'none',
+                    transition: 'all 200ms ease',
                     cursor: 'pointer',
                     userSelect: 'none',
                   }}
                 >
                   {dept.name}
                 </span>
-              </span>
-            ))}
+              )
+            })}
           </div>
 
           {/* 스크롤 유도 */}
