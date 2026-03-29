@@ -351,8 +351,6 @@ export default function Home() {
           }}>
             {HERO_DEPTS.map((dept) => {
               const isHovered = hoveredDept === dept.path
-              const hex = dept.color.replace('#', '')
-              const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16)
               const lightBg = dept.color === '#FFC900' || dept.color === '#00FF00'
               return (
                 <span
