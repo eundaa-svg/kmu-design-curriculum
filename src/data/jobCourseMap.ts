@@ -87,6 +87,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'product', courseId: 'id-209', relevance: 'related' },
   { jobId: 'product', courseId: 'id-206', relevance: 'related' },
   { jobId: 'product', courseId: 'id-202', relevance: 'related' },
+  { jobId: 'product', courseId: 'ai-112', relevance: 'related' },
 
   // ===== 영상·모션 디자이너 =====
   { jobId: 'motion', courseId: 'vd-209', relevance: 'core' },
