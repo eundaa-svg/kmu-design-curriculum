@@ -315,8 +315,6 @@ export default function Home() {
         {/* 도트 그리드 배경 */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
         }} />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
