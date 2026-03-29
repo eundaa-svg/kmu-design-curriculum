@@ -32,9 +32,13 @@ export default function CourseDetailPanel({
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  /* 설명 접힘 초기화 */
+  /* 과목 변경 시 스크롤 초기화 + 설명 접힘 초기화 */
   useEffect(() => {
     setDescExpanded(false)
+    if (panelRef.current) {
+      const scrollEl = panelRef.current.querySelector<HTMLDivElement>('[data-scroll]')
+      if (scrollEl) scrollEl.scrollTop = 0
+    }
   }, [course?.id])
 
   /* 모바일에서만 body 스크롤 잠금 */
@@ -82,9 +86,9 @@ export default function CourseDetailPanel({
             onKeyDown={handleKeyDown}
             style={{
               position: 'fixed',
-              top: 0,
+              top: 64,
               right: 0,
-              height: '100vh',
+              height: 'calc(100vh - 64px)',
               width: 'min(420px, 100vw)',
               maxWidth: '100vw',
               background: 'var(--color-bg-card)',
@@ -110,6 +114,10 @@ export default function CourseDetailPanel({
                     fontFamily: 'var(--font-family)',
                     color: 'var(--color-text-primary)',
                     lineHeight: '26px',
+                    margin: 0,
+                    wordBreak: 'keep-all',
+                    overflowWrap: 'break-word',
+                    whiteSpace: 'normal',
                   }}
                 >
                   {course.name}
@@ -148,7 +156,7 @@ export default function CourseDetailPanel({
             </div>
 
             {/* ── 본문 (스크롤) ── */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+            <div data-scroll style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
               {/* 기본 정보 그리드 */}
               <div
                 style={{
