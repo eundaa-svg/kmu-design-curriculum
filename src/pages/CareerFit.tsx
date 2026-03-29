@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Target, Info, X, Check, Circle, ChevronDown, ChevronUp } from 'lucide-react'
 import { useCareerFit } from '../hooks/useCareerFit'
@@ -30,6 +30,101 @@ function hexToRgba(hex: string, alpha: number) {
 }
 
 const RANK_LABEL = ['1st', '2nd', '3rd']
+
+const DEPT_LIST = [
+  { id: 'industrial-design',   name: '공업디자인',       color: '#FF0017' },
+  { id: 'visual-design',       name: '시각디자인',       color: '#FF006A' },
+  { id: 'metal-craft',         name: '금속공예',         color: '#FFC900' },
+  { id: 'ceramic-craft',       name: '도자공예',         color: '#FF7700' },
+  { id: 'fashion-design',      name: '의상디자인',       color: '#8E008E' },
+  { id: 'spatial-design',      name: '공간디자인',       color: '#008AC2' },
+  { id: 'moving-image-design', name: '영상디자인',       color: '#00BCB5' },
+  { id: 'automotive-design',   name: '자동차운송디자인', color: '#2B50B6' },
+  { id: 'ai-design',           name: 'AI디자인',         color: '#00FF00' },
+]
+
+function DeptSelectModal({ onClose }: { onClose: () => void }) {
+  const navigate = useNavigate()
+  const [hovered, setHovered] = useState<string | null>(null)
+
+  const go = (id: string) => { navigate(`/department/${id}`); onClose() }
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: 1000, padding: 20,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: '#111111', borderRadius: 20, padding: 32,
+          maxWidth: 560, width: '100%',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          position: 'relative',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: 16, right: 16,
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: 'rgba(255,255,255,0.3)', padding: 4,
+            lineHeight: 1, fontSize: 20,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
+        >
+          <X size={18} />
+        </button>
+        <p style={{ fontSize: 18, fontWeight: 700, color: '#FFFFFF', textAlign: 'center', margin: '0 0 24px' }}>
+          학과를 선택하세요
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+          {DEPT_LIST.map((dept) => {
+            const isHov = hovered === dept.id
+            const h = dept.color.replace('#','')
+            const rr = parseInt(h.slice(0,2),16), gg = parseInt(h.slice(2,4),16), bb = parseInt(h.slice(4,6),16)
+            const lightBg = dept.color === '#FFC900' || dept.color === '#00FF00'
+            return (
+              <button
+                key={dept.id}
+                onClick={() => go(dept.id)}
+                onMouseEnter={() => setHovered(dept.id)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  background: isHov ? dept.color : 'rgba(255,255,255,0.06)',
+                  border: `1px solid ${isHov ? dept.color : 'rgba(255,255,255,0.1)'}`,
+                  borderRadius: 12, padding: '14px 12px',
+                  textAlign: 'center', cursor: 'pointer',
+                  boxShadow: isHov ? `0 0 16px rgba(${rr},${gg},${bb},0.3)` : 'none',
+                  transition: 'all 200ms ease',
+                }}
+              >
+                <div style={{
+                  width: 6, height: 6, borderRadius: '50%',
+                  background: isHov ? (lightBg ? '#111111' : '#FFFFFF') : dept.color,
+                  margin: '0 auto 6px',
+                  transition: 'background 200ms ease',
+                }} />
+                <span style={{
+                  fontSize: 13, fontWeight: 600,
+                  color: isHov ? (lightBg ? '#111111' : '#FFFFFF') : 'rgba(255,255,255,0.5)',
+                  transition: 'color 200ms ease',
+                }}>
+                  {dept.name}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function TopCard({ result, rank }: { result: ReturnType<typeof useCareerFit>[0]; rank: number }) {
   const animated = useCountUp(result.percentage, 800)
@@ -89,6 +184,7 @@ export default function CareerFit() {
   const { completedCourseIds, toggleCourseComplete } = useStore()
   const [openJobId, setOpenJobId] = useState<string | null>(null)
   const [selectedCourse, setSelectedCourse] = useState<CourseWithDept | null>(null)
+  const [showDeptModal, setShowDeptModal] = useState(false)
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const tooltipRef = useRef<HTMLDivElement>(null)
   const infoRef = useRef<HTMLButtonElement>(null)
@@ -126,6 +222,7 @@ export default function CareerFit() {
         fontFamily: 'var(--font-family)',
       }}
     >
+      {showDeptModal && <DeptSelectModal onClose={() => setShowDeptModal(false)} />}
       <div style={{ flex: 1, overflowY: 'auto', padding: '40px 36px 80px', minWidth: 0 }}>
 
         {/* Header */}
@@ -189,16 +286,16 @@ export default function CareerFit() {
               <p style={{ fontSize: 14, color: '#AAAAAA', margin: 0 }}>
                 커리큘럼에서 이수한 과목을 체크하면 적합도가 계산됩니다.
               </p>
-              <Link
-                to="/department"
+              <button
+                onClick={() => setShowDeptModal(true)}
                 style={{
                   display: 'inline-block', marginTop: 12, padding: '8px 16px',
                   background: '#111111', color: '#FFFFFF', borderRadius: 8,
-                  fontSize: 13, fontWeight: 600, textDecoration: 'none',
+                  fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer',
                 }}
               >
                 커리큘럼 바로가기 →
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -222,16 +319,16 @@ export default function CareerFit() {
             <Target size={40} style={{ margin: '0 auto 16px', display: 'block', opacity: 0.3 }} />
             <p style={{ fontSize: 15, margin: '0 0 8px' }}>아직 이수한 과목이 없어서 분석할 수 없어요.</p>
             <p style={{ fontSize: 14, margin: '0 0 20px' }}>커리큘럼에서 이수한 과목을 체크해주세요.</p>
-            <Link
-              to="/department"
+            <button
+              onClick={() => setShowDeptModal(true)}
               style={{
                 display: 'inline-block', padding: '8px 20px',
                 background: '#111111', color: '#FFFFFF', borderRadius: 8,
-                fontSize: 13, fontWeight: 600, textDecoration: 'none',
+                fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer',
               }}
             >
               커리큘럼 바로가기 →
-            </Link>
+            </button>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
