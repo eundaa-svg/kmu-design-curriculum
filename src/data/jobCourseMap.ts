@@ -35,6 +35,7 @@ export const designJobs: DesignJob[] = [
   { id: 'character', name: '캐릭터 디자이너', icon: '', description: '캐릭터 개발, IP 디자인' },
   { id: 'fabric', name: '패브릭 디자이너', icon: '', description: '직물, 텍스타일 패턴 및 소재 디자인' },
   { id: 'furniture', name: '가구 디자이너', icon: '', description: '가구 제품 기획 및 디자인' },
+  { id: 'game', name: '게임 디자이너', icon: '', description: '게임 기획, 캐릭터·배경 그래픽 제작' },
 ]
 
 export const jobCourseMappings: JobCourseMapping[] = [
@@ -255,6 +256,9 @@ export const jobCourseMappings: JobCourseMapping[] = [
   { jobId: 'furniture', courseId: 'id-307', relevance: 'core' },
   { jobId: 'furniture', courseId: 'sd-205', relevance: 'related' },
   { jobId: 'furniture', courseId: 'id-206', relevance: 'related' },
+  // ===== 게임 디자이너 =====
+  { jobId: 'game', courseId: 'id-214', relevance: 'core' },
+  { jobId: 'game', courseId: 'id-308', relevance: 'core' },
 ]
 
 export function getJobsForCourse(courseId: string): { job: DesignJob; relevance: string }[] {
