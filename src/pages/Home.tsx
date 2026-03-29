@@ -267,7 +267,6 @@ export default function Home() {
 
   const [heroVisible, setHeroVisible] = useState(false)
   const [hoveredDept, setHoveredDept] = useState<string | null>(null)
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
   const heroRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -275,25 +274,12 @@ export default function Home() {
     return () => clearTimeout(t)
   }, [])
 
-  const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMousePos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    })
-  }
-
-  const hoveredColor = hoveredDept
-    ? HERO_DEPTS.find(d => d.path === hoveredDept)?.color ?? null
-    : null
-
   return (
     <div style={{ fontFamily: 'var(--font-family)' }}>
 
       {/* ── A. 히어로 ── */}
       <section
         ref={heroRef}
-        onMouseMove={handleHeroMouseMove}
         style={{
           minHeight: '100vh',
           display: 'flex', flexDirection: 'column',
@@ -303,19 +289,6 @@ export default function Home() {
           background: '#111111',
         }}
       >
-        {/* 마우스 hover gradient (학과색) */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: hoveredColor
-            ? `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, ${hoveredColor}0f 0%, transparent 50%)`
-            : 'transparent',
-          transition: hoveredColor ? 'background 100ms ease' : 'background 300ms ease',
-        }} />
-
-        {/* 도트 그리드 배경 */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-        }} />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* 라벨 */}
@@ -397,7 +370,7 @@ export default function Home() {
                     background: isHovered ? dept.color : 'rgba(255,255,255,0.08)',
                     color: isHovered ? (lightBg ? '#111111' : '#FFFFFF') : 'rgba(255,255,255,0.35)',
                     textShadow: 'none',
-                    boxShadow: isHovered ? `0 0 20px rgba(${r},${g},${b},0.3)` : 'none',
+                    boxShadow: 'none',
                     transition: 'all 200ms ease',
                     cursor: 'pointer',
                     userSelect: 'none',
