@@ -380,6 +380,7 @@ export default function Home() {
               const isHovered = hoveredDept === dept.path
               const hex = dept.color.replace('#', '')
               const r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16)
+              const lightBg = dept.color === '#FFC900' || dept.color === '#00FF00'
               return (
                 <span
                   key={dept.path}
@@ -393,9 +394,10 @@ export default function Home() {
                     padding: '8px 16px',
                     borderRadius: 20,
                     border: `1px solid ${isHovered ? dept.color : 'rgba(255,255,255,0.1)'}`,
-                    background: isHovered ? `rgba(${r},${g},${b},0.1)` : 'rgba(255,255,255,0.08)',
-                    color: isHovered ? dept.color : 'rgba(255,255,255,0.35)',
-                    textShadow: isHovered ? `0 0 20px rgba(${r},${g},${b},0.4)` : 'none',
+                    background: isHovered ? dept.color : 'rgba(255,255,255,0.08)',
+                    color: isHovered ? (lightBg ? '#111111' : '#FFFFFF') : 'rgba(255,255,255,0.35)',
+                    textShadow: 'none',
+                    boxShadow: isHovered ? `0 0 20px rgba(${r},${g},${b},0.3)` : 'none',
                     transition: 'all 200ms ease',
                     cursor: 'pointer',
                     userSelect: 'none',
@@ -409,7 +411,8 @@ export default function Home() {
 
           {/* 스크롤 유도 */}
           <div style={{
-            marginTop: 48,
+            marginTop: 40, width: '100%',
+            display: 'flex', justifyContent: 'center',
             opacity: heroVisible ? 1 : 0,
             transition: 'opacity 600ms ease',
             transitionDelay: '600ms',
