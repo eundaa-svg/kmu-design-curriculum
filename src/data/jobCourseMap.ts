@@ -259,6 +259,7 @@ export const jobCourseMappings: JobCourseMapping[] = [
   // ===== 게임 디자이너 =====
   { jobId: 'game', courseId: 'id-214', relevance: 'core' },
   { jobId: 'game', courseId: 'id-308', relevance: 'core' },
+  { jobId: 'game', courseId: 'ai-305', relevance: 'related' },
 ]
 
 export function getJobsForCourse(courseId: string): { job: DesignJob; relevance: string }[] {
