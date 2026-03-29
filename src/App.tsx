@@ -42,7 +42,7 @@ function PageLoader() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/kmu-design-curriculum">
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<AppLayout />}>
