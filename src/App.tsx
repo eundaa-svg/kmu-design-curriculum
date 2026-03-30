@@ -46,7 +46,8 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Home />} />
+            <Route index element={<AlumniPage />} />
+            <Route path="alumni" element={<AlumniPage />} />
             <Route path="recommend" element={<DashboardHome />} />
             <Route path="department" element={<DepartmentList />} />
             <Route path="department/:deptId" element={<DepartmentDetail />} />
@@ -55,7 +56,7 @@ export default function App() {
             <Route path="graduation" element={<GraduationCheck />} />
             <Route path="job-recommend" element={<JobRecommend />} />
             <Route path="career-fit" element={<CareerFit />} />
-            <Route path="alumni" element={<AlumniPage />} />
+            <Route path="home" element={<Home />} />
             <Route path="settings" element={<Settings />} />
 
           </Route>
